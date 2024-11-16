@@ -129,6 +129,61 @@ strong {
 }
 
 
+.reserve-button {
+  display: inline-block;
+  padding: .75rem 1.25rem;
+  border-radius: 10rem;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: .15rem;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.reserve-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(3, 162, 104);
+  border-radius: 10rem;
+  z-index: -2;
+}
+
+.reserve-button::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background-color: #00d478; /* manually darkened color */
+  transition: width .3s ease-in-out;
+  border-radius: 10rem;
+  z-index: -1;
+}
+
+.reserve-button:hover {
+  color: #fff;
+}
+
+.reserve-button:hover::before {
+  width: 100%;
+}
+
+
+.button-container {
+  padding-top: 50px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
 /*---------------------------------------
   SECTION               
 -----------------------------------------*/
