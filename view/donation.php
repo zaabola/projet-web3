@@ -20,13 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = htmlspecialchars($_POST['booking-form-message'] ?? '');
 
     if (!empty($name) && !empty($email) && !empty($amount)) {
-        // Validation supplémentaire si nécessaire
+        
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = "Veuillez entrer un email valide.";
         } elseif (!is_numeric($amount) || $amount <= 0) {
             $error = "Le montant doit être un nombre positif.";
         } else {
-            // Insertion dans la base de données
+
             try {
                 $sql = "INSERT INTO donation (donor_name, donor_email, donation_amount, message, donation_date) 
                         VALUES (:name, :email, :amount, :message, NOW())";
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Barista Cafe - Donation Form</title>
+    <title>emprunt - Donation Form</title>
     <!-- CSS FILES -->                
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/tooplate-barista.css" rel="stylesheet">
+    <script src="validation.js"></script>
 </head>
 <body class="reservation-page">
 <main>
@@ -86,13 +87,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="booking-form-body">
                                 <div class="row">
                                     <div class="col-lg-6 col-12">
-                                        <input type="text" name="booking-form-name" class="form-control" placeholder="Nom complet" required>
+                                        <input type="text" name="booking-form-name" class="form-control" placeholder="Nom complet" >
                                     </div>
                                     <div class="col-lg-6 col-12">
-                                        <input type="text" name="booking-form-email" class="form-control" placeholder="Votre email" required>
+                                        <input type="text" name="booking-form-email" class="form-control" placeholder="Votre email" >
                                     </div>                           
                                     <div class="col-lg-12 col-12">
-                                        <input type="text" name="booking-form-number" class="form-control" placeholder="Montant de la donation" required>
+                                        <input type="text" name="booking-form-number" class="form-control" placeholder="Montant de la donation" >
                                         <textarea name="booking-form-message" rows="3" class="form-control" placeholder="Commentaire (facultatif)"></textarea>
                                     </div>
                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
