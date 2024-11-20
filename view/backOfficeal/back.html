@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gestion des Thèmes</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            color: #495057;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #1cca4d;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #343a40;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-top: 25px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #1e9b35;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        select {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #30c141;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 16px;
+            background-color: #1e9b35;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e9b35;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            color: #495057;
+            font-weight: 500;
+            font-size: 1em;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gérer les Thèmes</h1>
+
+        <!-- Add Theme Section -->
+        <div id="add-theme">
+            <h2>Ajouter un Thème</h2>
+            <form id="theme-form">
+                <label for="theme-name">Nom du Thème :</label>
+                <input type="text" id="theme-name" name="theme-name" placeholder="Entrez le nom du theme" required="">
+
+                <span id="theme-name-error" class="error-message"></span>
+                
+                <label for="theme-description">Description du Thème :</label>
+                <input type="text" id="theme-description" name="theme-description" placeholder="Entrez la description du theme" required="">
+
+                <span id="theme-description-error" class="error-message"></span>
+
+                <label for="theme-image">Image du Thème :</label>
+                <input type="text" id="theme-image" name="theme-image" placeholder="Entrez le chemin de l'image du theme" required="">
+
+                <span id="theme-image-error" class="error-message"></span>
+                
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
+        
+        <!-- Delete Theme Section -->
+        <div id="delete-theme">
+            <h2>Supprimer le Thème</h2>
+            <form action="#" method="post">
+                <label for="delete-theme-select">Sélectionnez le Thème :</label>
+                <select id="delete-theme-select" name="delete-theme-select" placeholder="Entrez le nom du theme" required="">
+                    <option value="theme1">Thème 1</option>
+                    <option value="theme2">Thème 2</option>
+                </select>
+                <button type="submit">Supprimer</button>
+            </form>
+        </div>
+
+        <!-- Modify Theme Section -->
+        <div id="modify-theme">
+            <h2>Modifier le Thème</h2>
+            <form action="#" method="post">
+                <label for="theme-select">Sélectionnez le Thème :</label>
+                <select id="theme-select" name="theme-select">
+                    <option value="theme1">Thème 1</option>
+                    <option value="theme2">Thème 2</option>
+                </select>
+                <button type="submit">Modifier</button>
+            </form>
+
+            <!-- Add Article -->
+            <h4>modifier le nom du theme</h4>
+            <form action="#" method="post">
+                <label for="theme-title">Titre du theme :</label>
+                <input type="text" id="theme-title" name="theme-title" placeholder="modifier le nom du theme" required="">
+                <button type="submit">Ajouter</button>
+            </form>
+
+            <h4>modifier la description du theme</h4>
+            <form action="#" method="post">
+                <label for="theme-description">description du theme :</label>
+                <input type="text" id="theme-description" name="theme-description"placeholder="modifier la description du theme" required="">
+                <button type="submit">Ajouter</button>
+            </form>
+
+            <h4>modifier l'image du theme</h4>
+            <form action="#" method="post">
+                <label for="theme-image">image du theme :</label>
+                <input type="text" id="theme-image" name="theme-image"placeholder="modifier le chemin de l'image" required="">
+                <button type="submit">Ajouter</button>
+            </form>
+
+            <!-- Article Management within Theme -->
+            <div id="manage-articles">
+                <h3 class="section-title">Gérer les Articles</h3>
+
+                <!-- Add Article -->
+                <h4>Ajouter un Article</h4>
+                <form action="#" method="post">
+                    <label for="article-title">Titre de l'Article :</label>
+                    <input type="text" id="article-title" name="article-title"placeholder="Entrez le nom de l'article" required="">
+                    <button type="submit">Ajouter</button>
+                </form>
+
+                <!-- Modify Article -->
+                <h4>Modifier l'Article</h4>
+                <form action="#" method="post">
+                    <label for="article-select">Sélectionnez l'Article :</label>
+                    <select id="article-select" name="article-select"placeholder="Entrez le nom de l'article" required="">
+                        <option value="article1">Article 1</option>
+                        <option value="article2">Article 2</option>
+                    </select>
+                    <button type="submit">Modifier</button>
+                </form>
+
+                <!-- Delete Article -->
+                <h4>Supprimer l'Article</h4>
+                <form action="#" method="post">
+                    <label for="delete-article-select">Sélectionnez l'Article :</label>
+                    <select id="delete-article-select" name="delete-article-select"placeholder="Entrez le nom de l'article" required="">
+                        <option value="article1">Article 1</option>
+                        <option value="article2">Article 2</option>
+                    </select>
+                    <button type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="back2.js"></script> <!-- Le fichier JS de validation -->
+</body>
+</html>
