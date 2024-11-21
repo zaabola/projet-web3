@@ -1,11 +1,11 @@
 <?php 
 class commande {
-    private ?int $Id_Commande ;
-    private ?int $ID_Produit;
-    private ?string $Adresse_Client ;
-    private ?int $Num_tel_Client;
-    private ?string $Nom_Client ;
-    private ?string $Prenom_Client;
+    private $Id_Commande = null;
+    private $ID_Produit = null;
+    private $Adresse_Client = null;
+    private $Num_tel_Client = null;
+    private $Nom_Client = null;
+    private $Prenom_Client = null;
 
     public function __construct($Adresse_Client, $Num_tel_Client, $Nom_Client, $Prenom_Client) {
         $this->Adresse_Client = $Adresse_Client; // Corrected property name
@@ -17,9 +17,7 @@ class commande {
     public function getID() {
         return $this->Id_Commande; // Return only one ID
     }
-    public function setID($Id_Commande) {
-         $this->Id_Commande; // Return only one ID
-    }
+
     public function getNom() {
         return $this->Nom_Client;
     }

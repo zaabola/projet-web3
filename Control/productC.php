@@ -4,7 +4,7 @@ require_once('c:/xampp/htdocs/projet/model/commande.php'); // Assuming you meant
 
 class productC {
     public function create($productx) {
-        $sql = "INSERT INTO `volontaire`(`nom`, `prenom`, `numero`, `addresse` , `email`) VALUES (:nom, :prenom, :numero, :adresse , :email)";
+        $sql = "INSERT INTO `commande`(`nom`, `prenom`, `numero`, `addresse` , `email`) VALUES (:nom, :prenom, :numero, :adresse , :email)";
         $db = config::getConnexion();
         try {
             $req = $db->prepare($sql);

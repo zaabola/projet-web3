@@ -1,49 +1,77 @@
 <?php
 require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include the Commande class
-// Database connection
+
 $host = "localhost";
-$dbname = "empreinte";
 $username = "root";
 $password = "";
+$dbname = "empreinte";
 
+// Database connection
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
+    die("Could not connect to the database: " . $e->getMessage());
 }
 
-$success = $error = "";
+// Create an instance of the Commande class
+$commande = new Commande($db);
 
+// Handle different actions based on the request method
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Create a new order
+    if (isset($_POST['action']) && $_POST['action'] === 'create') {
+        $Adresse_client = $_POST['Adresse_client'];
+        $Tel_client = $_POST['Tel_client'];
+        $Nom_client = $_POST['Nom_client'];
+        $Prenom_client = $_POST['Prenom_client'];
 
-$message = "";
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($_POST['formValid']) && $_POST['formValid'] == 'true') {
-    $Nom_client =  htmlspecialchars($_POST['first-name'] ?? '');
-    $Prenom_client = htmlspecialchars($_POST['last-name'] ?? '');
-    $Tel_client = htmlspecialchars($_POST['tel'] ?? '');
-    $Adresse_client = htmlspecialchars($_POST['adresse'] ?? '');
-    try {
-        $sql = "INSERT INTO commande (`nom`, `prenom`, `numero`, `addresse`) 
-                VALUES (:nom, :prenom, :numero, :adresse)";
-        $stmt = $pdo->prepare($sql);
-        
-        $stmt->execute([
-            ':nom' => $Nom_client  ,
-            ':prenom' => $Prenom_client, // Corrected variable name
-            ' :numero' =>  $Tel_client, // Corrected variable name
-            ':adresse' => $Adresse_client, // Corrected variable name // Corrected variable name
-        ]);
-        
-        $success = "Commande ajoutée avec succès !";
-
-        // Redirect to avoid resubmitting the form on refresh
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit;
-    } catch (PDOException $e) {
-        $error = "Erreur lors de l'ajout : " . $e->getMessage();
+        if ($commande->createCommande($Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
+            echo "Order created successfully!";
+        } else {
+            echo "Failed to create order.";
+        }
     }
 
+    // Update an existing order
+    if (isset($_POST['action']) && $_POST['action'] === 'update') {
+        $Id_commande = $_POST['Id_commande'];
+        $Adresse_client = $_POST['Adresse_client'];
+        $Tel_client = $_POST['Tel_client'];
+        $Nom_client = $_POST['Nom_client'];
+        $Prenom_client = $_POST['Prenom_client'];
 
+        if ($commande->updateCommande($Id_commande, $Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
+            echo "Order updated successfully!";
+        } else {
+            echo "Failed to update order.";
+        }
+    }
+
+    // Delete an order
+    if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+        $Id_commande = $_POST['Id_commande'];
+
+        if ($commande->deleteCommande($Id_commande)) {
+            echo "Order deleted successfully!";
+        } else {
+            echo "Failed to delete order.";
+        }
+    }
+}
+
+// Handle reading orders
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Get all orders
+    $orders = $commande->getAllCommandes();
+    echo json_encode($orders); // Return orders as JSON
+}
+
+// Example of getting a specific order by ID
+if (isset($_GET['Id_commande'])) {
+    $Id_commande = $_GET['Id_commande'];
+    $order = $commande->getCommandeById($Id_commande);
+    echo json_encode($order); // Return the specific order as JSON
 }
 ?>
 
@@ -71,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($
 
         <link href="css/vegas.min.css" rel="stylesheet">
 
-        <link href="css/tooplate-barista.css" rel="stylesheet">
+        
+        <link rel="stylesheet" href="css/tooplate-barista.css">
         <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
         <link rel="icon" href="logo.png">
 </head>
@@ -95,32 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($
                                     <a class="nav-link click-scroll" href="#section_1">Home</a>
                                 </li>
         
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_2">About</a>
-                                </li>
+                              
                                 
                                 <li>
                                     <a href="#section_69" class="nav-link click-scroll">Shop</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_3">Our Menu</a>
-                                </li>
+                               
+
+                              
 
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_4">Reviews</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_5">Contact</a>
+                                    <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
                                 </li>
                             </ul>
 
-                            <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="reservation.html">
-                                    Reservation
-                                    <i class="bi-arrow-up-right ms-2"></i>
-                                </a>
-                            </div>
+                            
                         </div>
                     </div>
                 </nav>
@@ -180,89 +198,210 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($
                                     
                                 </div>
                                 <br>
-                                <button id="acheterBtn" class="animated-button">Acheter</button>
-                    <div class="form-container">
-                        <center>
-                            <form  class="form" action="#" method="post" role="form" onsubmit="return verifyInputs()">
-                            <div class="col-lg-6 col-12">
-                                                <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Nom">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="text" name="first-name" id="first-name" class="form-control" placeholder="Prénom">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="email" name="mail" id="mail" class="form-control" placeholder="Email">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="tel" name="tel" id="tel" class="form-control" placeholder="Téléphone">
-                                            </div>
-                                            <hr>
-                                            <div class="payments">
-                                                 <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                 <span>Subtotal:</span>
-                                                <span>10DT</span>
-                                                <span>Shipping:</span>
-                                                <span>7DT</span>
-                                                <span>Tax:</span>
-                                                <span>3DT</span>
-                                                </div>
-                                             </div>
-                                <hr>
-                                <button type="submit" class="animated-button">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                </button>
-                                <div>
-                                                <div class="footer">
-                                                  <label>Price:20DT</label>
-                                                </div>
-                                            </div>
-                            </form>
-                        </center>
-                    </div>
+                                
                
             
         </div>
-        <script>
-                const acheterBtn = document.getElementById('acheterBtn');
-    const formContainer = document.querySelector('.form-container');
-    
 
-    // Show/Hide the form on button click
-    acheterBtn.addEventListener('click', function () {
-        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
-    });
+       
 
-    // Attach form submit event handler
+
+<div class="col-lg-3 col-md-6 col-12 mb-4">
+    <div class="team-block-wrap">
+        <div class="team-block-info d-flex flex-column">
+            <div class="d-flex mt-auto mb-3">
+                <h4 class="text-white mb-0">Zarbiya Karwiya</h4>
+                <p class="badge ms-4"><em>200DT</em></p>
+            </div>
+            <p class="text-white mb-0">Big deals! upholstery fabric kilim orange fabric kilim boho armchair fabric kilim bohemian tribal persian ethnic rug kilim by the yard meter chair sofa Hurry.</p>
+        </div>
+        <div class="team-block-image-wrap">
+            <img src="OIP (3).jpg" class="team-block-image img-fluid" alt="">
+        </div>
+    </div>
     
-    function verifyInputs() {
+   
+
+</div>
+
+                            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                                <div class="team-block-wrap">
+                                    <div class="team-block-info d-flex flex-column">
+                                        <div class="d-flex mt-auto mb-3">
+                                            <h4 class="text-white mb-0">Kholkhal</h4>
+
+                                            <p class="badge ms-4"><em>60dt</em></p>
+                                        </div>
+
+                                        <p class="text-white mb-0">The Kholkhal is a traditional accessory worn by women in Tunisia for centuries.</p>
+                                    </div>
+                                    
+
+                                    <div class="team-block-image-wrap">
+                                        <img src="R.jpg" class="team-block-image img-fluid" alt="">
+                                    </div>
+                                </div>
+                                
+                            
+                               
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <div class="team-block-wrap">
+                                    <div class="team-block-info d-flex flex-column">
+                                        <div class="d-flex mt-auto mb-3">
+                                            <h4 class="text-white mb-0">Khamsa</h4>
+
+                                            <p class="badge ms-4"><em>25DT</em></p>
+                                        </div>
+
+                                        <p class="text-white mb-0">The Khamsa is a symbol representing a hand, used as an amulet, talisman and jewelry by the inhabitants of North Africa..</p>
+                                    </div>
+
+                                    <div class="team-block-image-wrap">
+                                        <img src="mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="">
+                                    </div>
+                                </div>
+                               
+                                
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <div class="team-block-wrap">
+                                    <div class="team-block-info d-flex flex-column">
+                                        <div class="d-flex mt-auto mb-3">
+                                            <h4 class="text-white mb-0">Hannibal's statue</h4>
+
+                                            <p class="badge ms-4"><em>600DT</em></p>
+                                        </div>
+
+                                        <p class="text-white mb-0">Hannibal was a Carthaginian general and politician, generally regarded as one of the greatest military tacticians in history.</p>
+                                    </div>
+
+                                    <div class="team-block-image-wrap">
+                                        <img src="Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="">
+                                    </div>
+                                </div>
+                                
+                            
+                               
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <div class="team-block-wrap">
+                                    <div class="team-block-info d-flex flex-column">
+                                        <div class="d-flex mt-auto mb-3">
+                                            <h4 class="text-white mb-0">Jebba</h4>
+
+                                            <p class="badge ms-4"><em>140DT</em></p>
+                                        </div>
+
+                                        <p class="text-white mb-0">Sa fabrication artisanale est assurée par des artisans qui coupent, cousent et brodent, dans des variations tenant aux particularismes régionaux, à l'usage (quotidien ou cérémoniel) et au niveau de richesse.</p>
+                                    </div>
+
+                                    <div class="team-block-image-wrap">
+                                        <img src="jebba.jpg" class="team-block-image img-fluid" alt="">
+                                    </div>
+                                </div>
+                               
+                            
+                               
+                            </div>
+
+
+                        </div>
+                    </div>
+                    
+                </section>
+               
+                <section class="booking-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div >
+                    <div class="booking-form-wrap">
+                        <div class="row">
+                            <div class="col-lg-7 col-12 p-0">
+                                <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs1()" id="createOrderForm">
+                                    <input type="hidden" name="formValid" id="formValid" value="false">
+                                    <div class="text-center mb-4 pb-lg-2">
+                                        <em class="text-white">Remplir le formulaire de commande</em>
+                                        <h2 class="text-white">Acheter une Produit</h2>
+                                    </div>
+                                    <div class="booking-form-body">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12">
+                                                <input type="text" name="Prenom_client" id="Prenom_client" class="form-control" placeholder="Nom">
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <input type="text" name="Nom_client" id="Nom_client" class="form-control" placeholder="Prénom">
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <input type="tel" name="Tel_client" id="Tel_client" class="form-control" placeholder="Téléphone">
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <input type="text" name="Adresse_client" id="Adresse_client" class="form-control" placeholder="Adresse">
+                                            </div>
+                                            <div class="col-lg-12 col-12">
+                                                <select name="destination" id="produit1" class="form-control">
+                                                    <option value="" disabled selected>Choisir une Produit</option>
+                                                    <option value="Tozeur">Chachia</option>
+                                                    <option value="Djerba">Jebba</option>
+                                                    <option value="El Jem">Kholkhal</option>
+                                                    <option value="Sidi Bou Said">Zarbiya</option>
+                                                    <option value="Carthage">Khomssa</option>
+                                                    <option value="Tunis">Hannibaal statue</option>
+                                                </select>
+                                                <textarea name="commentaire" rows="3" class="form-control" placeholder="Commentaire (optionnel)"></textarea>
+                                            </div>
+                                            <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                                                <button type="submit" class="form-control">Acheter</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-5 col-12 p-0">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+    function verifyInputs1() {
         const errorMessages = document.querySelectorAll('.error-message');
         errorMessages.forEach(msg => msg.remove());
 
-        const lastName = document.getElementById('last-name').value;
-        const firstName = document.getElementById('first-name').value;
-        const phone = document.getElementById('tel').value;
+        const lastName1 = document.getElementById('Prenom_client').value;
+        const Adresse1 = document.getElementById('Adresse_client').value;
+        const firstName1 = document.getElementById('Nom_client').value;
+        const phone1 = document.getElementById('Tel_client').value;
+        const produit1 = document.getElementById('produit1').value;
         let isValid = true;
 
-        if (!lastName) {
-            showError('last-name', 'Remplir champ Nom.');
+        if (!lastName1) {
+            showError('Prenom_client', 'Remplir champ Nom.');
             isValid = false; 
         }
 
-        if (!firstName) {
-            showError('first-name', 'Remplir champ Prenom.');
+        if (!firstName1) {
+            showError('Nom_client', 'Remplir champ Prenom.');
             isValid = false; 
         }
-
-        if (phone.length !== 8) {
-            showError('tel', 'Le numéro doit comporter exactement 8 chiffres.');
+        if (phone1.length !== 8) {
+            showError('Tel_client', 'Le numéro doit comporter exactement 8 chiffres.');
             isValid = false; 
         }
+        if (!Adresse1) {
+            showError('Adresse_client', "Donne une adresse");
+            isValid = false;
+        }
 
-     
+        if (!produit1) {
+            showError('produit1', "Choisir une Produit");
+            isValid = false;
+        }
+        
 
         // Set the hidden input value for form validation status
         if (isValid) {
@@ -283,669 +422,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($
         inputField.parentNode.insertBefore(errorMessage, inputField);
     }
 </script>
-
-
-
-<div class="col-lg-3 col-md-6 col-12 mb-4">
-    <div class="team-block-wrap">
-        <div class="team-block-info d-flex flex-column">
-            <div class="d-flex mt-auto mb-3">
-                <h4 class="text-white mb-0">Zarbiya Karwiya</h4>
-                <p class="badge ms-4"><em>200DT</em></p>
-            </div>
-            <p class="text-white mb-0">Big deals! upholstery fabric kilim orange fabric kilim boho armchair fabric kilim bohemian tribal persian ethnic rug kilim by the yard meter chair sofa Hurry.</p>
-        </div>
-        <div class="team-block-image-wrap">
-            <img src="OIP (3).jpg" class="team-block-image img-fluid" alt="">
-        </div>
-    </div>
-    <br>
-    <button id="acheterBtn1" class="animated-button">Acheter</button>
-    <div class="form-container1" style="display: none;">
-        <center>
-        <form method="POST" action="index.php" class="form" id="form2">
-                                <div class="flex">
-                                    <label>
-                                        <input name="Prenom_client" id="first-name1" class="input" type="text" placeholder="">
-                                        <span>First Name</span>
-                                    </label>
-                                    <label>
-                                        <input name="Nom_client" id="last-name1" class="input" type="text" placeholder="" >
-                                        <span>Last Name</span>
-                                    </label>
-                                </div>
-                                <label>
-                                    <input name="Tel_client" id="tel1" class="input" type="text" placeholder="" pattern="\d{8}" >
-                                    <span>Contact Number</span>
-                                </label>
-                                <label>
-                                    <textarea name="Adresse_client" class="input01" placeholder="" rows="3"></textarea>
-                                    <span>Address</span>
-                                </label>
-                                <hr>
-                                            <div class="payments">
-                                                 <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                 <span>Subtotal:</span>
-                                                <span>200DT</span>
-                                                <span>Shipping:</span>
-                                                <span>7DT</span>
-                                                <span>Tax:</span>
-                                                <span>3DT</span>
-                                                </div>
-                                             </div>
-                                <hr>
-                                <button type="submit" class="animated-button" onclick="submitForm1('form2')">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                </button>
-                                <div>
-                                                <div class="footer">
-                                                  <label>Price:210DT</label>
-                                                </div>
-                                            </div>
-                            </form>
-        </center>
-    </div>
-   
-<script>
-    const acheterBtn1 = document.getElementById('acheterBtn1');
-    const formContainer1 = document.querySelector('.form-container1');
-    const form1 = document.getElementById('form2');
-
-    // Show/Hide the form on button click
-    acheterBtn1.addEventListener('click', function () {
-        formContainer1.style.display = formContainer1.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Attach form submit event handler
-    form1.addEventListener('submit', function (event) {
-        event.preventDefault();  // Prevent default form submission to handle validation
-        submitForm1();  // Call the submitForm function for validation
-    });
-
-    function submitForm1() {
-        // Clear previous error messages
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => msg.remove());
-
-        // Get form values
-        const lastName1 = document.getElementById('last-name1').value;
-        const firstName1 = document.getElementById('first-name1').value;
-        const phone1 = document.getElementById('tel1').value;
-        const address1 = document.querySelector('textarea[name="Adresse_client1"]').value;
-
-        let isValid = true;
-
-        // Validate the inputs
-        if (!lastName1) {
-            showError('last-name1', 'Remplir champ Nom.');
-            isValid = false;
-        }
-
-        if (!firstName1) {
-            showError('first-name1', 'Remplir champ Prenom.');
-            isValid = false;
-        }
-
-        if (!phone1) {
-            showError('tel1', 'Remplir champ téléphone.');
-            isValid = false;
-        }
-
-        if (phone1.length !== 8) {
-            showError('tel1', 'Le numéro doit comporter exactement 8 chiffres.');
-            isValid = false;
-        }
-
-        if (!address) {
-            showError('Adresse_client1', 'Remplir champ adresse.');
-            isValid = false;
-        }
-
-        // If all fields are valid, simulate form submission
-        if (isValid) {
-            alert('Form submitted successfully!');
-            form.reset();  // Reset the form after submission
-            formContainer1.style.display = 'none';  // Hide the form after submission
-        }
-    }
-
-    function showError(inputId, message) {
-        const inputField = document.getElementById(inputId);
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-message';
-        errorMessage.style.color = 'red'; 
-        errorMessage.innerText = message;
-        inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);  // Insert error message after the input field
-    }
-</script>
-</div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Kholkhal</h4>
-
-                                            <p class="badge ms-4"><em>60dt</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">The Kholkhal is a traditional accessory worn by women in Tunisia for centuries.</p>
-                                    </div>
-                                    
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="R.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                <br>
-                                <button id="acheterBtn2" class="animated-button">Acheter</button>
-                                <div  class="form-container2">
-                                    <center>
-                                        <form class="form" id="form3">
-                                            <div class="flex">
-                                                <label>
-                                                    <input id="first-name2" class="input" type="text" placeholder="">
-                                                    <span>first name</span>
-                                                </label>
-                                                <label>
-                                                    <input id="last-name2" class="input" type="text" placeholder="">
-                                                    <span>last name</span>
-                                                </label>
-                                            </div>
-                                            <label>
-                                                <input id="mail2" class="input" type="email" placeholder="">
-                                                <span>email</span>
-                                            </label>
-                                            <label>
-                                                <input id="tel2" class="input" placeholder="" type="tel">
-                                                <span>contact number</span>
-                                            </label>
-                                            <label>
-                                                <textarea class="input01" placeholder="" rows="3" style="height: 70%;"></textarea>
-                                                <span>Address</span>
-                                            </label>
-                                            <hr>
-                                            <div class="payments">
-                                                <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                    <span>Subtotal:</span>
-                                                    <span>60DT</span>
-                                                    <span>Shipping:</span>
-                                                    <span>7DT</span>
-                                                    <span>Tax:</span>
-                                                    <span>3DT</span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <button type="button" class="animated-button" onclick="submitForm2('form3')">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                            </button>
-                                            <div>
-                                                <div class="footer">
-                                                    <label>Price:70DT</label>
-                                                </div>
-                                            </div>
-                                        </form>
-                                       
-                                    </center>
-                                </div>
-                            
-                                <script>
-                                    const acheterBtn2 = document.getElementById('acheterBtn2');
-                                   const formContainer2 = document.querySelector('.form-container2');
-                           
-                                   acheterBtn2.addEventListener('click', function() {
-                                       formContainer2.style.display = formContainer2.style.display === 'none' ? 'block' : 'none';
-                                   });
-                           
-                                   function submitForm2(formId) {
-                                       const form = document.getElementById(formId);
-                                       const errorMessages = document.querySelectorAll('.error-message');
-                                       errorMessages.forEach(msg => msg.remove()); // Clear previous error messages
-                           
-                                       const lastName2 = document.getElementById('last-name2').value;
-                                       const firstName2 = document.getElementById('first-name2').value;
-                                       const email2 = document.getElementById('mail2').value;
-                                       const phone2 = document.getElementById('tel2').value;
-                           
-                                       let isValid = true;
-                           
-                                       if (!lastName2) {
-                                           showError('last-name2', 'Remplir champ Nom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!firstName2) {
-                                           showError('first-name2', 'Remplir champ Prenom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!email2) {
-                                           showError('mail2', 'Remplir champ email.');
-                                           isValid = false; 
-                                       }
-                                       if (!phone2) {
-                                           showError('tel2', 'Remplir champ phone.');
-                                           isValid = false; 
-                                       }
-                           
-                                       const emailPattern2 = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
-                                       if (!emailPattern2.test(email2)) {
-                                           showError('mail2', 'Email est invalide');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (phone2.length !== 8) {
-                                           showError('tel2', 'Le numéro doit comporter exactement 8 chiffres.');
-                                                           isValid = false; 
-                                       }
-                           
-                                       if (isValid) {
-                                           // Here you can handle the form submission, e.g., send data to the server
-                                           alert('Form submitted successfully!');
-                                           form.reset(); // Reset the form after submission
-                                           formContainer2.style.display = 'none'; // Hide the form after submission
-                                       }
-                                   }
-                           
-                                   function showError(inputId, message) {
-                                       const inputField = document.getElementById(inputId);
-                                       const errorMessage = document.createElement('div');
-                                       errorMessage.className = 'error-message';
-                                       errorMessage.style.color = 'red'; 
-                                       errorMessage.innerText = message;
-                                       inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling); // Insert error message after the input field
-                                   }
-                               </script>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Khamsa</h4>
-
-                                            <p class="badge ms-4"><em>25DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">The Khamsa is a symbol representing a hand, used as an amulet, talisman and jewelry by the inhabitants of North Africa..</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                <br>
-                                <button id="acheterBtn3" class="animated-button">Acheter</button>
-                                <div  class="form-container3">
-                                    <center>
-                                        <form class="form" id="form4">
-                                            <div class="flex">
-                                                <label>
-                                                    <input id="first-name3" class="input" type="text" placeholder="">
-                                                    <span>first name</span>
-                                                </label>
-                                                <label>
-                                                    <input id="last-name3" class="input" type="text" placeholder="">
-                                                    <span>last name</span>
-                                                </label>
-                                            </div>
-                                            <label>
-                                                <input id="mail3" class="input" type="email" placeholder="">
-                                                <span>email</span>
-                                            </label>
-                                            <label>
-                                                <input id="tel3" class="input" placeholder="" type="tel">
-                                                <span>contact number</span>
-                                            </label>
-                                            <label>
-                                                <textarea class="input01" placeholder="" rows="3" style="height: 70%;"></textarea>
-                                                <span>Address</span>
-                                            </label>
-                                            <hr>
-                                            <div class="payments">
-                                                <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                    <span>Subtotal:</span>
-                                                    <span>25DT</span>
-                                                    <span>Shipping:</span>
-                                                    <span>7DT</span>
-                                                    <span>Tax:</span>
-                                                    <span>3DT</span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <button type="button" class="animated-button" onclick="submitForm3('form4')">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                            </button>
-                                            <div>
-                                                <div class="footer">
-                                                    <label>Price:35DT</label>
-                                                </div>
-                                            </div>
-                                        </form>
-                                       
-                                    </center>
-                                </div>
-                            
-                                <script>
-                                    const acheterBtn3 = document.getElementById('acheterBtn3');
-                                   const formContainer3 = document.querySelector('.form-container3');
-                           
-                                   acheterBtn3.addEventListener('click', function() {
-                                       formContainer3.style.display = formContainer3.style.display === 'none' ? 'block' : 'none';
-                                   });
-                           
-                                   function submitForm3(formId) {
-                                       const form = document.getElementById(formId);
-                                       const errorMessages = document.querySelectorAll('.error-message');
-                                       errorMessages.forEach(msg => msg.remove()); // Clear previous error messages
-                           
-                                       const lastName3 = document.getElementById('last-name3').value;
-                                       const firstName3 = document.getElementById('first-name3').value;
-                                       const email3 = document.getElementById('mail3').value;
-                                       const phone3 = document.getElementById('tel3').value;
-                           
-                                       let isValid = true;
-                           
-                                       if (!lastName3) {
-                                           showError('last-name3', 'Remplir champ Nom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!firstName3) {
-                                           showError('first-name3', 'Remplir champ Prenom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!email3) {
-                                           showError('mail3', 'Remplir champ email.');
-                                           isValid = false; 
-                                       }
-                                       if (!phone3) {
-                                           showError('tel3', 'Remplir champ phone.');
-                                           isValid = false; 
-                                       }
-                           
-                                       const emailPattern2 = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
-                                       if (!emailPattern2.test(email3)) {
-                                           showError('mail3', 'Email est invalide');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (phone3.length !== 8) {
-                                           showError('tel3', 'Le numéro doit comporter exactement 8 chiffres.');
-                                                           isValid = false; 
-                                       }
-                           
-                                       if (isValid) {
-                                           // Here you can handle the form submission, e.g., send data to the server
-                                           alert('Form submitted successfully!');
-                                           form.reset(); // Reset the form after submission
-                                           formContainer3.style.display = 'none'; // Hide the form after submission
-                                       }
-                                   }
-                           
-                                   function showError(inputId, message) {
-                                       const inputField = document.getElementById(inputId);
-                                       const errorMessage = document.createElement('div');
-                                       errorMessage.className = 'error-message';
-                                       errorMessage.style.color = 'red'; 
-                                       errorMessage.innerText = message;
-                                       inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling); // Insert error message after the input field
-                                   }
-                               </script>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Hannibal's statue</h4>
-
-                                            <p class="badge ms-4"><em>600DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">Hannibal was a Carthaginian general and politician, generally regarded as one of the greatest military tacticians in history.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                <br>
-                                <button id="acheterBtn4" class="animated-button">Acheter</button>
-                                <div  class="form-container4">
-                                    <center>
-                                        <form class="form" id="form5">
-                                            <div class="flex">
-                                                <label>
-                                                    <input id="first-name4" class="input" type="text" placeholder="">
-                                                    <span>first name</span>
-                                                </label>
-                                                <label>
-                                                    <input id="last-name4" class="input" type="text" placeholder="">
-                                                    <span>last name</span>
-                                                </label>
-                                            </div>
-                                            <label>
-                                                <input id="mail4" class="input" type="email" placeholder="">
-                                                <span>email</span>
-                                            </label>
-                                            <label>
-                                                <input id="tel4" class="input" placeholder="" type="tel">
-                                                <span>contact number</span>
-                                            </label>
-                                            <label>
-                                                <textarea class="input01" placeholder="" rows="3" style="height: 70%;"></textarea>
-                                                <span>Address</span>
-                                            </label>
-                                            <hr>
-                                            <div class="payments">
-                                                <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                    <span>Subtotal:</span>
-                                                    <span>25DT</span>
-                                                    <span>Shipping:</span>
-                                                    <span>7DT</span>
-                                                    <span>Tax:</span>
-                                                    <span>3DT</span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <button type="button" class="animated-button" onclick="submitForm4('form5')">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                            </button>
-                                            <div>
-                                                <div class="footer">
-                                                    <label>Price:35DT</label>
-                                                </div>
-                                            </div>
-                                        </form>
-                                       
-                                    </center>
-                                </div>
-                            
-                                <script>
-                                    const acheterBtn4 = document.getElementById('acheterBtn4');
-                                   const formContainer4 = document.querySelector('.form-container4');
-                           
-                                   acheterBtn3.addEventListener('click', function() {
-                                       formContainer3.style.display = formContainer3.style.display === 'none' ? 'block' : 'none';
-                                   });
-                           
-                                   function submitForm4(formId) {
-                                       const form = document.getElementById(formId);
-                                       const errorMessages = document.querySelectorAll('.error-message');
-                                       errorMessages.forEach(msg => msg.remove()); // Clear previous error messages
-                           
-                                       const lastName4 = document.getElementById('last-name4').value;
-                                       const firstName4 = document.getElementById('first-name4').value;
-                                       const email4 = document.getElementById('mail4').value;
-                                       const phone4 = document.getElementById('tel4').value;
-                           
-                                       let isValid = true;
-                           
-                                       if (!lastName4) {
-                                           showError('last-name4', 'Remplir champ Nom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!firstName4) {
-                                           showError('first-name4', 'Remplir champ Prenom.');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (!email4) {
-                                           showError('mail4', 'Remplir champ email.');
-                                           isValid = false; 
-                                       }
-                                       if (!phone4) {
-                                           showError('tel4', 'Remplir champ phone.');
-                                           isValid = false; 
-                                       }
-                           
-                                       const emailPattern4 = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
-                                       if (!emailPattern4.test(email4)) {
-                                           showError('mail4', 'Email est invalide');
-                                           isValid = false; 
-                                       }
-                           
-                                       if (phone4.length !== 8) {
-                                           showError('tel4', 'Le numéro doit comporter exactement 8 chiffres.');
-                                                           isValid = false; 
-                                       }
-                           
-                                       if (isValid) {
-                                           // Here you can handle the form submission, e.g., send data to the server
-                                           alert('Form submitted successfully!');
-                                           form.reset(); // Reset the form after submission
-                                           formContainer4.style.display = 'none'; // Hide the form after submission
-                                       }
-                                   }
-                           
-                                   function showError(inputId, message) {
-                                       const inputField = document.getElementById(inputId);
-                                       const errorMessage = document.createElement('div');
-                                       errorMessage.className = 'error-message';
-                                       errorMessage.style.color = 'red'; 
-                                       errorMessage.innerText = message;
-                                       inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling); // Insert error message after the input field
-                                   }
-                               </script>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Jebba</h4>
-
-                                            <p class="badge ms-4"><em>140DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">Sa fabrication artisanale est assurée par des artisans qui coupent, cousent et brodent, dans des variations tenant aux particularismes régionaux, à l'usage (quotidien ou cérémoniel) et au niveau de richesse.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="jebba.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                <br>
-                                <button id="acheterBtn5" class="animated-button">Acheter</button>
-                                <div  class="form-container5">
-                                    <center>
-                                        <form class="form">
-                                            <div class="flex">
-                                                <label>
-                                                    <input class="input" type="text" placeholder="" required="">
-                                                    <span>first name</span>
-                                                </label>
-                                                <label>
-                                                    <input class="input" type="text" placeholder="" required="">
-                                                    <span>last name</span>
-                                                </label>
-                                            </div>  
-                                            <label>
-                                                <input class="input" type="email" placeholder="" required="">
-                                                <span>email</span>
-                                            </label> 
-                                            <label>
-                                                <input class="input" placeholder="" type="tel" required="">
-                                                <span>contact number</span>
-                                            </label>
-                                            <label>
-                                                <textarea class="input01" placeholder="" rows="3" required="" style="height: 70%;"></textarea>
-                                                <span>Address</span>
-                                            </label>
-                                            <hr>
-                                            <div class="payments">
-                                                 <span>PAYMENT</span>
-                                                <div class="details" style="height: 70%;">
-                                                 <span>Subtotal:</span>
-                                                <span>140DT</span>
-                                                <span>Shipping:</span>
-                                                <span>7DT</span>
-                                                <span>Tax:</span>
-                                                <span>3DT</span>
-                                                </div>
-                                             </div>
-                                             <hr>
-                                            
-                                            <button type="submit" class="animated-button">
-                                                <span class="top-key"></span>
-                                                <span style="color: black;">submit</span>
-                                                <span class="bottom-key-1"></span>
-                                                <span class="bottom-key-2"></span>
-                                            </button>
-                                            <div>
-                                                <div class="footer">
-                                                  <label>Price:150DT</label>
-                                                </div>
-                                            </div>
-                                        </form>
-                                       
-                                    </center>
-                                </div>
-                            
-                                <script>
-                                    const acheterBtn5 = document.getElementById('acheterBtn4');
-                                    const formContainer5 = document.querySelector('.form-container4');
-                            
-                                    acheterBtn4.addEventListener('click', function() {
-                                        if (formContainer4.style.display === 'none') {
-                                            formContainer4.style.display = 'block';
-                                        } else {
-                                            formContainer4.style.display = 'none';
-                                        }
-                                    });
-                            
-                                    formContainer4.addEventListener('click', function(event) {
-                                        if (event.target === formContainer4) {
-                                            formContainer4.style.display = 'none';
-                                        }
-                                    });
-                                </script>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    
-                </section>
-               
-
 
                 <section class="contact-section section-padding" id="section_5">
                     <div class="container">
@@ -984,7 +460,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commande']) && isset($
                                                         <input class="form-control" type="text" name="message" id="message69" placeholder="Message(optional)">
                                                     </div>
                                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                        <button type="submit" class="form-control">Reserver</button>
+                                                        <button type="submit" class="form-control">Reclamer</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1140,6 +616,78 @@ function showError(inputId, message) {
         <script src="js/click-scroll.js"></script>
         <script src="js/vegas.min.js"></script>
         <script src="js/custom.js"></script>
+        <script>
+        // Handle form submissions
+        document.getElementById('createOrderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'create');
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                fetchOrders();
+            })
+            .catch(error => console.error('Error creating order:', error));
+        });
 
+        document.getElementById('updateOrderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'update');
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                fetchOrders();
+            })
+            .catch(error => console.error('Error updating order:', error));
+        });
+
+        document.getElementById('deleteOrderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            formData.append('action', 'delete');
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                fetchOrders();
+            })
+            .catch(error => console.error('Error deleting order:', error));
+        });
+
+        // Fetch all orders
+        document.getElementById('fetchOrdersButton').addEventListener('click', fetchOrders);
+
+        function fetchOrders() {
+            fetch('index.php')
+                .then(response => response.json())
+                .then(data => {
+                    const ordersList = document.getElementById('ordersList');
+                    ordersList.innerHTML = ''; // Clear previous results
+                    data.forEach(order => {
+                        const orderDiv = document.createElement('div');
+                        orderDiv.innerHTML = `
+                            <p><strong>Order ID:</strong> ${order.Id_commande}</p>
+                            <p><strong>Client Address:</strong> ${order.Adresse_client}</p>
+                            <p><strong>Client Phone:</strong> ${order.Tel_client}</p>
+                            <p><strong>Client Name:</strong> ${order.Nom_client} ${order.Prenom_client}</p>
+                        `;
+                        ordersList.appendChild(orderDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching orders:', error));
+        }
+    </script>
     </body>
 </html>
