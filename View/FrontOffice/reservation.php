@@ -1,53 +1,38 @@
 <?php
-require 'C:/xampp/htdocs/reservation/Model/res.php';
-
-$host = "localhost";
-$dbname = "emprunt";
-$username = "root";
-$password = "";
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
-}
+require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
 
 $success = $error = "";
 
 // Check if form was submitted and data is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && isset($_POST['formValid']) && $_POST['formValid'] == 'true') {
-    $nom = htmlspecialchars($_POST['last-name'] ?? '');
-    $prenom = htmlspecialchars($_POST['first-name'] ?? '');
-    $mail = htmlspecialchars($_POST['mail'] ?? '');
-    $tel = htmlspecialchars($_POST['tel'] ?? '');
-    $destination = htmlspecialchars($_POST['destination'] ?? '');
-    $commentaire = htmlspecialchars($_POST['commentaire'] ?? '');
-
     try {
-        $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date) 
-                VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, NOW())";
-        $stmt = $pdo->prepare($sql);
-        
-        $stmt->execute([
-            ':nom' => $nom,
-            ':prenom' => $prenom,
-            ':mail' => $mail,
-            ':tel' => $tel,
-            ':destination' => $destination,
-            ':commentaire' => $commentaire,
-        ]);
-        
+        // Extract form data
+        $nom = $_POST['last-name'] ?? '';
+        $prenom = $_POST['first-name'] ?? '';
+        $mail = $_POST['mail'] ?? '';
+        $tel = $_POST['tel'] ?? '';
+        $destination = $_POST['destination'] ?? '';
+        $commentaire = $_POST['commentaire'] ?? '';
+        $date = new DateTime(); // Current date and time
+
+        // Create a reservation object
+        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date);
+
+        // Use GestionReservation to add the reservation
+        $gestionReservation = new GestionReservation();
+        $gestionReservation->createReservation($reservation);
+
         $success = "Réservation ajoutée avec succès !";
 
         // Redirect to avoid resubmitting the form on refresh
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
-    } catch (PDOException $e) {
-        $error = "Erreur lors de l'ajout : " . $e->getMessage();
+    } catch (Exception $e) {
+        $error = $e->getMessage();
     }
 }
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -103,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
                     <div class="booking-form-wrap">
                         <div class="row">
                             <div class="col-lg-7 col-12 p-0">
-                                <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs()">
+                                <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs()" novalidate>
                                     <input type="hidden" name="formValid" id="formValid" value="false">
                                     <div class="text-center mb-4 pb-lg-2">
                                         <em class="text-white">Remplir le formulaire de réservation</em>
@@ -132,6 +117,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
                                                     <option value="Sidi Bou Said">Sidi Bou Said</option>
                                                     <option value="Carthage">Carthage</option>
                                                     <option value="Tunis">Tunis</option>
+                                                    <option value="Dougga">Dougga</option>
+                                                    <option value="Kairouan">Kairouan</option>
+                                                    <option value="Ain drahem et Tbarka">Ain drahem et Tbarka</option>
+                                                    
                                                 </select>
                                                 <textarea name="commentaire" rows="3" class="form-control" placeholder="Commentaire (optionnel)"></textarea>
                                             </div>
@@ -241,70 +230,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/custom.js"></script>
+<script src="js/ReservationFormControl.js"></script>
 
-<!-- JavaScript Validation Script -->
-<script>
-    function verifyInputs() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => msg.remove());
-
-        const lastName = document.getElementById('last-name').value;
-        const firstName = document.getElementById('first-name').value;
-        const email = document.getElementById('mail').value;
-        const phone = document.getElementById('tel').value;
-        const destination = document.getElementById('destination').value;
-        let isValid = true;
-
-        if (!lastName) {
-            showError('last-name', 'Remplir champ Nom.');
-            isValid = false; 
-        }
-
-        if (!firstName) {
-            showError('first-name', 'Remplir champ Prenom.');
-            isValid = false; 
-        }
-
-        if (!email) {
-            showError('mail', 'Remplir champ email.');
-            isValid = false; 
-        }
-
-        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
-        if (!emailPattern.test(email)) {
-            showError('mail', 'Email est invalide');
-            isValid = false; 
-        }
-
-        if (phone.length !== 8) {
-            showError('tel', 'Le numéro doit comporter exactement 8 chiffres.');
-            isValid = false; 
-        }
-
-        if (!destination) {
-            showError('destination', "Choisir une destination");
-            isValid = false;
-        }
-
-        // Set the hidden input value for form validation status
-        if (isValid) {
-            document.getElementById('formValid').value = 'true';
-        } else {
-            document.getElementById('formValid').value = 'false';
-        }
-
-        return isValid; // Return false to prevent form submission if validation fails
-    }
-
-    function showError(inputId, message) {
-        const inputField = document.getElementById(inputId);
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-message';
-        errorMessage.style.color = 'red'; 
-        errorMessage.innerText = message;
-        inputField.parentNode.insertBefore(errorMessage, inputField);
-    }
-</script>
 
 </body>
 </html>

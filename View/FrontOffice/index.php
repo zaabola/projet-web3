@@ -417,7 +417,6 @@ Bootstrap 5 HTML CSS Template
                     </div>
                 </section>
 
-
                 <section class="contact-section section-padding" id="section_5">
                     <div class="container">
                         <div class="row">   
@@ -429,32 +428,32 @@ Bootstrap 5 HTML CSS Template
                             <div class="col-lg-6 col-12">
                                 <form action="#" method="post" class="custom-form contact-form" role="form">
 
-                                <div class="row">
-                                    
-                                    <div class="col-lg-6 col-12">
-                                        <label for="name" class="form-label">Nom <sup class="text-danger">*</sup></label>
-
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="Jackson" required="">
-                                    </div>
-
-                                    <div class="col-lg-6 col-12">
-                                        <label for="email" class="form-label">Email</label>
-
-                                        <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jack@gmail.com" required="">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="message" class="form-label">Comment s'est passé ton excursion</label>
-
-                                        <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message" required=""></textarea>
+                                    <div class="row">
                                         
-                                    </div>
-                                </div>
+                                        <div class="col-lg-6 col-12">
+                                            <label for="name" class="form-label">Nom <sup class="text-danger">*</sup></label>
 
-                                <div class="col-lg-5 col-12 mx-auto mt-3">
-                                    <button type="submit" class="form-control">Envoyer votre avis</button>
-                                </div>
-                            </form>
+                                            <input type="text" name="name" id="name" class="form-control" placeholder="Jackson">
+                                        </div>
+
+                                        <div class="col-lg-6 col-12">
+                                            <label for="email" class="form-label">Email</label>
+
+                                            <input type="text" name="email" id="email"  class="form-control" placeholder="Jack@gmail.com">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="message" class="form-label">Comment s'est passé ton excursion</label>
+
+                                            <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message"></textarea>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-5 col-12 mx-auto mt-3">
+                                        <button type="submit" class="form-control">Envoyer votre avis</button>
+                                    </div>
+                                </form>
                             </div>
 
                         </div>
@@ -554,6 +553,7 @@ Bootstrap 5 HTML CSS Template
         <script src="js/click-scroll.js"></script>
         <script src="js/vegas.min.js"></script>
         <script src="js/custom.js"></script>
+        <script src="js/ContactFormControl.js"></script>
 
     </body>
 </html>

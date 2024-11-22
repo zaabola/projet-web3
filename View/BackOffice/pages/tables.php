@@ -1,52 +1,27 @@
 <?php
-// Configuration de la base de données
-$host = "localhost";
-$dbname = "emprunt";
-$username = "root";
-$password = "";
+require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
 
-try {
-    // Connexion à la base de données
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
-}
-
-// Initialisation des messages
+$gestionReservation = new GestionReservation();
 $success = $error = "";
 $selectedReservation = null;
 $validationErrors = [];
 
-// Traitement des actions (suppression et modification)
+// Handle actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['delete-reservation'])) {
         $id_reservation = intval($_POST['reservation-id'] ?? 0);
-        if ($id_reservation > 0) {
-            try {
-                $sql = "DELETE FROM reservation WHERE id_reservation = :id_reservation";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([':id_reservation' => $id_reservation]);
-                $success = "Réservation supprimée avec succès.";
-            } catch (PDOException $e) {
-                $error = "Erreur lors de la suppression : " . $e->getMessage();
-            }
-        } else {
-            $error = "ID de réservation invalide.";
+        try {
+            $gestionReservation->deleteReservation($id_reservation);
+            $success = "Réservation supprimée avec succès.";
+        } catch (Exception $e) {
+            $error = $e->getMessage();
         }
     } elseif (isset($_POST['edit-reservation'])) {
         $id_reservation = intval($_POST['reservation-id'] ?? 0);
-        if ($id_reservation > 0) {
-            try {
-                $sql = "SELECT * FROM reservation WHERE id_reservation = :id_reservation";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([':id_reservation' => $id_reservation]);
-                $selectedReservation = $stmt->fetch(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                $error = "Erreur lors de la récupération de la réservation : " . $e->getMessage();
-            }
-        } else {
-            $error = "ID de réservation invalide.";
+        try {
+            $selectedReservation = $gestionReservation->getReservationById($id_reservation);
+        } catch (Exception $e) {
+            $error = $e->getMessage();
         }
     } elseif (isset($_POST['update-reservation'])) {
         $id_reservation = intval($_POST['id_reservation']);
@@ -56,69 +31,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tel = $_POST['tel'];
         $destination = $_POST['destination'];
         $commentaire = $_POST['commentaire'];
-        $date = date('Y-m-d H:i:s'); // Set the current date and time automatically
+        $date = new DateTime();
 
-        // Validating inputs
-        if (empty($nom)) {
-            $validationErrors[] = "Le champ 'Nom' est obligatoire.";
-        }
-        if (empty($prenom)) {
-            $validationErrors[] = "Le champ 'Prénom' est obligatoire.";
-        }
-        if (empty($mail)) {
-            $validationErrors[] = "Le champ 'Email' est obligatoire.";
-        }
-        if (empty($tel)) {
-            $validationErrors[] = "Le champ 'Téléphone' est obligatoire.";
-        }
-        if (empty($destination)) {
-            $validationErrors[] = "Le champ 'Destination' est obligatoire.";
-        }
-        if (empty($commentaire)) {
-            $validationErrors[] = "Le champ 'Commentaire' est obligatoire.";
-        }
+        // Validate inputs
+        if (empty($nom)) $validationErrors[] = "Le champ 'Nom' est obligatoire.";
+        if (empty($prenom)) $validationErrors[] = "Le champ 'Prénom' est obligatoire.";
+        if (empty($mail)) $validationErrors[] = "Le champ 'Email' est obligatoire.";
+        if (empty($tel)) $validationErrors[] = "Le champ 'Téléphone' est obligatoire.";
+        if (empty($destination)) $validationErrors[] = "Le champ 'Destination' est obligatoire.";
+        //if (empty($commentaire)) $validationErrors[] = "Le champ 'Commentaire' est obligatoire.";
 
-        // If there are no validation errors, proceed with the update
         if (empty($validationErrors)) {
             try {
-                $sql = "UPDATE reservation SET 
-                            nom = :nom, 
-                            prenom = :prenom, 
-                            mail = :mail, 
-                            tel = :tel, 
-                            destination = :destination, 
-                            commentaire = :commentaire, 
-                            date = :date 
-                        WHERE id_reservation = :id_reservation";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([
-                    ':nom' => $nom,
-                    ':prenom' => $prenom,
-                    ':mail' => $mail,
-                    ':tel' => $tel,
-                    ':destination' => $destination,
-                    ':commentaire' => $commentaire,
-                    ':date' => $date,
-                    ':id_reservation' => $id_reservation,
-                ]);
+                $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date);
+                $reservation->setId($id_reservation);
+                $gestionReservation->updateReservation($reservation);
                 $success = "Réservation mise à jour avec succès.";
-            } catch (PDOException $e) {
-                $error = "Erreur lors de la mise à jour : " . $e->getMessage();
+            } catch (Exception $e) {
+                $error = $e->getMessage();
             }
         }
     }
 }
 
-// Lecture des réservations
-$reservations = [];
+// Fetch reservations
 try {
-    $sql = "SELECT * FROM reservation ORDER BY date DESC";
-    $stmt = $pdo->query($sql);
-    $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $error = "Erreur lors de la récupération des réservations : " . $e->getMessage();
+    $reservations = $gestionReservation->getAllReservations();
+} catch (Exception $e) {
+    $error = $e->getMessage();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -160,9 +103,9 @@ try {
             if (form["destination"].value.trim() == "") {
                 errorMessages.push("Le champ 'Destination' est obligatoire.");
             }
-            if (form["commentaire"].value.trim() == "") {
+            /*if (form["commentaire"].value.trim() == "") {
                 errorMessages.push("Le champ 'Commentaire' est obligatoire.");
-            }
+            }*/
 
             // Afficher les erreurs si présentes
             if (errorMessages.length > 0) {

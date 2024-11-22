@@ -1,43 +1,101 @@
 <?php
-require_once("C:/xampp/htdocs/reservation/config.php");
-include 'C:/xampp/htdocs/reservation/Model/res.php';
+require_once 'C:/xampp/htdocs/reservation/config.php';
+require_once 'C:/xampp/htdocs/reservation/Model/res.php';
 
-$host = "localhost";
-$dbname = "emprunt";
-$username = "root";
-$password = "";
+class GestionReservation
+{
+    private $pdo;
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
-}
+    public function __construct()
+    {
+        $this->pdo = Config::getConnexion();
+    }
 
-$success = $error = "";
+    public function getAllReservations()
+    {
+        try {
+            $sql = "SELECT * FROM reservation ORDER BY date DESC";
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des réservations : " . $e->getMessage());
+        }
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation'])){
-    $nom = htmlspecialchars($_POST['last-name'] ?? '');
-    $prenom = htmlspecialchars($_POST['first-name'] ?? '');
-    $mail = htmlspecialchars($_POST['mail'] ?? '');
-    $tel = htmlspecialchars($_POST['tel'] ?? '');
-    $destination = htmlspecialchars($_POST['destination'] ?? '');
-    $commentaire = htmlspecialchars($_POST['commentaire'] ?? '');
-    try {
-        $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date) 
-                VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, NOW())";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':name' => $nom,
-            ':prenom' => $prenom,
-            ':mail' => $mail,
-            ':tel' => $tel,
-            ':destination' => $destination
-            ':commentaire' => $commentaire,
-        ]);
-        $success = "reservation ajoutée avec succès !";
-    } catch (PDOException $e) {
-        $error = "Erreur lors de l'ajout : " . $e->getMessage();
+    public function createReservation(reservevation $reservation)
+    {
+        try {
+            $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date) 
+                    VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, :date)";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':nom' => $reservation->getNom(),
+                ':prenom' => $reservation->getPrenom(),
+                ':mail' => $reservation->getMail(),
+                ':tel' => $reservation->getTel(),
+                ':destination' => $reservation->getDestination(),
+                ':commentaire' => $reservation->getCommentaire(),
+                ':date' => $reservation->getDate()->format('Y-m-d H:i:s'),
+            ]);
+
+            return true; // Return true if the operation was successful
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'ajout de la réservation : " . $e->getMessage());
+        }
+    }
+
+    public function deleteReservation(int $id_reservation)
+    {
+        try {
+            $sql = "DELETE FROM reservation WHERE id_reservation = :id_reservation";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id_reservation' => $id_reservation]);
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la suppression : " . $e->getMessage());
+        }
+    }
+
+    public function getReservationById(int $id_reservation)
+    {
+        try {
+            $sql = "SELECT * FROM reservation WHERE id_reservation = :id_reservation";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id_reservation' => $id_reservation]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération de la réservation : " . $e->getMessage());
+        }
+    }
+
+    public function updateReservation(reservevation $reservation)
+    {
+        try {
+            $sql = "UPDATE reservation SET 
+                        nom = :nom, 
+                        prenom = :prenom, 
+                        mail = :mail, 
+                        tel = :tel, 
+                        destination = :destination, 
+                        commentaire = :commentaire, 
+                        date = :date 
+                    WHERE id_reservation = :id_reservation";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':nom' => $reservation->getNom(),
+                ':prenom' => $reservation->getPrenom(),
+                ':mail' => $reservation->getMail(),
+                ':tel' => $reservation->getTel(),
+                ':destination' => $reservation->getDestination(),
+                ':commentaire' => $reservation->getCommentaire(),
+                ':date' => $reservation->getDate()->format('Y-m-d H:i:s'),
+                ':id_reservation' => $reservation->getId(),
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour : " . $e->getMessage());
+        }
     }
 }
 ?>
