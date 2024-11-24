@@ -120,7 +120,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
                                                     <option value="Dougga">Dougga</option>
                                                     <option value="Kairouan">Kairouan</option>
                                                     <option value="Ain drahem et Tbarka">Ain drahem et Tbarka</option>
-                                                    
                                                 </select>
                                                 <textarea name="commentaire" rows="3" class="form-control" placeholder="Commentaire (optionnel)"></textarea>
                                             </div>
