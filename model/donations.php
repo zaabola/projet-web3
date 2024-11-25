@@ -8,7 +8,6 @@ class Donation
     private ?DateTime $donationDate;
     private ?string $message;
 
-    // Constructeur
     public function __construct(int $idDonation, string $donorName, string $donorEmail, float $donationAmount, DateTime $donationDate, string $message)
     {
         $this->idDonation = $idDonation;
@@ -19,7 +18,6 @@ class Donation
         $this->message = $message;
     }
 
-    // Getters et Setters
     public function getIdDonation(): int
     {
         return $this->idDonation;

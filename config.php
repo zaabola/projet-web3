@@ -14,7 +14,7 @@ class Config
 
             try {
                 self::$pdo = new PDO(
-                    "mysql:host=$servername;dbname=$dbname",
+                    "mysql:host=$host;dbname=$dbname",
                     $username,
                     $password,
                     [

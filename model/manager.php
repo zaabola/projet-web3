@@ -2,26 +2,36 @@
 
 class DonationManagement
 {
-    private int $managementId;
-    private int $idDonation;
-    private string $adminName;
-    private string $recipientName;
-    private DateTime $distributionDate;
-    private int $quantity;
+    private ?int $managementId;
+    private ?int $idDonation;
+    private ?string $adminName;
+    private ?string $recipientName;
+    private ?DateTime $distributionDate;
+    private ?int $quantity;
+    private ?float $allocatedPercentage;
+    private ?float $priceAfterPercentage;
 
-    // Constructeur
-    public function __construct(int $managementId, int $idDonation, string $adminName, string $recipientName, DateTime $distributionDate, int $quantity)
-    {
+    public function __construct(
+        ?int $managementId,
+        ?int $idDonation,
+        ?string $adminName,
+        ?string $recipientName,
+        ?DateTime $distributionDate,
+        ?int $quantity,
+        ?float $allocatedPercentage = null,
+        ?float $priceAfterPercentage = null
+    ) {
         $this->managementId = $managementId;
         $this->idDonation = $idDonation;
         $this->adminName = $adminName;
         $this->recipientName = $recipientName;
         $this->distributionDate = $distributionDate;
         $this->quantity = $quantity;
+        $this->allocatedPercentage = $allocatedPercentage;
+        $this->priceAfterPercentage = $priceAfterPercentage;
     }
 
-    // Getters et Setters
-    public function getManagementId(): int
+    public function getManagementId(): ?int
     {
         return $this->managementId;
     }
@@ -31,7 +41,7 @@ class DonationManagement
         $this->managementId = $managementId;
     }
 
-    public function getIdDonation(): int
+    public function getIdDonation(): ?int
     {
         return $this->idDonation;
     }
@@ -41,7 +51,7 @@ class DonationManagement
         $this->idDonation = $idDonation;
     }
 
-    public function getAdminName(): string
+    public function getAdminName(): ?string
     {
         return $this->adminName;
     }
@@ -51,7 +61,7 @@ class DonationManagement
         $this->adminName = $adminName;
     }
 
-    public function getRecipientName(): string
+    public function getRecipientName(): ?string
     {
         return $this->recipientName;
     }
@@ -61,7 +71,7 @@ class DonationManagement
         $this->recipientName = $recipientName;
     }
 
-    public function getDistributionDate(): DateTime
+    public function getDistributionDate(): ?DateTime
     {
         return $this->distributionDate;
     }
@@ -71,7 +81,7 @@ class DonationManagement
         $this->distributionDate = $distributionDate;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
@@ -80,4 +90,35 @@ class DonationManagement
     {
         $this->quantity = $quantity;
     }
+
+    public function getAllocatedPercentage(): ?float
+    {
+        return $this->allocatedPercentage;
+    }
+
+    public function setAllocatedPercentage(?float $allocatedPercentage): void
+    {
+        $this->allocatedPercentage = $allocatedPercentage;
+    }
+
+    public function getPriceAfterPercentage(): ?float
+    {
+        return $this->priceAfterPercentage;
+    }
+
+    public function setPriceAfterPercentage(float $priceAfterPercentage): void
+    {
+        $this->priceAfterPercentage = $priceAfterPercentage;
+    }
+
+    // Method to calculate price after the allocated percentage
+    public function calculatePriceAfterPercentage(): void
+    {
+        if ($this->quantity && $this->allocatedPercentage !== null) {
+            $this->priceAfterPercentage = $this->quantity * (1 - ($this->allocatedPercentage / 100));
+        } else {
+            $this->priceAfterPercentage = 0.00;
+        }
+    }
 }
+?>

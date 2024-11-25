@@ -1,13 +1,12 @@
 <?php
 include(__DIR__ . '/../config.php');
-include(__DIR__ . '/../model/donations.php');
 
 class DonationController
 {
-    // List all donations
-    public function listDonations() {
+    public function listDonations()
+    {
         $sql = "SELECT id_donation, donor_name, donor_email, donation_amount, donation_date, message FROM donation";
-        
+
         try {
             $db = config::getConnexion();
             $query = $db->prepare($sql);
@@ -18,78 +17,73 @@ class DonationController
         }
     }
 
-    // Add a donation
-    public function addDonation($donation) {
-        $sql = "INSERT INTO donation (donor_name, donor_email, donation_amount, donation_date, message) 
-                VALUES (:donor_name, :donor_email, :donation_amount, :donation_date, :message)";
-        
+    public function addDonation($name, $email, $amount, $message)
+    {
+        $sql = "INSERT INTO donation (donor_name, donor_email, donation_amount, message, donation_date) 
+                VALUES (:donor_name, :donor_email, :donation_amount, :message, NOW())";
+
         try {
             $db = config::getConnexion();
             $query = $db->prepare($sql);
             $query->execute([
-                'donor_name' => $donation->getDonorName(),
-                'donor_email' => $donation->getDonorEmail(),
-                'donation_amount' => $donation->getDonationAmount(),
-                'donation_date' => $donation->getDonationDate(),
-                'message' => $donation->getMessage(),
+                'donor_name' => $name,
+                'donor_email' => $email,
+                'donation_amount' => $amount,
+                'message' => $message,
             ]);
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         }
     }
 
-    // Delete a donation
-    public function deleteDonation($id) {
+    public function deleteDonation($id)
+    {
         $sql = "DELETE FROM donation WHERE id_donation = :id";
-        $db = config::getConnexion();
-        $req = $db->prepare($sql);
-        $req->bindValue(':id', $id);
 
         try {
-            $req->execute();
-        } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
-        }
-    }
-
-    // Get a donation by ID
-    public function getDonationById($id) {
-        $sql = "SELECT * FROM donation WHERE id_donation = :id";
-        $db = config::getConnexion();
-        try {
+            $db = config::getConnexion();
             $query = $db->prepare($sql);
             $query->execute(['id' => $id]);
-
-            $donation = $query->fetch();
-            return $donation;
         } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
+            echo 'Error: ' . $e->getMessage();
         }
     }
 
-    // Update a donation
-    public function updateDonation($donation, $id) {
+    public function getDonationById($id)
+    {
+        $sql = "SELECT * FROM donation WHERE id_donation = :id";
+
+        try {
+            $db = config::getConnexion();
+            $query = $db->prepare($sql);
+            $query->execute(['id' => $id]);
+            return $query->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    public function updateDonation($id, $name, $email, $amount, $message)
+    {
         $sql = "UPDATE donation SET 
                 donor_name = :donor_name,
                 donor_email = :donor_email,
                 donation_amount = :donation_amount,
-                donation_date = :donation_date,
                 message = :message
             WHERE id_donation = :id";
-        
+
         try {
             $db = config::getConnexion();
             $query = $db->prepare($sql);
             $query->execute([
                 'id' => $id,
-                'donor_name' => $donation->getDonorName(),
-                'donor_email' => $donation->getDonorEmail(),
-                'donation_amount' => $donation->getDonationAmount(),
-                'donation_date' => $donation->getDonationDate(),
-                'message' => $donation->getMessage(),
+                'donor_name' => $name,
+                'donor_email' => $email,
+                'donation_amount' => $amount,
+                'message' => $message,
             ]);
-        } catch (PDOException $e) {
-            die("Error: " . $e->getMessage());
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
         }
     }
 }

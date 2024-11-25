@@ -1,121 +1,53 @@
 <?php
-// Connexion à la base de données
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "emprunt";
+include('C:/xampp/htdocs/web/controller/donation_controller.php');
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
-}
-
+$donationController = new DonationController();
 $success = $error = "";
 
-// Ajout d'une donation
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-donation'])) {
-    $name = htmlspecialchars($_POST['booking-form-name'] ?? '');
-    $email = htmlspecialchars($_POST['booking-form-email'] ?? '');
-    $amount = htmlspecialchars($_POST['booking-form-number'] ?? '');
-    $message = htmlspecialchars($_POST['booking-form-message'] ?? '');
+// Gestion des actions POST
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['add-donation'])) {
+        $name = htmlspecialchars($_POST['booking-form-name'] ?? '');
+        $email = htmlspecialchars($_POST['booking-form-email'] ?? '');
+        $amount = htmlspecialchars($_POST['booking-form-number'] ?? '');
+        $message = htmlspecialchars($_POST['booking-form-message'] ?? '');
 
-    if (!empty($name) && !empty($email) && !empty($amount)) {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = "Veuillez entrer un email valide.";
-        } elseif (!is_numeric($amount) || $amount <= 0) {
-            $error = "Le montant doit être un nombre positif.";
+        if (!empty($name) && !empty($email) && is_numeric($amount) && $amount > 0) {
+            $donationController->addDonation($name, $email, $amount, $message);
+            $success = "Donation ajoutée avec succès !";
         } else {
-            try {
-                // Vérification des doublons avant d'ajouter
-                $checkQuery = "SELECT COUNT(*) FROM donation WHERE donor_email = :email AND donation_amount = :amount";
-                $checkStmt = $pdo->prepare($checkQuery);
-                $checkStmt->execute([':email' => $email, ':amount' => $amount]);
-                $existingDonationCount = $checkStmt->fetchColumn();
-
-                if ($existingDonationCount > 0) {
-                    $error = "Une donation avec ce montant et cet email existe déjà.";
-                } else {
-                    // Si aucun doublon trouvé, on insère la donation
-                    $sql = "INSERT INTO donation (donor_name, donor_email, donation_amount, message, donation_date) 
-                            VALUES (:name, :email, :amount, :message, NOW())";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([':name' => $name, ':email' => $email, ':amount' => $amount, ':message' => $message]);
-                    $success = "Donation ajoutée avec succès !";
-                }
-            } catch (PDOException $e) {
-                $error = "Erreur lors de l'ajout : " . $e->getMessage();
-            }
+            $error = "Veuillez remplir correctement tous les champs.";
         }
-    } else {
-        $error = "Veuillez remplir tous les champs obligatoires.";
     }
-}
 
-// Mise à jour d'une donation
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-donation'])) {
-    $id_donation = intval($_POST['id_donation']);
-    $name = htmlspecialchars($_POST['booking-form-name']);
-    $email = htmlspecialchars($_POST['booking-form-email']);
-    $amount = htmlspecialchars($_POST['booking-form-number']);
-    $message = htmlspecialchars($_POST['booking-form-message']);
-
-    if (!empty($name) && !empty($email) && !empty($amount)) {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = "Veuillez entrer un email valide.";
-        } elseif (!is_numeric($amount) || $amount <= 0) {
-            $error = "Le montant doit être un nombre positif.";
-        } else {
-            try {
-                // Mise à jour de la donation
-                $sql = "UPDATE donation SET donor_name = :name, donor_email = :email, donation_amount = :amount, message = :message WHERE id_donation = :id";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([
-                    ':name' => $name,
-                    ':email' => $email,
-                    ':amount' => $amount,
-                    ':message' => $message,
-                    ':id' => $id_donation
-                ]);
-                $success = "Donation mise à jour avec succès.";
-            } catch (PDOException $e) {
-                $error = "Erreur lors de la mise à jour : " . $e->getMessage();
-            }
-        }
-    } else {
-        $error = "Veuillez remplir tous les champs obligatoires.";
-    }
-}
-
-// Suppression d'une donation
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete-donation'])) {
-    $id_donation = intval($_POST['id_donation']);
-
-    try {
-        $sql = "DELETE FROM donation WHERE id_donation = :id_donation";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':id_donation' => $id_donation]);
+    if (isset($_POST['delete-donation'])) {
+        $id = intval($_POST['id_donation']);
+        $donationController->deleteDonation($id);
         $success = "Donation supprimée avec succès.";
-    } catch (PDOException $e) {
-        $error = "Erreur lors de la suppression : " . $e->getMessage();
+    }
+
+    if (isset($_POST['edit-donation'])) {
+        $id = intval($_POST['id_donation']);
+        $donationToEdit = $donationController->getDonationById($id);
+    }
+
+    if (isset($_POST['update-donation'])) {
+        $id = intval($_POST['id_donation']);
+        $name = htmlspecialchars($_POST['booking-form-name']);
+        $email = htmlspecialchars($_POST['booking-form-email']);
+        $amount = htmlspecialchars($_POST['booking-form-number']);
+        $message = htmlspecialchars($_POST['booking-form-message']);
+
+        if (!empty($name) && !empty($email) && is_numeric($amount) && $amount > 0) {
+            $donationController->updateDonation($id, $name, $email, $amount, $message);
+            $success = "Donation mise à jour avec succès.";
+        } else {
+            $error = "Veuillez remplir correctement tous les champs.";
+        }
     }
 }
 
-// Récupération des donations
-try {
-    $donations = $pdo->query("SELECT * FROM donation ORDER BY donation_date DESC")->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    $error = "Erreur lors de la récupération des donations : " . $e->getMessage();
-}
-
-// Vérification pour afficher le formulaire d'édition
-if (isset($_POST['edit-donation'])) {
-    $id_donation = $_POST['edit-donation'];
-    $stmt = $pdo->prepare("SELECT * FROM donation WHERE id_donation = :id");
-    $stmt->execute([':id' => $id_donation]);
-    $donationToEdit = $stmt->fetch(PDO::FETCH_ASSOC);
-}
+$donations = $donationController->listDonations();
 ?>
 
 <!DOCTYPE html>
@@ -124,15 +56,16 @@ if (isset($_POST['edit-donation'])) {
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <title>Donation Management</title>
     <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" rel="stylesheet" />
-    <link href="assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link id="pagestyle" href="assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+    <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+    <script src="../validation.js"></script>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -140,7 +73,7 @@ if (isset($_POST['edit-donation'])) {
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
-                <img src="assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+                <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
                 <span class="ms-1 text-sm text-dark">بصمة</span>
             </a>
         </div>
@@ -172,13 +105,7 @@ if (isset($_POST['edit-donation'])) {
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
                     </ol>
                 </nav>
-                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <ul class="navbar-nav  justify-content-end">
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="logout.php" class="btn btn-dark">Logout</a>
-                        </li>
-                    </ul>
-                </div>
+                
             </div>
         </nav>
 
@@ -195,17 +122,17 @@ if (isset($_POST['edit-donation'])) {
                 <div class="col-md-6">
                     <h4>Add a Donation</h4>
                     <form action="" method="POST">
-                        <div class="mb-3">1
+                        <div class="mb-3">
                             <label for="booking-form-name">Name</label>
-                            <input type="text" name="booking-form-name" class="form-control" required>
+                            <input type="text" name="booking-form-name" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label for="booking-form-email">Email</label>
-                            <input type="email" name="booking-form-email" class="form-control" required>
+                            <input type="email" name="booking-form-email" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label for="booking-form-number">Amount</label>
-                            <input type="number" name="booking-form-number" class="form-control" required>
+                            <input type="number" name="booking-form-number" class="form-control" >
                         </div>
                         <div class="mb-3">
                             <label for="booking-form-message">Message</label>
@@ -222,15 +149,15 @@ if (isset($_POST['edit-donation'])) {
                             <input type="hidden" name="id_donation" value="<?= $donationToEdit['id_donation'] ?>">
                             <div class="mb-3">
                                 <label for="booking-form-name">Name</label>
-                                <input type="text" name="booking-form-name" class="form-control" value="<?= $donationToEdit['donor_name'] ?>" required>
+                                <input type="text" name="booking-form-name" class="form-control" value="<?= $donationToEdit['donor_name'] ?>" >
                             </div>
                             <div class="mb-3">
                                 <label for="booking-form-email">Email</label>
-                                <input type="email" name="booking-form-email" class="form-control" value="<?= $donationToEdit['donor_email'] ?>" required>
+                                <input type="email" name="booking-form-email" class="form-control" value="<?= $donationToEdit['donor_email'] ?>" >
                             </div>
                             <div class="mb-3">
                                 <label for="booking-form-number">Amount</label>
-                                <input type="number" name="booking-form-number" class="form-control" value="<?= $donationToEdit['donation_amount'] ?>" required>
+                                <input type="number" name="booking-form-number" class="form-control" value="<?= $donationToEdit['donation_amount'] ?>" >
                             </div>
                             <div class="mb-3">
                                 <label for="booking-form-message">Message</label>
@@ -248,6 +175,7 @@ if (isset($_POST['edit-donation'])) {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Amount</th>
@@ -258,6 +186,7 @@ if (isset($_POST['edit-donation'])) {
                         <tbody>
                             <?php foreach ($donations as $donation) : ?>
                                 <tr>
+                                    <td><?= $donation['id_donation'] ?></td>
                                     <td><?= $donation['donor_name'] ?></td>
                                     <td><?= $donation['donor_email'] ?></td>
                                     <td><?= $donation['donation_amount'] ?></td>
