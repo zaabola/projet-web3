@@ -10,7 +10,7 @@ class Config
             $host = "localhost";
             $username = "root";
             $password = "";
-            $dbname = "empreinte";
+            $dbname = "empreinte1";
 
             try {
                 self::$pdo = new PDO(

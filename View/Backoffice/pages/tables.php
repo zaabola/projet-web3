@@ -60,6 +60,13 @@
             <span class="nav-link-text ms-1">Orders</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/reclamation.php">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Complaints</span>
+          </a>
+        </li>
+        
         
       </ul>
     </div>
@@ -75,7 +82,7 @@ require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include t
 $host = "localhost";
 $username = "root";
 $password = "";
-$dbname = "empreinte";
+$dbname = "empreinte1";
 
 // Database connection
 try {
@@ -135,39 +142,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Get all orders
     $orders = $commande->getAllCommandes();
-    echo json_encode($orders); // Return orders as JSON
+    // Return orders as JSON
 }
 
 // Example of getting a specific order by ID
 if (isset($_GET['Id_commande'])) {
     $Id_commande = $_GET['Id_commande'];
     $order = $commande->getCommandeById($Id_commande);
-    echo json_encode($order); // Return the specific order as JSON
+     // Return the specific order as JSON
 }
 
 ?>
-<table id="ordersTable" class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Order ID</th>
-                <th>Client Address</th>
-                <th>Client Phone</th>
-                <th>Client Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Dynamic PHP Content Here -->
-            <?php foreach ($orders as $order) { ?>
-                <tr>
-                    <td><?= htmlspecialchars($order['Id_commande']); ?></td>
-                    <td><?= htmlspecialchars($order['Adresse_client']); ?></td>
-                    <td><?= htmlspecialchars($order['Tel_client']); ?></td>
-                    <td><?= htmlspecialchars($order['Nom_client'] . " " . $order['Prenom_client']); ?></td>
-                    
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -316,6 +302,28 @@ if (isset($_GET['Id_commande'])) {
                 .catch(error => console.error('Error fetching orders:', error));
         }
     </script>
+    <table id="ordersTable" class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>Client Address</th>
+                <th>Client Phone</th>
+                <th>Client Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic PHP Content Here -->
+            <?php foreach ($orders as $order) { ?>
+                <tr>
+                    <td><?= htmlspecialchars($order['Id_commande']); ?></td>
+                    <td><?= htmlspecialchars($order['Adresse_client']); ?></td>
+                    <td><?= htmlspecialchars($order['Tel_client']); ?></td>
+                    <td><?= htmlspecialchars($order['Nom_client'] . " " . $order['Prenom_client']); ?></td>
+                    
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 </body>
 </html>
 

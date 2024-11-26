@@ -18,7 +18,7 @@ require_once 'c:/xampp/htdocs/projet/config.php';  // Include your config for DB
 
 // Database connection
 try {
-    $db = new PDO("mysql:host=localhost;dbname=empreinte", "root", "");
+    $db = new PDO("mysql:host=localhost;dbname=empreinte1", "root", "");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Could not connect to the database: " . $e->getMessage());
@@ -92,6 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/reclamation.php">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Complaints</span>
           </a>
         </li>
         

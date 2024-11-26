@@ -4,7 +4,7 @@ require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include t
 $host = "localhost";
 $username = "root";
 $password = "";
-$dbname = "empreinte";
+$dbname = "empreinte1";
 
 // Database connection
 try {
@@ -64,14 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Get all orders
     $orders = $commande->getAllCommandes();
-    echo json_encode($orders); // Return orders as JSON
+     // Return orders as JSON
 }
 
 // Example of getting a specific order by ID
 if (isset($_GET['Id_commande'])) {
     $Id_commande = $_GET['Id_commande'];
     $order = $commande->getCommandeById($Id_commande);
-    echo json_encode($order); // Return the specific order as JSON
+     // Return the specific order as JSON
 }
 ?>
 
@@ -432,94 +432,13 @@ if (isset($_GET['Id_commande'])) {
                                 <div class="col-lg-6 col-12">
                                     <form class="custom-form booking-form" action="../../Controller/reservation.php" method="post" role="form" onsubmit="return verifyInputs()">
                                             <div class="text-center mb-4 pb-lg-2">
-                                                <em class="text-white">Remplir le formulaire de Reclamation</em>
+                                                
 
                                                 <h2 class="text-white">Reclamation</h2>
+                                                <em class="text-white">if you want to make a complaint contact us at 99888777</em>
                                             </div>
 
-                                            <div class="booking-form-body">
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" name="last-name" id="last-name69" class="form-control" placeholder="Nom">
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" name="first-name" id="first-name69" class="form-control" placeholder="Prenom">
-                                                    </div>
-
-                                                    <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="mail" id="mail69" placeholder="foulenbenfoulen@xyz.com">
-                                                    </div>
-                                                    
-
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" class="form-control" name="phone" id="tel69" placeholder="tel: 25 456 789">
-                                                    </div>
-                                                    <div class="col-lg-6 col-12">
-                                                        
-                                                        <input class="form-control" type="text" name="message" id="message69" placeholder="Message(optional)">
-                                                    </div>
-                                                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                        <button type="submit" class="form-control">Reclamer</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                </div>
-                            </div>
-                            
-                            <script>
-                              function verifyInputs() {
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(msg => msg.remove());
-
-    const lastName69 = document.getElementById('last-name69').value;
-    const firstName69 = document.getElementById('first-name69').value;
-    const email69 = document.getElementById('mail69').value;
-    const phone69 = document.getElementById('tel69').value;
-    
-    let isValid = true;
-
-    if (!lastName69) {
-        showError('last-name69', 'Remplir champ Nom.');
-        isValid = false; 
-    }
-
-    if (!firstName69) {
-        showError('first-name69', 'Remplir champ Prenom.');
-        isValid = false; 
-    }
-
-    if (!email69) {
-        showError('mail69', 'Remplir champ email.');
-        isValid = false; 
-    }
-
-    const emailPattern69 = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; 
-    if (!emailPattern69.test(email69)) {
-        showError('mail69', 'Email est invalide');
-        isValid = false; 
-    }
-
-    if (phone69.length !== 8) {
-        showError('tel69', 'Le numéro doit comporter exactement 8 chiffres.');
-        isValid = false; 
-    }
-
-   
-
-    return isValid; 
-}
-
-function showError(inputId, message) {
-    const inputField = document.getElementById(inputId);
-    const errorMessage = document.createElement('div');
-    errorMessage.className = 'error-message';
-    errorMessage.style.color = 'red'; 
-    errorMessage.innerText = message;
-    inputField.parentNode.insertBefore(errorMessage, inputField);
-}
-                            </script>
+                                            
                 </section>
 
 
