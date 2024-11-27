@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../../controller/theme.php';
+require_once '../../../controller/Articles.php';
 
 $error = "";
 $theme = null;
@@ -84,7 +84,7 @@ if (
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
-        </li>
+        </li>   
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/billing.html">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>

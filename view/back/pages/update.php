@@ -1,5 +1,5 @@
 <?php
-include '../../../controller/theme.php';
+include_once '../../../controller/theme.php';
 
 $error = "";
 $imageError = "";
