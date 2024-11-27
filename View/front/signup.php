@@ -69,7 +69,48 @@ if (isset($_POST['entrer'])) {
     <link href="css/style.css" rel="stylesheet">
 
     <style>
-        /* Your existing styles */
+        /* General body styling */
+        body {
+            background-color: #f5f5dc; /* Beige color */
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .min-vh-100 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background-color: #ffffff; /* White background */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px;
+        }
+        .form-control {
+            border-radius: 10px; /* Rounded corners for inputs */
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .btn-success {
+            background-color: #3cb371; /* Soft green */
+            border: none;
+            border-radius: 10px; /* Rounded corners for the button */
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-success:hover {
+            background-color: #2e8b57; /* Darker green on hover */
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -133,7 +174,7 @@ if (isset($_POST['entrer'])) {
                                     </form>
                                 </div>
                                 <div class="card-footer text-center">
-                                    <p>Already have an account? <a href="signin.html" class="text-success">Login here</a></p>
+                                    <p>Already have an account? <a href="signin.php" class="text-success">Login here</a></p>
                                 </div>
                             </div>
                         </div>
