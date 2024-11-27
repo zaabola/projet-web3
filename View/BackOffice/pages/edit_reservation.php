@@ -27,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-reservation']))
     $destination = $_POST['destination'];
     $commentaire = $_POST['commentaire'];
     $date = new DateTime();
+    $matricule = $_POST['matricule'];
 
     // Validate inputs
     $validationErrors = [];
@@ -38,8 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-reservation']))
 
     if (empty($validationErrors)) {
         try {
-            $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date);
+            $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date,null);
             $reservation->setId($id_reservation);
+            $reservation->setMatricule($matricule);
             $gestionReservation->updateReservation($reservation);
             $success = "Réservation mise à jour avec succès.";
         } catch (Exception $e) {
@@ -157,20 +159,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-reservation']))
         <ul class="navbar-nav">
             <li class="nav-item">
             <a class="nav-link text-dark" href="../pages/dashboard.php">
-                <!--<i class="material-symbols-rounded opacity-5">dashboard</i>-->
                 <span class="nav-link-text ms-1">Dashboard</span>
             </a>
             </li>
             <li class="nav-item">
             <a class="nav-link text-dark" href="../pages/reservation_tables.php">
-                <!--<i class="material-symbols-rounded opacity-5">table_view</i>-->
                 <span class="nav-link-text ms-1">Reservation</span>
             </a>
             </li> 
             <li class="nav-item">
             <a class="nav-link active bg-gradient-dark text-white" href="../pages/edit_reservation.php">
-                <!--<i class="material-symbols-rounded opacity-5">table_view</i>--> 
                 <span class="nav-link-text ms-1">Modification des reservations</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/ajoutbus.php">
+                <span class="nav-link-text ms-1">Ajouter un bus</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/bus_tables.php">
+                <span class="nav-link-text ms-1">Bus</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/edit_bus.php">
+                <span class="nav-link-text ms-1">Modification des bus</span>
             </a>
             </li>
         </div>
@@ -195,6 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-reservation']))
                             <?php if ($selectedReservation): ?>
                                 <form method="POST" onsubmit="return verifyInputs();" novalidate>
                                     <input type="hidden" name="id_reservation" value="<?= htmlspecialchars($selectedReservation['id_reservation']) ?>">
+                                    <input type="hidden" name="matricule" value="<?= htmlspecialchars($selectedReservation['matricule']) ?>">
 
                                     <div class="form-group">
                                         <label>Nom</label>

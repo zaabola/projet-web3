@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
         $date = new DateTime(); // Current date and time
 
         // Create a reservation object
-        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date);
+        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date,null);
 
         // Use GestionReservation to add the reservation
         $gestionReservation = new GestionReservation();
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
 
 <!doctype html>
 <html lang="en">
-<head>
+<head>  
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Reservation Form for Excursions">
@@ -224,13 +224,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
                     </div>
     </footer>
 </main>
+<!-- Load jQuery first -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- JavaScript Files -->
-<script src="js/jquery.min.js"></script>
+<!-- Optionally, load other external libraries like Bootstrap -->
 <script src="js/bootstrap.min.js"></script>
+
+<!-- Load the Vegas plugin (if necessary) -->
+<script src="js/vegas.min.js"></script>
+
+<!-- Then load your custom scripts -->
 <script src="js/custom.js"></script>
 <script src="js/ReservationFormControl.js"></script>
-
-
 </body>
 </html>

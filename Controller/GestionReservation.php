@@ -25,9 +25,24 @@ class GestionReservation
     public function createReservation(reservevation $reservation)
     {
         try {
-            $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date) 
-                    VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, :date)";
+            // Step 1: Check if a bus is available for the given destination
+            $sql = "SELECT matricule FROM bus WHERE destination = :destination LIMIT 1";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':destination' => $reservation->getDestination()]);
+            $bus = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            // Step 2: If no bus is available, throw an error
+            if (!$bus) {
+                throw new Exception("Excursion pas disponible");
+            }
+
+            // Step 3: Assign the bus matricule to the reservation
+            $matricule = $bus['matricule'];
+            $reservation->setMatricule($matricule);
+
+            // Step 4: Insert the reservation into the database
+            $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date, matricule) 
+                    VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, :date, :matricule)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 ':nom' => $reservation->getNom(),
@@ -37,13 +52,17 @@ class GestionReservation
                 ':destination' => $reservation->getDestination(),
                 ':commentaire' => $reservation->getCommentaire(),
                 ':date' => $reservation->getDate()->format('Y-m-d H:i:s'),
+                ':matricule' => $matricule
             ]);
 
-            return true; // Return true if the operation was successful
+            return true; // Success
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de l'ajout de la réservation : " . $e->getMessage());
+        } catch (Exception $e) {
+            throw $e; // Custom exception for unavailable excursion
         }
     }
+
 
     public function deleteReservation(int $id_reservation)
     {
@@ -72,6 +91,19 @@ class GestionReservation
     public function updateReservation(reservevation $reservation)
     {
         try {
+            // Fetch the appropriate `matricule` based on the updated destination
+            $sql = "SELECT matricule FROM bus WHERE destination = :destination LIMIT 1";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':destination' => $reservation->getDestination()]);
+            $bus = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$bus) {
+                throw new Exception("Aucun bus disponible pour cette destination.");
+            }
+
+            $matricule = $bus['matricule'];
+
+            // Update the reservation in the database
             $sql = "UPDATE reservation SET 
                         nom = :nom, 
                         prenom = :prenom, 
@@ -79,7 +111,8 @@ class GestionReservation
                         tel = :tel, 
                         destination = :destination, 
                         commentaire = :commentaire, 
-                        date = :date 
+                        date = :date,
+                        matricule = :matricule 
                     WHERE id_reservation = :id_reservation";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
@@ -90,12 +123,15 @@ class GestionReservation
                 ':destination' => $reservation->getDestination(),
                 ':commentaire' => $reservation->getCommentaire(),
                 ':date' => $reservation->getDate()->format('Y-m-d H:i:s'),
+                ':matricule' => $matricule,
                 ':id_reservation' => $reservation->getId(),
             ]);
+
             return true;
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la mise à jour : " . $e->getMessage());
         }
     }
+
 }
 ?>

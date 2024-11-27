@@ -4,12 +4,13 @@
         private ?string $nom;
         private ?string $prenom;
         private ?string $mail;
-        private ?int $tel;
+        private ?string $tel;
         private ?string $destination;
         private ?string $commentaire;
         private ?DateTime $date;
+        private ?int $matricule;//foreign key from the table bus
 
-        public function __construct($nom, $prenom, $mail, $tel, $destination,$commentaire,$date){
+        public function __construct($nom, $prenom, $mail, $tel, $destination,$commentaire,$date,$matricule){
             $this->nom = $nom;
             $this ->prenom = $prenom;
             $this ->mail = $mail;
@@ -17,6 +18,7 @@
             $this ->destination = $destination;
             $this ->commentaire = $commentaire;
             $this ->date = $date;
+            $this->matricule = $matricule;
         }
 
         public function getId() : int{
@@ -51,13 +53,14 @@
             $this ->mail = $mail;
         }
 
-        public function getTel() : int{
+        public function getTel() : ?string {
             return $this->tel;
         }
-
-        public function setTel($tel) : void{
-            $this ->tel = $tel;
+        
+        public function setTel(?string $tel) : void {
+            $this->tel = $tel;
         }
+        
 
         public function getDestination() : string{
             return $this->destination;
@@ -71,7 +74,7 @@
             return $this->commentaire;
         }
 
-        public function setDepartement($commentaire) : void{
+        public function setCommentaire($commentaire) : void{
             $this ->departement = $commentaire;
         }
 
@@ -80,6 +83,13 @@
         }
         public function setDate(DateTime $date) : void{
             $this->date = $date;
+        }
+    
+        public function getMatricule () : int{
+            return $this->matricule;
+        }
+        public function setMatricule ($matricule) : void{
+            $this->matricule = $matricule;
         }
     }
     ?>

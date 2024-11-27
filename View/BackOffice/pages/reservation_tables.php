@@ -49,20 +49,32 @@ try {
         <ul class="navbar-nav">
             <li class="nav-item">
             <a class="nav-link text-dark" href="../pages/dashboard.php">
-                <!--<i class="material-symbols-rounded opacity-5">dashboard</i>-->
                 <span class="nav-link-text ms-1">Dashboard</span>
             </a>
             </li>
             <li class="nav-item">
             <a class="nav-link active bg-gradient-dark text-white" href="../pages/reservation_tables.php">
-                <!--<i class="material-symbols-rounded opacity-5">table_view</i>-->
                 <span class="nav-link-text ms-1">Reservation</span>
             </a>
             </li> 
             <li class="nav-item">
             <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-                <!--<i class="material-symbols-rounded opacity-5">table_view</i>--> 
                 <span class="nav-link-text ms-1">Modification des reservations</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/ajoutbus.php">
+                <span class="nav-link-text ms-1">Ajouter un bus</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/bus_tables.php">
+                <span class="nav-link-text ms-1">Bus</span>
+            </a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link text-dark" href="../pages/edit_bus.php">
+                <span class="nav-link-text ms-1">Modification des bus</span>
             </a>
             </li>
         </div>
@@ -94,6 +106,7 @@ try {
                                             <th>Destination</th>
                                             <th>Commentaire</th>
                                             <th>Date</th>
+                                            <th>matricule</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -107,6 +120,7 @@ try {
                                                 <td><?= htmlspecialchars($reservation['destination']) ?></td>
                                                 <td><?= htmlspecialchars($reservation['commentaire']) ?></td>
                                                 <td><?= htmlspecialchars($reservation['date']) ?></td>
+                                                <td><?= htmlspecialchars($reservation['matricule']) ?></td>
                                                 <td>
                                                     <form method="GET" action="edit_reservation.php" style="display:inline-block;">
                                                         <input type="hidden" name="id" value="<?= $reservation['id_reservation'] ?>">

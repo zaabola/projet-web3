@@ -49,6 +49,8 @@ function verifyInputs() {
     // Update hidden input for form validation status
     document.getElementById('formValid').value = isValid ? 'true' : 'false';
 
+    console.log(isValid); // Check if validation passed
+
     return isValid; // Return false to prevent form submission if validation fails
 }
 
