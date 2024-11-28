@@ -6,7 +6,7 @@ class Volontaire
     private $prenom = null;
     private $numero = null;
     private $exp = null;
-    private $etat = 0;
+    private $etat = 0; 
     private $email=null;
 
     public function __construct($nom, $prenom, $numero, $exp, $email)

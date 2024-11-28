@@ -2,12 +2,13 @@
 include 'C:/xampp/htdocs/web/controller/volntaireC.php';
 
 $volntaireC = new VolontaireC();
+$PortfolioC = new PortfolioC();
 if(isset($_GET['addVolantaire']))
 {
     $Volontaire = new Volontaire($_POST['nom'],$_POST['prenom'],$_POST['numero'],$_POST['message'],$_POST['email']);
     $volntaireC->create($Volontaire);
 }
-
+$guides=$PortfolioC->read();
 ?>
 <!doctype html>
 <html lang="en">
@@ -270,85 +271,33 @@ if(isset($_GET['addVolantaire']))
                 <section class="barista-section section-padding section-bg" id="section_2">
                     <div class="container">
                         <div class="row justify-content-center">
-
                             <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
                                 <em class="text-white">Empreinte</em>
 
                                 <h2 class="text-white">Meet our guides</h2>
                             </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
+                        <?php
+                            foreach ($guides as $guide) :
+                        ?>
+                            <div class="col-lg-4 col-md-4 col-4 mb-4">
+                            <a href="toPortfolio.php?id=<?=$guide['id_portfolio']?>">
                                 <div class="team-block-wrap">
                                     <div class="team-block-info d-flex flex-column">
                                         <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Samir</h4>
-
-                                            
+                                            <h4 class="text-white mb-0"><?=$guide['nom']?> <?=$guide['prenom']?></h4>   
                                         </div>
-
-                                        <p class="text-white mb-0">Spécialiste des ruines romaines et des médinas</p>
+                                        <p class="text-white mb-0"><?=$guide['specialite']?></p>
                                     </div>
 
                                     <div class="team-block-image-wrap">
-                                        <img src="Samir1.jpeg" class="team-block-image img-fluid" alt="">
+                                        <img src="<?=$guide['photo']?>" class="team-block-image img-fluid" alt="">
                                     </div>
                                 </div>
+                            </a>
                             </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Leila</h4>
-
-                                            
-                                        </div>
-
-                                        <p class="text-white mb-0">Native de la Méditerranée.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="leila1.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">khaled</h4>
-
-                                            
-                                        </div>
-
-                                        <p class="text-white mb-0"> à travers les montagnes et la nature.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="rajel2.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Amina</h4>
-
-                                            
-                                        </div>
-
-                                        <p class="text-white mb-0">Passionnée d’artisanat,</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="amani2.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-
+                            <?php
+                            endforeach;
+                        ?>
                         </div>
                     </div>
                 </section>
