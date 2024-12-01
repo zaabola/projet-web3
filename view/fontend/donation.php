@@ -66,7 +66,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/tooplate-barista.css" rel="stylesheet">
-    <script src="../validation.js"></script>
+    <script>
+        // Fonction pour définir le montant de la donation
+        function setDonationAmount(amount) {
+            document.getElementById('donationAmount').value = amount; // Définit la valeur dans le champ caché
+            document.getElementById('customDonationAmount').value = amount; // Affiche dans le champ visible
+        }
+    </script>
 </head>
 <body class="reservation-page">
 <main>
@@ -92,10 +98,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <input type="text" name="booking-form-email" class="form-control" placeholder="Votre email" >
-                                    </div>                           
-                                    <div class="col-lg-12 col-12">
-                                        <input type="text" name="booking-form-number" class="form-control" placeholder="Montant de la donation" >
-                                        <textarea name="booking-form-message" rows="3" class="form-control" placeholder="Commentaire (facultatif)"></textarea>
+                                    </div>       
+                                    <div class="col-lg-12 col-12 mt-3 text-center">
+                                    <label class="text-white"><strong>Montant de la donation:</strong></label><br>
+                                        <button type="button" class="form-control" onclick="setDonationAmount(20)">20 €</button>
+                                        <button type="button" class="form-control" onclick="setDonationAmount(40)">40 €</button>
+                                        <button type="button" class="form-control" onclick="setDonationAmount(60)">60 €</button>
+                                    </div>
+                                    <!-- Champ caché pour stocker la valeur -->
+                                    <input type="hidden" name="booking-form-number" id="donationAmount" value="">
+                                    <!-- Champ visible pour la valeur personnalisée -->
+                                    <div class="col-lg-12 col-12 mt-3 text-center">
+                                    <input type="text" name="booking-form-number" id="customDonationAmount" class="form-control" placeholder="Montant de la donation personnalisé" value="<?= isset($amount) ? htmlspecialchars($amount) : '' ?>">
+
                                     </div>
                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
                                         <button type="submit" class="form-control">Envoyer</button>

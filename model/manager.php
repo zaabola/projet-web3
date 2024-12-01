@@ -10,16 +10,18 @@ class DonationManagement
     private ?int $quantity;
     private ?float $allocatedPercentage;
     private ?float $priceAfterPercentage;
+    private ?string $note;
 
     public function __construct(
-        ?int $managementId,
-        ?int $idDonation,
-        ?string $adminName,
-        ?string $recipientName,
-        ?DateTime $distributionDate,
-        ?int $quantity,
+        ?int $managementId = null,
+        ?int $idDonation = null,
+        ?string $adminName = null,
+        ?string $recipientName = null,
+        ?DateTime $distributionDate = null,
+        ?int $quantity = null,
         ?float $allocatedPercentage = null,
-        ?float $priceAfterPercentage = null
+        ?float $priceAfterPercentage = null,
+        ?string $note = null
     ) {
         $this->managementId = $managementId;
         $this->idDonation = $idDonation;
@@ -29,14 +31,16 @@ class DonationManagement
         $this->quantity = $quantity;
         $this->allocatedPercentage = $allocatedPercentage;
         $this->priceAfterPercentage = $priceAfterPercentage;
+        $this->note = $note;
     }
 
+    // Getters and Setters
     public function getManagementId(): ?int
     {
         return $this->managementId;
     }
 
-    public function setManagementId(int $managementId): void
+    public function setManagementId(?int $managementId): void
     {
         $this->managementId = $managementId;
     }
@@ -46,7 +50,7 @@ class DonationManagement
         return $this->idDonation;
     }
 
-    public function setIdDonation(int $idDonation): void
+    public function setIdDonation(?int $idDonation): void
     {
         $this->idDonation = $idDonation;
     }
@@ -109,6 +113,16 @@ class DonationManagement
     public function setPriceAfterPercentage(float $priceAfterPercentage): void
     {
         $this->priceAfterPercentage = $priceAfterPercentage;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): void
+    {
+        $this->note = $note;
     }
 
     // Method to calculate price after the allocated percentage

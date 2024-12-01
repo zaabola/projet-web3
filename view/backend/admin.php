@@ -5,82 +5,80 @@ $donationManagementController = new DonationManagementController();
 $success = $error = "";
 $donationToEdit = null;
 
-// Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['add-donation-management']) || isset($_POST['update-donation-management'])) {
+        $idDonation = htmlspecialchars($_POST['id_donation'] ?? '');
+        $adminName = htmlspecialchars($_POST['admin_name'] ?? '');
+        $distributionDate = htmlspecialchars($_POST['distribution_date'] ?? '');
+        $allocatedPercentage = floatval($_POST['allocated_percentage'] ?? 0);
+        $managementId = intval($_POST['management_id'] ?? 0);
 
-    // Add donation management
-    if (isset($_POST['add-donation-management'])) {
-        $idDonation = htmlspecialchars($_POST['id_donation']);
-        $adminName = htmlspecialchars($_POST['admin-name']);
-        $recipientName = htmlspecialchars($_POST['recipient-name']);
-        $distributionDate = htmlspecialchars($_POST['distribution-date']);
-        $quantity = htmlspecialchars($_POST['quantity']);
-        $allocatedPercentage = htmlspecialchars($_POST['allocated-percentage']) ?? null;
-
-        if (!empty($idDonation) && !empty($adminName) && !empty($recipientName) && is_numeric($quantity) && $quantity > 0) {
-            try {
-                $donationManagementController->addDonationManagement($idDonation, $adminName, $recipientName, $distributionDate, $quantity, $allocatedPercentage);
-                $success = "Donation management added successfully!";
-            } catch (Exception $e) {
-                $error = $e->getMessage();
-            }
-        } else {
-            $error = "Please fill all the required fields correctly.";
-        }
-    }
-
-    // Delete donation management
-    if (isset($_POST['delete-donation-management'])) {
-        $managementId = intval($_POST['management_id']);
         try {
-            $donationManagementController->deleteDonationManagement($managementId);
-            $success = "Donation management deleted successfully.";
+            if (isset($_POST['add-donation-management'])) {
+                $donationManagementController->addDonationManagement($idDonation, $adminName, '', $distributionDate, 0, $allocatedPercentage);
+                $success = "Donation management added successfully!";
+            } elseif (isset($_POST['update-donation-management']) && $managementId) {
+                $donationManagementController->updateDonationManagement($managementId, $idDonation, $adminName, '', $distributionDate, 0, $allocatedPercentage);
+                $success = "Donation management updated successfully!";
+            }
+
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
         } catch (Exception $e) {
             $error = $e->getMessage();
         }
     }
 
-    // Edit donation management (show the edit form)
+    if (isset($_POST['delete-donation-management'])) {
+        $managementId = intval($_POST['management_id']);
+        try {
+            $donationManagementController->deleteDonationManagement($managementId);
+            $success = "Donation management deleted successfully.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+        }
+    }
+
     if (isset($_POST['edit-donation-management'])) {
         $managementId = intval($_POST['management_id']);
         $donationToEdit = $donationManagementController->getDonationManagementById($managementId);
 
-        // Check if the returned data is valid before accessing it
         if (!$donationToEdit) {
             $error = "No data found for this donation management.";
         }
     }
-
-    // Update donation management
-    if (isset($_POST['update-donation-management'])) {
-        $managementId = intval($_POST['management_id']);
-        $idDonation = htmlspecialchars($_POST['id_donation']);
-        $adminName = htmlspecialchars($_POST['admin-name']);
-        $recipientName = htmlspecialchars($_POST['recipient-name']);
-        $distributionDate = htmlspecialchars($_POST['distribution-date']);
-        $quantity = htmlspecialchars($_POST['quantity']);
-        $allocatedPercentage = htmlspecialchars($_POST['allocated-percentage']) ?? null;
-
-        if (!empty($idDonation) && !empty($adminName) && !empty($recipientName) && is_numeric($quantity) && $quantity > 0) {
-            try {
-                $donationManagementController->updateDonationManagement($managementId, $idDonation, $adminName, $recipientName, $distributionDate, $quantity, $allocatedPercentage);
-                $success = "Donation management updated successfully.";
-            } catch (Exception $e) {
-                $error = $e->getMessage();
-            }
-        } else {
-            $error = "Please fill all the required fields correctly.";
-        }
-    }
 }
 
-// List all donation management entries
-$donationsManagement = $donationManagementController->listDonationManagement();
+try {
+    $donationsManagement = $donationManagementController->listDonationManagement();
+    $seenManagementIds = [];
+    $uniqueDonationsManagement = [];
+
+    foreach ($donationsManagement as $management) {
+        if (!in_array($management['management_id'], $seenManagementIds)) {
+            $seenManagementIds[] = $management['management_id'];
+            $donationDetails = $donationManagementController->getDonationDetailsById($management['id_donation']);
+            $management['donor_name'] = $donationDetails['donor_name'] ?? 'Unknown';
+            $management['donation_amount'] = $donationDetails['donation_amount'] ?? 0;
+
+            $price_per_unit = 1;
+            $totalPrice = $management['donation_amount'] * $price_per_unit;
+            $allocatedPrice = $totalPrice * ($management['allocated_percentage'] / 100);
+            $management['allocated_price'] = number_format($allocatedPrice, 2);
+
+            $uniqueDonationsManagement[] = $management;
+        }
+    }
+} catch (Exception $e) {
+    $uniqueDonationsManagement = [];
+    $error = $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -97,7 +95,7 @@ $donationsManagement = $donationManagementController->listDonationManagement();
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-    <!-- Sidebar -->
+    <!-- Sidebar and Navbar -->
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -155,82 +153,66 @@ $donationsManagement = $donationManagementController->listDonationManagement();
                             <input type="hidden" name="management_id" value="<?= $donationToEdit ? $donationToEdit['management_id'] : '' ?>">
                             <div class="mb-3">
                                 <label for="id_donation">Donation ID</label>
-                                <input type="text" name="id_donation" class="form-control" value="<?= $donationToEdit ? $donationToEdit['id_donation'] : '' ?>" required>
+                                <input type="text" name="id_donation" value="<?= $donationToEdit['id_donation'] ?? '' ?>" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="admin-name">Admin Name</label>
-                                <input type="text" name="admin-name" class="form-control" value="<?= $donationToEdit ? $donationToEdit['admin_name'] : '' ?>" required>
+                                <label for="admin_name">Admin Name</label>
+                                <input type="text" name="admin_name" value="<?= $donationToEdit['admin_name'] ?? '' ?>" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="recipient-name">Recipient Name</label>
-                                <input type="text" name="recipient-name" class="form-control" value="<?= $donationToEdit ? $donationToEdit['recipient_name'] : '' ?>" required>
+                                <label for="distribution_date">Distribution Date</label>
+                                <input type="date" name="distribution_date" value="<?= $donationToEdit['distribution_date'] ?? '' ?>" class="form-control">
                             </div>
                             <div class="mb-3">
-                                <label for="distribution-date">Distribution Date</label>
-                                <input type="date" name="distribution-date" class="form-control" value="<?= $donationToEdit ? $donationToEdit['distribution_date'] : '' ?>" required>
+                                <label for="allocated_percentage">Allocated Percentage</label>
+                                <input type="number" name="allocated_percentage" value="<?= $donationToEdit['allocated_percentage'] ?? '' ?>" class="form-control" step="0.01" min="0" max="100">
                             </div>
-                            <div class="mb-3">
-                                <label for="quantity">Quantity</label>
-                                <input type="number" name="quantity" class="form-control" value="<?= $donationToEdit ? $donationToEdit['quantity'] : '' ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="allocated-percentage">Allocated Percentage</label>
-                                <input type="number" name="allocated-percentage" class="form-control" value="<?= $donationToEdit ? $donationToEdit['allocated_percentage'] : '' ?>" min="0" max="100" step="0.01">
-                            </div>
-                            <button type="submit" name="<?= $donationToEdit ? 'update-donation-management' : 'add-donation-management' ?>" class="btn btn-<?= $donationToEdit ? 'warning' : 'success' ?>"><?= $donationToEdit ? 'Update' : 'Add' ?></button>
+                            <button type="submit" class="btn btn-primary" name="<?= $donationToEdit ? 'update-donation-management' : 'add-donation-management' ?>">Save</button>
                         </form>
                     </div>
-
-                    <!-- Donation Management Table -->
-                    <div class="col-md-12 mt-4">
-                        <h4>Donation Management List</h4>
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Management ID</th>
-                                    <th>Donation ID</th>
-                                    <th>Admin Name</th>
-                                    <th>Recipient Name</th>
-                                    <th>Quantity</th>
-                                    <th>Allocated Percentage</th>
-                                    <th>Price After Allocation</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($donationsManagement as $management) : ?>
-                                    <?php
-                                    $price_per_unit = 10; // Example price per unit
-                                    $totalPrice = $management['quantity'] * $price_per_unit;
-                                    $allocatedPrice = $totalPrice * ($management['allocated_percentage'] / 100);
-                                    ?>
-                                    <tr>
-                                        <td><?= $management['management_id'] ?></td>
-                                        <td><?= $management['id_donation'] ?></td>
-                                        <td><?= $management['admin_name'] ?></td>
-                                        <td><?= $management['recipient_name'] ?></td>
-                                        <td><?= $management['quantity'] ?></td>
-                                        <td><?= $management['allocated_percentage'] ?>%</td>
-                                        <td><?= number_format($allocatedPrice, 2) ?> USD</td>
-                                        <td>
-                                            <form action="" method="POST" style="display:inline;">
-                                                <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
-                                                <button type="submit" name="edit-donation-management" class="btn btn-warning btn-sm">Edit</button>
-                                            </form>
-                                            <form action="" method="POST" style="display:inline;">
-                                                <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
-                                                <button type="submit" name="delete-donation-management" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
+            </div>
+
+            <!-- Display Donation Management Table -->
+            <div class="col-12">
+                <h4 class="mt-4">Donation Management List</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>management_id</th>
+                            <th>Donation ID</th>
+                            <th>Admin Name</th>
+                            <th>Distribution Date</th>
+                            <th>Allocated Percentage</th>
+                            <th>Allocated Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($uniqueDonationsManagement as $management): ?>
+                            <tr>
+                                <td><?= $management['management_id'] ?></td>
+                                <td><?= $management['id_donation'] ?></td>
+                                <td><?= $management['admin_name'] ?></td>
+                                <td><?= $management['distribution_date'] ?></td>
+                                <td><?= $management['allocated_percentage'] ?>%</td>
+                                <td><?= $management['allocated_price'] ?></td>
+                                <td>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
+                                    <button type="submit" name="edit-donation-management" class="btn btn-warning">Edit</button>
+                                </form>
+                                    <form action="" method="POST" class="d-inline">
+                                        <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
+                                        <button type="submit" name="delete-donation-management" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
 </body>
-
 </html>

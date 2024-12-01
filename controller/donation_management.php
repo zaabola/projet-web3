@@ -1,136 +1,95 @@
 <?php
-include(__DIR__ . '/../config.php');
 
 class DonationManagementController
 {
-    // List all donation management entries
+    private $db;
+
+    public function __construct()
+    {
+        try {
+            $this->db = new PDO('mysql:host=localhost;dbname=emprunt', 'root', '');
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Database connection failed: " . $e->getMessage());
+        }
+    }
+
     public function listDonationManagement()
     {
-        $sql = "SELECT management_id, id_donation, admin_name, recipient_name, distribution_date, quantity, allocated_percentage, price_after_percentage 
-                FROM donation_management";
-        try {
-            $db = config::getConnexion();
-            $query = $db->prepare($sql);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
+        $stmt = $this->db->query("SELECT * FROM donation_management");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Add a new donation management entry
+    public function getDonationDetailsById($idDonation)
+    {
+        $stmt = $this->db->prepare("
+            SELECT donor_name, donation_amount 
+            FROM donation 
+            WHERE id_donation = :id_donation
+        ");
+        $stmt->bindParam(':id_donation', $idDonation, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function addDonationManagement($idDonation, $adminName, $recipientName, $distributionDate, $quantity, $allocatedPercentage = null)
     {
-        try {
-            // Check if the donation exists
-            $db = config::getConnexion();
-            $query = $db->prepare("SELECT COUNT(*) FROM donation WHERE id_donation = :id_donation");
-            $query->execute(['id_donation' => $idDonation]);
-            $exists = $query->fetchColumn();
-
-            if (!$exists) {
-                throw new Exception("The donation with ID $idDonation does not exist. Please add it first.");
-            }
-
-            // Calculate the price after percentage
-            $priceAfterPercentage = $this->calculatePriceAfterPercentage($quantity, $allocatedPercentage);
-
-            // Proceed with the insert
-            $sql = "INSERT INTO donation_management 
-                    (id_donation, admin_name, recipient_name, distribution_date, quantity, allocated_percentage, price_after_percentage) 
-                    VALUES (:id_donation, :admin_name, :recipient_name, :distribution_date, :quantity, :allocated_percentage, :price_after_percentage)";
-            $query = $db->prepare($sql);
-            $query->execute([
-                'id_donation' => $idDonation,
-                'admin_name' => $adminName,
-                'recipient_name' => $recipientName,
-                'distribution_date' => $distributionDate,
-                'quantity' => $quantity,
-                'allocated_percentage' => $allocatedPercentage,
-                'price_after_percentage' => $priceAfterPercentage
-            ]);
-        } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
+        $stmt = $this->db->prepare("
+            INSERT INTO donation_management (id_donation, admin_name, donor_name, distribution_date, donation_amount, allocated_percentage) 
+            VALUES (:id_donation, :admin_name, :recipient_name, :distribution_date, :quantity, :allocated_percentage)
+        ");
+        $stmt->execute([
+            ':id_donation' => $idDonation,
+            ':admin_name' => $adminName,
+            ':recipient_name' => $recipientName,
+            ':distribution_date' => $distributionDate,
+            ':quantity' => $quantity,
+            ':allocated_percentage' => $allocatedPercentage,
+        ]);
     }
 
-    // Delete a donation management entry
-    public function deleteDonationManagement($managementId)
-    {
-        $sql = "DELETE FROM donation_management WHERE management_id = :management_id";
-        try {
-            $db = config::getConnexion();
-            $query = $db->prepare($sql);
-            $query->execute(['management_id' => $managementId]);
-        } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-    }
-
-    // Get a specific donation management entry by its ID
+    // Add this method to fetch a specific donation management by its ID
     public function getDonationManagementById($managementId)
     {
-        $sql = "SELECT * FROM donation_management WHERE management_id = :management_id";
-        try {
-            $db = config::getConnexion();
-            $query = $db->prepare($sql);
-            $query->execute(['management_id' => $managementId]);
-            return $query->fetch(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
+        $stmt = $this->db->prepare("
+            SELECT * 
+            FROM donation_management 
+            WHERE management_id = :management_id
+        ");
+        $stmt->bindParam(':management_id', $managementId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Update an existing donation management entry
-    public function updateDonationManagement($managementId, $idDonation, $adminName, $recipientName, $distributionDate, $quantity, $allocatedPercentage)
+    public function updateDonationManagement($managementId, $idDonation, $adminName, $recipientName, $distributionDate, $quantity, $allocatedPercentage = null)
     {
-        try {
-            // Check if the donation exists
-            $db = config::getConnexion();
-            $query = $db->prepare("SELECT COUNT(*) FROM donation WHERE id_donation = :id_donation");
-            $query->execute(['id_donation' => $idDonation]);
-            $exists = $query->fetchColumn();
-
-            if (!$exists) {
-                throw new Exception("The donation with ID $idDonation does not exist. Please add it first.");
-            }
-
-            // Calculate the price after percentage
-            $priceAfterPercentage = $this->calculatePriceAfterPercentage($quantity, $allocatedPercentage);
-
-            // Proceed with the update
-            $sql = "UPDATE donation_management SET 
-                    id_donation = :id_donation,
-                    admin_name = :admin_name,
-                    recipient_name = :recipient_name,
-                    distribution_date = :distribution_date,
-                    quantity = :quantity,
-                    allocated_percentage = :allocated_percentage,
-                    price_after_percentage = :price_after_percentage
-                WHERE management_id = :management_id";
-            $query = $db->prepare($sql);
-            $query->execute([
-                'management_id' => $managementId,
-                'id_donation' => $idDonation,
-                'admin_name' => $adminName,
-                'recipient_name' => $recipientName,
-                'distribution_date' => $distributionDate,
-                'quantity' => $quantity,
-                'allocated_percentage' => $allocatedPercentage,
-                'price_after_percentage' => $priceAfterPercentage
-            ]);
-        } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
+        $stmt = $this->db->prepare("
+            UPDATE donation_management 
+            SET 
+                id_donation = :id_donation,
+                admin_name = :admin_name,
+                donor_name = :recipient_name,
+                distribution_date = :distribution_date,
+                donation_amount = :quantity,
+                allocated_percentage = :allocated_percentage
+            WHERE management_id = :management_id
+        ");
+        $stmt->execute([
+            ':management_id' => $managementId,
+            ':id_donation' => $idDonation,
+            ':admin_name' => $adminName,
+            ':recipient_name' => $recipientName,
+            ':distribution_date' => $distributionDate,
+            ':quantity' => $quantity,
+            ':allocated_percentage' => $allocatedPercentage,
+        ]);
     }
 
-    // Helper method to calculate price after percentage
-    private function calculatePriceAfterPercentage($quantity, $allocatedPercentage)
+    public function deleteDonationManagement($managementId)
     {
-        if ($quantity && $allocatedPercentage !== null) {
-            return $quantity * (1 - ($allocatedPercentage / 100));
-        }
-        return 0.00;  // Return 0 if quantity or allocatedPercentage is not provided
+        $stmt = $this->db->prepare("DELETE FROM donation_management WHERE management_id = :management_id");
+        $stmt->bindParam(':management_id', $managementId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 }
 ?>
