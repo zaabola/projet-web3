@@ -95,7 +95,7 @@ try {
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-    <!-- Sidebar and Navbar -->
+  
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -114,14 +114,28 @@ try {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active bg-gradient-dark text-white" href="list.php">
+                    <a class="nav-link active bg-gradient-dark text-white" href="liste.php">
                         <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tables</span>
+                        <span class="nav-link-text ms-1">Liste</span>
                     </a>
                 </li>
+                    <li class="nav-item">
+                        <a class="nav-link active bg-gradient-dark text-white" href="admin.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Management</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active bg-gradient-dark text-white" href="jointure.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Tableaux</span>
+                    </a>
+                    </li>
+                
             </ul>
         </div>
     </aside>
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 
     <!-- Main Content -->
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
@@ -136,7 +150,7 @@ try {
             </div>
         </nav>
 
-        <div class="container-fluid py-4">
+        <div class="container-fluid-py-2">
             <div class="row">
                 <div class="col-12">
                     <?php if ($error) : ?>
@@ -173,46 +187,47 @@ try {
                 </div>
             </div>
 
-            <!-- Display Donation Management Table -->
-            <div class="col-12">
-                <h4 class="mt-4">Donation Management List</h4>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>management_id</th>
-                            <th>Donation ID</th>
-                            <th>Admin Name</th>
-                            <th>Distribution Date</th>
-                            <th>Allocated Percentage</th>
-                            <th>Allocated Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($uniqueDonationsManagement as $management): ?>
-                            <tr>
-                                <td><?= $management['management_id'] ?></td>
-                                <td><?= $management['id_donation'] ?></td>
-                                <td><?= $management['admin_name'] ?></td>
-                                <td><?= $management['distribution_date'] ?></td>
-                                <td><?= $management['allocated_percentage'] ?>%</td>
-                                <td><?= $management['allocated_price'] ?></td>
-                                <td>
-                                <form action="" method="POST">
-                                    <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
-                                    <button type="submit" name="edit-donation-management" class="btn btn-warning">Edit</button>
-                                </form>
-                                    <form action="" method="POST" class="d-inline">
-                                        <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
-                                        <button type="submit" name="delete-donation-management" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        
+<div class="col-12">
+    <h4 class="mt-4">Donation Management List</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>management_id</th>
+                <th>Donation ID</th>
+                <th>Donor Name</th>
+                <th>Admin Name</th>
+                <th>Distribution Date</th>
+                <th>Allocated Percentage</th>
+                <th>Allocated Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($uniqueDonationsManagement as $management): ?>
+                <tr>
+                    <td><?= $management['management_id'] ?></td>
+                    <td><?= $management['id_donation'] ?></td>
+                    <td><?= $management['donor_name'] ?></td>
+                    <td><?= $management['admin_name'] ?></td>
+                    <td><?= $management['distribution_date'] ?></td>
+                    <td><?= $management['allocated_percentage'] ?>%</td>
+                    <td><?= $management['allocated_price'] ?></td>
+                    <td>
+                        <form action="" method="POST">
+                            <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
+                            <button type="submit" name="edit-donation-management" class="btn btn-warning">Edit</button>
+                        </form>
+                        <form action="" method="POST" class="d-inline">
+                            <input type="hidden" name="management_id" value="<?= $management['management_id'] ?>">
+                            <button type="submit" name="delete-donation-management" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    </div>
     </main>
 </body>
 </html>

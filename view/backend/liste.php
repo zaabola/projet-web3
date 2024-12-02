@@ -87,16 +87,28 @@ $donations = $donationController->listDonations();
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active bg-gradient-dark text-white" href="list.php">
+                    <a class="nav-link active bg-gradient-dark text-white" href="liste.php">
                         <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tables</span>
+                        <span class="nav-link-text ms-1">Liste</span>
                     </a>
                 </li>
+                    <li class="nav-item">
+                        <a class="nav-link active bg-gradient-dark text-white" href="admin.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Management</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active bg-gradient-dark text-white" href="jointure.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Tableaux</span>
+                    </a>
+                    </li>
             </ul>
         </div>
     </aside>
 
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
