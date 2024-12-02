@@ -33,53 +33,96 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Gestion des Réservations</title>
     <link href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+    <script>
+        function sortTable() {
+            const table = document.getElementById("reservationTable");
+            let rows, switching, i, x, y, shouldSwitch, switchCount = 0;
+            switching = true;
+            let direction = "asc";
+
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[4];
+                    y = rows[i + 1].getElementsByTagName("TD")[4];
+
+                    if (direction === "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (direction === "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchCount++;
+                } else {
+                    if (switchCount === 0 && direction === "asc") {
+                        direction = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
         <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
-            <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-            <span class="ms-1 text-sm text-dark">Emprunt</span>
-        </a>
+            <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
+                <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+                <span class="ms-1 text-sm text-dark">Emprunt</span>
+            </a>
         </div>
         <hr class="horizontal dark mt-0 mb-2">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/dashboard.php">
-                <span class="nav-link-text ms-1">Dashboard</span>
-            </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link active bg-gradient-dark text-white" href="../pages/reservation_tables.php">
-                <span class="nav-link-text ms-1">Reservation</span>
-            </a>
-            </li> 
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-                <span class="nav-link-text ms-1">Modification des reservations</span>
-            </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-                <span class="nav-link-text ms-1">Ajouter un bus</span>
-            </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/bus_tables.php">
-                <span class="nav-link-text ms-1">Bus</span>
-            </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/edit_bus.php">
-                <span class="nav-link-text ms-1">Modification des bus</span>
-            </a>
-            </li>
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/dashboard.php">
+                        <span class="nav-link-text ms-1">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active bg-gradient-dark text-white" href="../pages/reservation_tables.php">
+                        <span class="nav-link-text ms-1">Reservation</span>
+                    </a>
+                </li> 
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/edit_reservation.php">
+                        <span class="nav-link-text ms-1">Modification des reservations</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/ajoutbus.php">
+                        <span class="nav-link-text ms-1">Ajouter un bus</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/bus_tables.php">
+                        <span class="nav-link-text ms-1">Bus</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/edit_bus.php">
+                        <span class="nav-link-text ms-1">Modification des bus</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        
     </aside>
+
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
         <div class="container-fluid py-2">
             <div class="row">
@@ -96,17 +139,17 @@ try {
                                 <div class="alert alert-danger"><?= $error ?></div>
                             <?php endif; ?>
                             <div class="table-responsive">
-                                <table class="table">
+                                <table id="reservationTable" class="table">
                                     <thead>
                                         <tr>
                                             <th>Nom</th>
                                             <th>Prénom</th>
                                             <th>Email</th>
                                             <th>Téléphone</th>
-                                            <th>Destination</th>
+                                            <th>Destination <button type="button" class="sort-button" onclick="sortTable()">Trier</button></th>
                                             <th>Commentaire</th>
                                             <th>Date</th>
-                                            <th>matricule</th>
+                                            <th>Matricule</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -142,6 +185,29 @@ try {
             </div>
         </div>
     </main>
+    <style>
+        button.sort-button {
+        background-color: #4CAF50; 
+        border: none; 
+        color: white; 
+        padding: 3px 10px; 
+        text-align: center; 
+        text-decoration: none; 
+        display: inline-block; 
+        font-size: 16px; 
+        margin: 4px 2px; 
+        cursor: pointer; 
+        border-radius: 12px; 
+        transition-duration: 0.4s; 
+        height: 30px;
+        }
+
+        button.sort-button:hover {
+        background-color: white; 
+        color: black; 
+        border: 2px solid #4CAF50; 
+        }
+    </style>
 </body>
 
 </html>
