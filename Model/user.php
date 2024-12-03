@@ -6,21 +6,22 @@ class User {
     private ?string $prenom = null;   // Nouvelle propriété
     private ?string $email = null;
     private ?string $mdp = null;
-    private ?string $role = null;
+    private ?int $role = null;
     private ?string $adresse = null;  // Nouvelle propriété
-    private ?string $telephone = null; // Nouvelle propriété
+    private ?string $telephone = null; // Nouvelle propriété 
+   private $nationalite;
 
-    // Constructeur
-    public function __construct($id, $nom, $prenom, $email, $mdp, $role, $adresse, $telephone) {
-        $this->id = $id;
-        $this->nom = $nom;
-        $this->prenom = $prenom;
-        $this->email = $email;
-        $this->mdp = $mdp;
-        $this->role = $role;
-        $this->adresse = $adresse;
-        $this->telephone = $telephone;
-    }
+   public function __construct($id, $nom, $prenom, $email, $mdp, $role, $adresse, $telephone, $nationalite) {
+    $this->id = $id;
+    $this->nom = $nom;
+    $this->prenom = $prenom;
+    $this->email = $email;
+    $this->mdp = $mdp;
+    $this->role = $role;
+    $this->adresse = $adresse;
+    $this->telephone = $telephone;
+    $this->nationalite = $nationalite;
+}
 
     // Méthodes getter
     public function getId() {
@@ -86,6 +87,14 @@ class User {
 
     public function setTelephone($telephone) {
         $this->telephone = $telephone; // Setter pour telephone
+    }
+     // Getter et setter pour nationalité
+     public function getNationalite() {
+        return $this->nationalite;
+    }
+
+    public function setNationalite($nationalite) {
+        $this->nationalite = $nationalite;
     }
 }
 ?>

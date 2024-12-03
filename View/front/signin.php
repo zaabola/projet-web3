@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once("C:/xampp/htdocs/projetuser/config.php");
+require_once("../../config.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
     $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]); // Correction pour correspondre au champ HTML
+    $password = trim($_POST["password"]); 
 
     // Contrôle de saisie
-    if (empty($email) || empty($password)) {
+    if (empty($email) && empty($password)) {
         echo '<div class="alert alert-danger">Tous les champs doivent être remplis.</div>';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo '<div class="alert alert-danger">L\'adresse email n\'est pas valide.</div>';
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
 
             if ($user) {
                 // Vérification du mot de passe (assurez-vous que mdp est haché dans votre base)
-                if (password_verify($password, $user["mdp"])) {
+                if ($password === $user["mdp"]) {
                     // Stocker les informations en session
                     $_SESSION["user_id"] = $user["id"];
                     $_SESSION["user_name"] = $user["nom"];
@@ -34,9 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
 
                     // Rediriger selon le rôle
                     if ($user["role"] == 1) {
-                        header("Location: /projetuser/View/back/pages/Dashboard.php");
+                        header("Location: ../back/Dashboard.php");
                     } else {
-                        header("Location: /projetuser/View/front/index.html");
+                        header("Location: index.html");
                     }
                     exit(); // Toujours utiliser exit() après une redirection
                 } else {
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
   <style>
         /* General body styling */
         body {
-            background-color: #f5f5dc; /* Beige color */
+            background-color: #bf9256; /* Beige color */
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
@@ -86,17 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
             padding: 10px;
             font-size: 14px;
         }
-        .btn-success {
-            background-color: #3cb371; /* Soft green */
-            border: none;
-            border-radius: 10px; /* Rounded corners for the button */
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .btn-success:hover {
-            background-color: #2e8b57; /* Darker green on hover */
-        }
+        
         .card-title {
             font-size: 1.5rem;
             font-weight: 600;
@@ -121,28 +111,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
                                 </a>
                             </div><!-- End Logo -->
               <div class="pt-4 pb-2">
-                <h5 class="card-title text-center">Connexion à votre compte</h5>
-                <p class="text-center small">Entrez votre email et mot de passe</p>
+                <h5 class="card-title text-center">Login to your Account</h5>
+                <p class="text-center small">Enter your email and password</p>
               </div>
 
               <!-- Formulaire de connexion -->
               <form method="POST" action="" class="row g-3 needs-validation">
                 <div class="col-12">
-                  <label for="email" class="form-label">Adresse Email</label>
-                  <input type="email" name="email" class="form-control" id="email" required>
+                  <label for="email" class="form-label">📧 Email Address</label>
+                  <input type="text" name="email" class="form-control" id="email" >
                 </div>
 
                 <div class="col-12">
-                  <label for="password" class="form-label">Mot de passe</label>
-                  <input type="password" name="password" class="form-control" id="password" required>
+                  <label for="password" class="form-label">🔑 Password</label>
+                  <input type="password" name="password" class="form-control" id="password" >
+                </div>
+                <div class="col-12 text-center">
+                  <a >if you forgot your password</a>
+                   <a href="recover_password.php" class="btn btn-link">Click here to recover it</a>
                 </div>
 
+
                 <div class="col-12">
-                  <button class="btn btn-primary w-100" type="submit" name="login">Se connecter</button>
+                  <button class="btn btn-primary w-100" type="submit" name="login">Log in</button>
                 </div>
 
                 <div class="col-12 text-center">
-                  <p class="small mb-0">Pas encore inscrit ? <a href="signup.php">Créer un compte</a></p>
+                  <p class="small mb-0">Don't have an account ? <a href="signup.php">Create an account</a></p>
                 </div>
               </form>
             </div>
@@ -152,7 +147,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
     </div>
   </main>
 
-  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+        let isValid = true;
+        const email = document.getElementById('email').value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+        if (!emailRegex.test(email)) {
+            document.getElementById('emailError').textContent = 'Invalid email format.';
+            isValid = false;
+        }
+    });
+    </script>
 </body>
 
 </html>
