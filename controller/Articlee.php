@@ -1,7 +1,7 @@
 <?php
-include_once(__DIR__ . '/../config.php'); // Including the database connection
-include_once(__DIR__ . '/../model/article.php'); // Including the Theme model
-include_once(__DIR__ . '/../model/themem.php'); // Including the Theme model
+include_once(__DIR__ . '/../config.php'); // Inclusion de la connexion à la base de données
+include_once(__DIR__ . '/../model/article.php'); // Inclusion du modèle Article
+include_once(__DIR__ . '/../model/themem.php'); // Inclusion du modèle Theme
 
 class ArticlesController {
     private $db;
@@ -11,48 +11,54 @@ class ArticlesController {
         $this->db = $database->getConnection();
     }*/
 
-    // Liste des Articless
+    // Liste des Articles
     public function listArticless() {
         $query = "SELECT a.*, t.titre AS theme_titre 
-                  FROM Articless a 
+                  FROM articless a 
                   LEFT JOIN themes t ON a.id = t.id";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Ajouter un Articles
+    // Ajouter un Article
     public function addArticles($Articles) {
-        $query = "INSERT INTO Articless (Titre_Articles, Description_Articles, image_Articles, id)
-                  VALUES (:titre, :description, :image, :id)";
+        $query = "INSERT INTO Articles (Titre_Articles, Description_Articles, image_Articles, bibliographie, date_crt, archivage, id)
+                  VALUES (:titre, :description, :image, :bibliographie, NOW(), :archivage, :id)";
         $stmt = $this->db->prepare($query);
 
         $stmt->bindValue(':titre', $Articles->getTitreArticles());
         $stmt->bindValue(':description', $Articles->getDescriptionArticles());
         $stmt->bindValue(':image', $Articles->getImageArticles());
+        $stmt->bindValue(':bibliographie', $Articles->getBibliographie());
+        $stmt->bindValue(':archivage', $Articles->getArchivage(), PDO::PARAM_INT);
         $stmt->bindValue(':id', $Articles->getIdTheme());
 
         return $stmt->execute();
     }
 
-    // Modifier un Articles
+    // Modifier un Article
     public function updateArticles($Articles) {
         $query = "UPDATE Articless 
                   SET Titre_Articles = :titre, Description_Articles = :description, 
-                      image_Articles = :image, id = :id 
-                  WHERE Id_Articles = :id";
+                      image_Articles = :image, bibliographie = :bibliographie, 
+                      date_maj = NOW(), archivage = :archivage, 
+                      id = :id 
+                  WHERE Id_article = :article_id";
         $stmt = $this->db->prepare($query);
 
-        $stmt->bindValue(':id', $Articles->getIdArticles());
+        $stmt->bindValue(':article_id', $Articles->getIdArticles());
         $stmt->bindValue(':titre', $Articles->getTitreArticles());
-        $stmt->bindValue(':description', $Articles->getDescriptionArticles());
+        $stmt->bindValue(':description', $Articles->getDescriptionArticle());
         $stmt->bindValue(':image', $Articles->getImageArticles());
+        $stmt->bindValue(':bibliographie', $Articles->getBibliographie());
+        $stmt->bindValue(':archivage', $Articles->getArchivage(), PDO::PARAM_INT);
         $stmt->bindValue(':id', $Articles->getIdTheme());
 
         return $stmt->execute();
     }
 
-    // Supprimer un Articles
+    // Supprimer un Article
     public function deleteArticles($Id_Articles) {
         $query = "DELETE FROM Articless WHERE Id_Articles = :id";
         $stmt = $this->db->prepare($query);
@@ -60,27 +66,31 @@ class ArticlesController {
         return $stmt->execute();
     }
 
-    // Obtenir un Articles par ID
+    // Obtenir un Article par ID
     public function getArticlesById($Id_Articles) {
-        $query = "SELECT * FROM Articless WHERE Id_Articles = :id";
+        $query = "SELECT a.*, t.titre AS theme_titre 
+                  FROM Articless a 
+                  LEFT JOIN themes t ON a.id = t.id 
+                  WHERE a.Id_article = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindValue(':id', $Id_Articles);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function getArticlessByTheme($id)
-{
-    $sql = "SELECT * FROM Articles WHERE id = :id";
-    $db = config::getConnexion();
-    $query = $db->prepare($sql);
-    $query->bindValue(':id', $id, PDO::PARAM_INT);
-    try {
-        $query->execute();
-        return $query->fetchAll();
-    } catch (Exception $e) {
-        die('Error: ' . $e->getMessage());
-    }
-}
 
+    // Obtenir des Articles par thème
+    public function getArticlessByTheme($id)
+    {
+        $sql = "SELECT * FROM Articles WHERE id = :id";
+        $db = config::getConnexion();
+        $query = $db->prepare($sql);
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+        try {
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
 }
 ?>

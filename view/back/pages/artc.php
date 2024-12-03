@@ -34,7 +34,8 @@ if (!$theme) {
 $errorMessages = [
     'titre' => '',
     'description' => '',
-    'image' => ''
+    'image' => '',
+    'bibliographie' => ''
 ];
 $successMessage = '';
 $formVisible = true;  // Le formulaire est visible par défaut
@@ -43,12 +44,14 @@ $formVisible = true;  // Le formulaire est visible par défaut
 $titre = '';
 $description = '';
 $image = '';
+$bibliographie = '';
 
 // Vérification de la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_article'])) {
     $titre = $_POST['titre'] ?? '';
     $description = $_POST['description'] ?? '';
     $image = $_FILES['image']['name'] ?? '';
+    $bibliographie = $_POST['bibliographie'] ?? '';  // Récupération de la bibliographie
 
     // Validation des champs
     $valid = true;
@@ -86,12 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_article'])) {
         $targetFile = $targetDir . basename($image);
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $insertQuery = "INSERT INTO articles (Titre_article, Description_article, Image_article, id) 
-                            VALUES (:titre, :description, :image, :theme_id)";
+            // Insertion avec date_crt et date_maj (date_maj sera gérée par la base de données)
+            $insertQuery = "INSERT INTO articles (Titre_article, Description_article, Image_article, bibliographie, id, date_crt, date_maj) 
+                            VALUES (:titre, :description, :image, :bibliographie, :theme_id, NOW(), NOW())";  // date_creation et date_maj sont définies à NOW()
             $stmt = $pdo->prepare($insertQuery);
             $stmt->bindParam(':titre', $titre);
             $stmt->bindParam(':description', $description);
             $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':bibliographie', $bibliographie);
             $stmt->bindParam(':theme_id', $theme_id, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -103,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_article'])) {
             $titre = '';
             $description = '';
             $image = '';
+            $bibliographie = '';
         } else {
             $errorMessages['image'] = "Erreur lors du téléchargement de l'image.";
         }
@@ -186,6 +192,14 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
           </div>
 
+          <div class="form-group">
+            <label for="bibliographie">Bibliographie de l'article</label>
+            <textarea name="bibliographie" id="bibliographie" class="form-control"><?php echo htmlspecialchars($bibliographie ?? ''); ?></textarea>
+            <?php if ($errorMessages['bibliographie']) : ?>
+              <div class="text-danger"><?php echo $errorMessages['bibliographie']; ?></div>
+            <?php endif; ?>
+          </div>
+
           <button type="submit" class="btn btn-success">Ajouter</button>
         </form>
       </div>
@@ -199,46 +213,40 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Titre</th>
             <th>Description</th>
             <th>Image</th>
+            <th>Bibliographie</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <?php if (empty($articles)): ?>
+          <?php foreach ($articles as $article) : ?>
             <tr>
-              <td colspan="4">Aucun article trouvé pour ce thème.</td>
+              <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
+              <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
+              <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
+              <td><?php echo htmlspecialchars($article['bibliographie']); ?></td>
+              <td>
+                <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
+                <a href="?delete_id=<?php echo $article['Id_article']; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
+              </td>
             </tr>
-          <?php else: ?>
-            <?php foreach ($articles as $article): ?>
-              <tr>
-                <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
-                <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
-                <td>
-                  <?php if (!empty($article['Image_article'])): ?>
-                    <img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image de l'article" width="100">
-                  <?php else: ?>
-                    Pas d'image
-                  <?php endif; ?>
-                </td>
-                <td>
-                  <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-primary">Modifier</a>
-                  <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cet article ?')">Supprimer</a>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          <?php endif; ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </div>
 </main>
 
+<!-- Scripts -->
 <script src="../assets/js/core/popper.min.js"></script>
 <script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+
 <script>
   // Fonction pour afficher/masquer le formulaire
   function toggleForm() {
-    const form = document.getElementById("addArticleForm");
-    form.style.display = (form.style.display === "none" || form.style.display === "") ? "block" : "none";
+    const form = document.getElementById('addArticleForm');
+    form.style.display = (form.style.display === 'none') ? 'block' : 'none';
   }
 </script>
 </body>

@@ -1,16 +1,46 @@
 <?php
-include_once '../../controller/theme.php';
-$themeController = new ThemeController();
-$list = $themeController->listtheme();
+// Connexion à la base de données
+$host = 'localhost';
+$dbname = 'Emprunt';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+// Pagination
+$itemsPerPage = 3; // Nombre maximum de thèmes par page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $itemsPerPage;
+
+// Récupération des thèmes avec la pagination
+$query = "SELECT * FROM theme LIMIT :offset, :itemsPerPage";
+$stmt = $pdo->prepare($query);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
+$stmt->execute();
+$list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupération du nombre total de thèmes pour la pagination
+$totalQuery = "SELECT COUNT(*) AS total FROM theme";
+$totalStmt = $pdo->query($totalQuery);
+$totalThemes = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
+$totalPages = ceil($totalThemes / $itemsPerPage);
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Bibliothèque</title>
-
+    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- CSS FILES -->                
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,68 +50,118 @@ $list = $themeController->listtheme();
     <link href="css/vegas.min.css" rel="stylesheet">
     <link href="css/tooplate-barista.css" rel="stylesheet">
 
-    <!-- Styles personnalisés -->
     <style>
-        /* Bouton transparent */
+        body {
+            background-color: #f9f4ef; /* Couleur de fond claire */
+            color: #212529; /* Couleur du texte */
+        }
         .btn-custom {
-            background-color: transparent; /* Fond transparent */
-            color: white;                 /* Texte blanc */
-            border: 2px solid white;      /* Bordure blanche */
-            border-radius: 5px;           /* Bordures légèrement arrondies */
+            background-color: #b78752; /* Couleur personnalisée */
+            color: #fff; /* Texte blanc */
+            border: 2px solid #b78752;
+            border-radius: 5px;
         }
-
-        /* Effet au survol */
         .btn-custom:hover {
-            background-color: rgba(255, 255, 255, 0.1); /* Légère transparence au survol */
-            color: white;                                /* Texte reste blanc */
-            border-color: white;                         /* Bordure blanche */
+            background-color: #a36d46; /* Couleur légèrement plus foncée au survol */
+            color: #fff;
+            border-color: #a36d46;
         }
-
-        /* Focus pour accessibilité */
-        .btn-custom:focus {
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Ombre blanche */
+        .team-block-wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Aligne le contenu en haut */
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff; /* Fond blanc */
+            text-align: center;
+            min-height: 400px; /* Hauteur minimale des conteneurs */
+            max-height: 400px; /* Hauteur maximale pour forcer le défilement */
+            overflow-y: auto; /* Ajout d'une barre de défilement verticale si le contenu dépasse */
+        }
+        .team-block-image {
+            width: 100%;
+            height: 200px; /* Taille fixe pour les images */
+            object-fit: cover; /* Remplissage proportionnel des images */
+            border-radius: 10px;
+        }
+        nav .page-link {
+            color: #b78752;
+        }
+        nav .page-item.active .page-link {
+            background-color: #b78752;
+            color: #fff;
+            border-color: #b78752;
+        }
+        /* Personnalisation de la barre de défilement */
+        .team-block-wrap::-webkit-scrollbar {
+            width: 6px;
+        }
+        .team-block-wrap::-webkit-scrollbar-thumb {
+            background-color: #b78752;
+            border-radius: 10px;
+        }
+        .team-block-wrap::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
 <body>
 <main>
-    <section class="barista-section section-padding section-bg d-flex align-items-center justify-content-center" id="biblio">
+    <section class="py-5">
         <div class="container">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-12 col-12 mb-4 pb-lg-2">
-                    <h2 class="text-white">Bibliothèque</h2>
-                </div>
+            <div class="text-center mb-5">
+                <h2 style="color: #b78752;">Bibliothèque</h2>
             </div>
-            <!-- Row pour centrer les thèmes -->
-            <div class="row d-flex justify-content-center">
-                <?php foreach ($list as $theme): ?>
-                    <!-- Div pour chaque thème -->
-                    <div class="col-lg-3 col-md-6 col-sm-8 mb-4">
-                        <div class="team-block-wrap">
-                            <div class="team-block-info d-flex flex-column">
-                                <div class="d-flex justify-content-center align-items-center mt-auto mb-3">
-                                    <h4 class="text-white mb-0"><?php echo $theme['titre']; ?></h4>
-                                </div>
-                                <p class="text-white mb-0"><?php echo $theme['description']; ?></p>
-                                <!-- Bouton pour consulter les articles -->
-                                <div class="text-center mt-3">
-                                    <a href="affichage.php?theme_id=<?php echo $theme['id']; ?>" class="btn btn-custom">
-                                        Consulter les articles de <?php echo $theme['titre']; ?>
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- Conteneur pour l'image -->
-                            <div class="team-block-image-wrap">
-                                <img src="<?php echo $theme['image']; ?>" class="team-block-image" alt="">
+            <div class="row">
+                <?php if (empty($list)): ?>
+                    <div class="col-12">
+                        <p class="text-center">Aucun thème disponible.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($list as $theme): ?>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="team-block-wrap">
+                                <img src="<?php echo htmlspecialchars($theme['image']); ?>" class="team-block-image" alt="Image du thème">
+                                <h4 style="color: #b78752;" class="mt-3"><?php echo htmlspecialchars($theme['titre']); ?></h4>
+                                <p><?php echo nl2br(htmlspecialchars($theme['description'])); ?></p>
+                                <a href="affichage.php?theme_id=<?php echo $theme['id']; ?>" class="btn btn-custom mt-3">Consulter les articles</a>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-center mt-4">
+                    <?php if ($page > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Précédent">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <?php if ($page < $totalPages): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Suivant">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
     </section>
 </main>
 
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -93,6 +173,5 @@ $list = $themeController->listtheme();
 <script src="js/click-scroll.js"></script>
 <script src="js/vegas.min.js"></script>
 <script src="js/custom.js"></script>
-
 </body>
 </html>

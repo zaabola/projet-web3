@@ -32,24 +32,55 @@ if (isset($_GET['theme_id'])) {
     <!-- Liens CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/vegas.min.css" rel="stylesheet">
     <link href="css/tooplate-barista.css" rel="stylesheet">
 
-    <!-- Styles personnalisés -->
+    <!-- Intégration du fichier CSS -->
     <style>
+        :root {
+          --white-color:                  #e6dede;
+          --primary-color:                #BC6C25;
+          --secondary-color:              #DDA15E;
+          --section-bg-color:             #b78752;
+          --custom-btn-bg-color:          #BC6C25;
+          --custom-btn-bg-hover-color:    #DDA15E;
+          --dark-color:                   #000000;
+          --p-color:                      #717275;
+          --border-color:                 #7fffd4;
+          --link-hover-color:             #E76F51;
+        
+          --body-font-family:             'Plus Jakarta Sans', sans-serif;
+        
+          --h1-font-size:                 68px;
+          --h2-font-size:                 46px;
+          --h3-font-size:                 32px;
+          --h4-font-size:                 28px;
+          --h5-font-size:                 24px;
+          --h6-font-size:                 22px;
+          --p-font-size:                  20px;
+          --btn-font-size:                16px;
+          --form-btn-font-size:           18px;
+          --menu-font-size:               16px;
+        
+          --border-radius-large:          100px;
+          --border-radius-medium:         20px;
+          --border-radius-small:          10px;
+        
+          --font-weight-thin:             200;
+          --font-weight-light:            300;
+          --font-weight-normal:           400;
+          --font-weight-bold:             700;
+        }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8f9fa;
+          background-color: var(--white-color);
+          font-family: var(--body-font-family); 
         }
 
         .section-bg {
-            background: linear-gradient(to right, #b78752); /* Couleur café */
-            color: #fff;
+            background: var(--section-bg-color);
+            color: var(--white-color);
             padding: 40px 0;
         }
 
@@ -58,18 +89,23 @@ if (isset($_GET['theme_id'])) {
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
-            border-radius: 10px;
+            border-radius: var(--border-radius-small);
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            background-color: #fff;
+            background-color: var(--primary-color); /* Changer la couleur des cartes */
+            transition: transform 0.2s;
+        }
+
+        .article-card:hover {
+            transform: scale(1.05);
         }
 
         .article-card img {
-            width: 100%; /* Largeur complète de la carte */
-            height: 200px; /* Hauteur fixe */
-            object-fit: cover; /* Ajuste l'image en rognant si nécessaire */
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: var(--border-radius-small);
+            border-top-right-radius: var(--border-radius-small);
         }
 
         .card-body {
@@ -77,14 +113,21 @@ if (isset($_GET['theme_id'])) {
         }
 
         .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #333;
+            font-size: var(--h5-font-size);
+            font-weight: var(--font-weight-bold);
+            color: var(--white-color); /* Couleur du texte des titres */
         }
 
         .card-text {
-            font-size: 0.95rem;
-            color: #666;
+            font-size: var(--p-font-size);
+            color: var(--white-color); /* Couleur du texte des descriptions */
+            margin-bottom: 10px;
+        }
+
+        .bibliography {
+            font-size: var(--btn-font-size);
+            color: var(--white-color); /* Couleur du texte des bibliographies */
+            margin-top: 10px;
         }
 
         .feedback-form {
@@ -95,28 +138,28 @@ if (isset($_GET['theme_id'])) {
             width: 100%;
             height: 80px;
             padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            border-radius: var(--border-radius-small);
+            border: 1px solid var(--border-color);
             margin-bottom: 10px;
-            font-size: 1rem;
+            font-size: var(--btn-font-size);
         }
 
         .submit-btn {
-            background-color: #6F4E37; /* Couleur café */
-            color: white;
+            background-color: var(--secondary-color); /* Couleur plus claire pour le bouton */
+            color: var(--dark-color); /* Texte sombre pour contraste */
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: var(--border-radius-small);
             cursor: pointer;
         }
 
         .submit-btn:hover {
-            background-color: #5b3d2e; /* Couleur café plus foncée */
+            background-color: var(--link-hover-color); /* Couleur de survol pour le bouton */
         }
 
         .empty-message {
-            font-size: 1.25rem;
-            color: #fff;
+            font-size: var(--h4-font-size);
+            color: var(--white-color);
             text-align: center;
             margin-top: 20px;
         }
@@ -140,6 +183,9 @@ if (isset($_GET['theme_id'])) {
                                     <div class="card-body">
                                         <h5 class="card-title"><?php echo htmlspecialchars($article['Titre_article']); ?></h5>
                                         <p class="card-text"><?php echo htmlspecialchars($article['Description_article']); ?></p>
+                                        
+                                        <!-- Bibliographie -->
+                                        <p class="bibliography">Bibliographie : <?php echo htmlspecialchars($article['bibliographie']); ?></p>
 
                                         <!-- Formulaire de feedback -->
                                         <div class="feedback-form">

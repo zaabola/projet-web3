@@ -13,7 +13,7 @@ try {
     exit;
 }
 
-// Récupération de l'ID de l'article
+// Vérification et récupération de l'ID de l'article
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("ID de l'article invalide ou non spécifié.");
 }
@@ -34,6 +34,7 @@ if (!$article) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
     $titre = $_POST['titre'] ?? '';
     $description = $_POST['description'] ?? '';
+    $bibliographie = $_POST['bibliographie'] ?? '';
     $image = $_FILES['image']['name'] ?? '';
 
     // Si une nouvelle image est téléchargée
@@ -49,22 +50,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
             echo "<script>alert('Veuillez choisir un fichier avec une extension d\'image valide (jpg, jpeg, png, gif, bmp).');</script>";
         } else {
             if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                // Mise à jour de l'article avec la nouvelle image
-                $updateQuery = "UPDATE articles SET Titre_article = :titre, Description_article = :description, Image_article = :image WHERE Id_article = :article_id";
+                // Mise à jour avec nouvelle image
+                $updateQuery = "UPDATE articles 
+                                SET Titre_article = :titre, 
+                                    Description_article = :description, 
+                                    Image_article = :image, 
+                                    bibliographie = :bibliographie,
+                                    date_maj = NOW() 
+                                WHERE Id_article = :article_id";
                 $stmt = $pdo->prepare($updateQuery);
                 $stmt->bindParam(':titre', $titre);
                 $stmt->bindParam(':description', $description);
                 $stmt->bindParam(':image', $image);
+                $stmt->bindParam(':bibliographie', $bibliographie);
                 $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
                 $stmt->execute();
             }
         }
     } else {
-        // Mise à jour de l'article sans changer l'image
-        $updateQuery = "UPDATE articles SET Titre_article = :titre, Description_article = :description WHERE Id_article = :article_id";
+        // Mise à jour sans changer l'image
+        $updateQuery = "UPDATE articles 
+                        SET Titre_article = :titre, 
+                            Description_article = :description, 
+                            bibliographie = :bibliographie,
+                            date_maj = NOW() 
+                        WHERE Id_article = :article_id";
         $stmt = $pdo->prepare($updateQuery);
         $stmt->bindParam(':titre', $titre);
         $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':bibliographie', $bibliographie);
         $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -92,22 +106,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
     function validateForm() {
       var isValid = true;
       
-      // Récupération des valeurs des champs
       var titre = document.forms["articleForm"]["titre"].value;
       var description = document.forms["articleForm"]["description"].value;
+      var bibliographie = document.forms["articleForm"]["bibliographie"].value;
       var image = document.forms["articleForm"]["image"].value;
       
-      // Récupération des éléments où afficher les erreurs
       var titreError = document.getElementById("titreError");
       var descriptionError = document.getElementById("descriptionError");
+      var bibliographieError = document.getElementById("bibliographieError");
       var imageError = document.getElementById("imageError");
       
-      // Initialiser les messages d'erreur à vide
       titreError.innerHTML = "";
       descriptionError.innerHTML = "";
+      bibliographieError.innerHTML = "";
       imageError.innerHTML = "";
       
-      // Vérification si les champs sont vides
       if (titre == "") {
         titreError.innerHTML = "Le titre est obligatoire.";
         isValid = false;
@@ -118,11 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
         isValid = false;
       }
       
-      // Vérification du fichier image
+      if (bibliographie.length > 500) {
+        bibliographieError.innerHTML = "La bibliographie ne doit pas dépasser 500 caractères.";
+        isValid = false;
+      }
+      
       if (image != "") {
         var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.bmp)$/i;
         if (!allowedExtensions.exec(image)) {
-          imageError.innerHTML = "Veuillez choisir un fichier avec une extension d'image valide (jpg, jpeg, png, gif, bmp).";
+          imageError.innerHTML = "Veuillez choisir un fichier avec une extension d'image valide.";
           isValid = false;
         }
       }
@@ -154,6 +171,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
             <label for="description">Description de l'article</label>
             <textarea name="description" class="form-control"><?php echo htmlspecialchars($article['Description_article']); ?></textarea>
             <div id="descriptionError" class="error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="bibliographie">Bibliographie</label>
+            <textarea name="bibliographie" class="form-control"><?php echo htmlspecialchars($article['bibliographie']); ?></textarea>
+            <div id="bibliographieError" class="error"></div>
           </div>
           
           <div class="form-group">
