@@ -139,13 +139,13 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand px-4 py-3 m-0" href="#">
+            <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
                 <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
                 <span class="ms-1 text-sm text-dark">Emprunt</span>
             </a>
         </div>
         <hr class="horizontal dark mt-0 mb-2">
-        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <div class="collapse navbar-collapse w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="../pages/dashboard.php">
@@ -156,7 +156,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                     <a class="nav-link text-dark" href="../pages/reservation_tables.php">
                         <span class="nav-link-text ms-1">Reservation</span>
                     </a>
-                </li>
+                </li> 
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="../pages/edit_reservation.php">
                         <span class="nav-link-text ms-1">Modification des reservations</span>
@@ -167,17 +167,17 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                         <span class="nav-link-text ms-1">Ajouter un bus</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/bus_tables.php">
+                        <span class="nav-link-text ms-1">Bus</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/edit_bus.php">
+                        <span class="nav-link-text ms-1">Modification des bus</span>
+                    </a>
+                </li>
             </ul>
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/bus_tables.php">
-                <span class="nav-link-text ms-1">Bus</span>
-            </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link text-dark" href="../pages/edit_bus.php">
-                <span class="nav-link-text ms-1">Modification des bus</span>
-            </a>
-            </li>
         </div>
     </aside>
 

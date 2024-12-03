@@ -1,6 +1,8 @@
 <?php
+session_start(); // Start the session to use session variables
 require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
 
+// Initialize variables for messages
 $success = $error = "";
 
 // Check if form was submitted and data is valid
@@ -16,27 +18,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
         $date = new DateTime(); // Current date and time
 
         // Create a reservation object
-        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date,null);
+        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date, null);
 
         // Use GestionReservation to add the reservation
         $gestionReservation = new GestionReservation();
         $gestionReservation->createReservation($reservation);
 
-        $success = "Réservation ajoutée avec succès !";
+        // Set success message in session
+        $_SESSION['success'] = "Réservation ajoutée avec succès !";
 
         // Redirect to avoid resubmitting the form on refresh
         header("Location: " . $_SERVER['PHP_SELF']);
         exit;
     } catch (Exception $e) {
-        $error = $e->getMessage();
+        // Set error message in session
+        $_SESSION['error'] = $e->getMessage();
+
+        // Redirect to avoid resubmitting the form on refresh
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
     }
+}
+
+// Retrieve flash messages from session if they exist
+if (isset($_SESSION['success'])) {
+    $success = $_SESSION['success'];
+    unset($_SESSION['success']); // Clear success message from session
+}
+
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']); // Clear error message from session
 }
 ?>
 
-
 <!doctype html>
 <html lang="en">
-<head>  
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Reservation Form for Excursions">
@@ -88,6 +106,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
                     <div class="booking-form-wrap">
                         <div class="row">
                             <div class="col-lg-7 col-12 p-0">
+                                <!-- Flash Messages -->
+                                <?php if (!empty($success)) : ?>
+                                    <div class="alert alert-success">
+                                        <?= htmlspecialchars($success); ?>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($error)) : ?>
+                                    <div class="alert alert-danger">
+                                        <?= htmlspecialchars($error); ?>
+                                    </div>
+                                <?php endif; ?>
+
                                 <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs()" novalidate>
                                     <input type="hidden" name="formValid" id="formValid" value="false">
                                     <div class="text-center mb-4 pb-lg-2">
@@ -140,100 +170,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-12 me-auto">
+                    <em class="text-white d-block mb-4">Où nous trouver ?</em>
 
-                            <div class="col-lg-4 col-12 me-auto">
-                                <em class="text-white d-block mb-4">Où nous trouver ?</em>
+                    <strong class="text-white">
+                        <i class="bi-geo-alt me-2"></i>
+                             Av. Hedi Nouira Ariana, 2001
+                    </strong>
 
-                                <strong class="text-white">
-                                    <i class="bi-geo-alt me-2"></i>
-                                     Av. Hedi Nouira Ariana, 2001
-                                </strong>
+                    <ul class="social-icon mt-4">
+                        <li class="social-icon-item">
+                            <a href="#" class="social-icon-link bi-facebook"></a>
+                        </li>
+                        <li class="social-icon-item">
+                            <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a>
+                        </li>
+                        <li class="social-icon-item">
+                            <a href="#" class="social-icon-link bi-whatsapp"></a>
+                        </li>
+                    </ul>
+                </div>
 
-                                <ul class="social-icon mt-4">
-                                    <li class="social-icon-item">
-                                        <a href="#" class="social-icon-link bi-facebook">
-                                        </a>
-                                    </li>
-        
-                                    <li class="social-icon-item">
-                                        <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter">
-                                        </a>
-                                    </li>
-
-                                    <li class="social-icon-item">
-                                        <a href="#" class="social-icon-link bi-whatsapp">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                                <em class="text-white d-block mb-4">Contact</em>
-
-                                <p class="d-flex mb-1">
-                                    <strong class="me-2">Tel:</strong>
-                                    <a href="tel: 305-240-9671" class="site-footer-link">
-                                        (216) 
-                                        95 020 030
-                                    </a>
-                                </p>
-
-                                <p class="d-flex">
-                                    <strong class="me-2">Email:</strong>
-
-                                    <a href="mailto:info@yourgmail.com" class="site-footer-link">
-                                        Basma.Travel@gmail.com
-                                    </a>
-                                </p>
-                            </div>
+                <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                    <em class="text-white d-block mb-4">Contact</em>
+                        <p class="d-flex mb-1">
+                            <strong class="me-2">Tel:</strong>
+                            <a href="tel: 305-240-9671" class="site-footer-link">
+                                (216) 
+                                95 020 030
+                            </a>
+                        </p>
+                        <p class="d-flex">
+                            <strong class="me-2">Email:</strong>
+                            <a href="mailto:info@yourgmail.com" class="site-footer-link">
+                                Basma.Travel@gmail.com
+                            </a>
+                        </p>
+                </div>
 
 
-                            <div class="col-lg-5 col-12">
-                                <em class="text-white d-block mb-4">Horaire de travail.</em>
+                <div class="col-lg-5 col-12">
+                    <em class="text-white d-block mb-4">Horaire de travail.</em>
+                    <ul class="opening-hours-list">
+                        <li class="d-flex">
+                            Lundi - Vendredi
+                            <span class="underline"></span>
+                            <strong>9:00 - 18:00</strong>
+                        </li>
+                        <li class="d-flex">
+                            Samedi
+                            <span class="underline"></span>
+                            <strong>9:00 - 13:00</strong>
+                         </li>
+                        <li class="d-flex">
+                            Dimanche
+                            <span class="underline"></span>
+                            <strong>Ferme</strong>
+                        </li>
+                    </ul>
+                </div>
 
-                                <ul class="opening-hours-list">
-                                    <li class="d-flex">
-                                        Lundi - Vendredi
-                                        <span class="underline"></span>
-
-                                        <strong>9:00 - 18:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Samedi
-                                        <span class="underline"></span>
-
-                                        <strong>9:00 - 13:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Dimanche
-                                        <span class="underline"></span>
-
-                                        <strong>Ferme</strong>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-8 col-12 mt-4">
-                                <p class="copyright-text mb-0">Copyright © بصمة </p>
-                            </div>
-                    </div>
+                <div class="col-lg-8 col-12 mt-4">
+                    <p class="copyright-text mb-0">Copyright © بصمة </p>
+                </div>
+            </div>
+        </div>
     </footer>
 </main>
-<!-- Load jQuery first -->
+
+<!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Optionally, load other external libraries like Bootstrap -->
 <script src="js/bootstrap.min.js"></script>
-
-<!-- Load the Vegas plugin (if necessary) -->
 <script src="js/vegas.min.js"></script>
-
-<!-- Then load your custom scripts -->
 <script src="js/custom.js"></script>
 <script src="js/ReservationFormControl.js"></script>
 </body>

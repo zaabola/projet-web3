@@ -1,5 +1,5 @@
     <?php
-    class reservevation{
+    class reservation{
         private ?int $id;
         private ?string $nom;
         private ?string $prenom;

@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update-reservation']))
 
     if (empty($validationErrors)) {
         try {
-            $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date,null);
+            $reservation = new reservation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date, null);
             $reservation->setId($id_reservation);
             $reservation->setMatricule($matricule);
             $gestionReservation->updateReservation($reservation);

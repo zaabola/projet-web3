@@ -25,22 +25,45 @@ class GestionReservation
     public function createReservation(reservevation $reservation)
     {
         try {
-            // Step 1: Check if a bus is available for the given destination
-            $sql = "SELECT matricule FROM bus WHERE destination = :destination LIMIT 1";
+            // Step 1: Check if there are any buses available for the given destination
+            $sql = "SELECT matricule, nbr_place FROM bus WHERE destination = :destination";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([':destination' => $reservation->getDestination()]);
-            $bus = $stmt->fetch(PDO::FETCH_ASSOC);
+            $buses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             // Step 2: If no bus is available, throw an error
-            if (!$bus) {
-                throw new Exception("Excursion pas disponible");
+            if (!$buses) {
+                throw new Exception("Excursion pas disponible.");
             }
 
-            // Step 3: Assign the bus matricule to the reservation
-            $matricule = $bus['matricule'];
+            // Step 3: Try to find a bus with available seats
+            $availableBus = null;
+            foreach ($buses as $bus) {
+                // Count how many reservations are already made for this bus
+                $sql = "SELECT COUNT(r.id_reservation) AS reservations_count 
+                        FROM reservation r
+                        WHERE r.matricule = :matricule";
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([':matricule' => $bus['matricule']]);
+                $reservationCount = $stmt->fetch(PDO::FETCH_ASSOC)['reservations_count'];
+
+                // Check if there are available seats on this bus
+                if ($bus['nbr_place'] > $reservationCount) {
+                    $availableBus = $bus; // Bus found with available seats
+                    break;
+                }
+            }
+
+            // Step 4: If no available bus is found, throw an error
+            if (!$availableBus) {
+                throw new Exception("Pas de place disponible.");
+            }
+
+            // Step 5: Assign the bus matricule to the reservation
+            $matricule = $availableBus['matricule'];
             $reservation->setMatricule($matricule);
 
-            // Step 4: Insert the reservation into the database
+            // Step 6: Insert the reservation into the database
             $sql = "INSERT INTO reservation (nom, prenom, mail, tel, destination, commentaire, date, matricule) 
                     VALUES (:nom, :prenom, :mail, :tel, :destination, :commentaire, :date, :matricule)";
             $stmt = $this->pdo->prepare($sql);
@@ -59,9 +82,10 @@ class GestionReservation
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de l'ajout de la réservation : " . $e->getMessage());
         } catch (Exception $e) {
-            throw $e; // Custom exception for unavailable excursion
+            throw $e; // Custom exception for unavailable excursion or no available seats
         }
     }
+
 
 
     public function deleteReservation(int $id_reservation)
@@ -88,22 +112,48 @@ class GestionReservation
         }
     }
 
-    public function updateReservation(reservevation $reservation)
+    public function updateReservation(reservation $reservation)
     {
         try {
-            // Fetch the appropriate `matricule` based on the updated destination
-            $sql = "SELECT matricule FROM bus WHERE destination = :destination LIMIT 1";
+            // Fetch all buses for the updated destination
+            $sql = "SELECT matricule, nbr_place FROM bus WHERE destination = :destination";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([':destination' => $reservation->getDestination()]);
-            $bus = $stmt->fetch(PDO::FETCH_ASSOC);
+            $buses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if (!$bus) {
+            // Step 1: Check if no buses are available for the updated destination
+            if (!$buses) {
                 throw new Exception("Aucun bus disponible pour cette destination.");
             }
 
-            $matricule = $bus['matricule'];
+            // Step 2: Try to find a bus with available seats for the updated destination
+            $availableBus = null;
+            foreach ($buses as $bus) {
+                // Count how many reservations are already made for this bus
+                $sql = "SELECT COUNT(r.id_reservation) AS reservations_count 
+                        FROM reservation r
+                        WHERE r.matricule = :matricule";
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([':matricule' => $bus['matricule']]);
+                $reservationCount = $stmt->fetch(PDO::FETCH_ASSOC)['reservations_count'];
 
-            // Update the reservation in the database
+                // Check if there are available seats on this bus
+                if ($bus['nbr_place'] > $reservationCount) {
+                    $availableBus = $bus; // Bus found with available seats
+                    break;
+                }
+            }
+
+            // Step 3: If no available bus is found, throw an error
+            if (!$availableBus) {
+                throw new Exception("Pas de place disponible sur un bus pour cette destination.");
+            }
+
+            // Step 4: Assign the bus matricule to the reservation
+            $matricule = $availableBus['matricule'];
+            $reservation->setMatricule($matricule);
+
+            // Step 5: Update the reservation in the database
             $sql = "UPDATE reservation SET 
                         nom = :nom, 
                         prenom = :prenom, 
@@ -127,11 +177,14 @@ class GestionReservation
                 ':id_reservation' => $reservation->getId(),
             ]);
 
-            return true;
+            return true; // Success
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de la mise à jour : " . $e->getMessage());
+        } catch (Exception $e) {
+            throw $e; // Custom exception for unavailable excursion or no available seats
         }
     }
+
 
 }
 ?>

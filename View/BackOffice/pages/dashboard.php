@@ -75,7 +75,6 @@ try {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des reservations</span>
           </a>
         </li>
