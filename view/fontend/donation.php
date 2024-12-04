@@ -66,6 +66,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/tooplate-barista.css" rel="stylesheet">
+ <style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('../images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; /* Remplacez 'images/image.png' par le chemin de votre image */
+    background-size: cover;
+    color: #fff; /* Couleur de texte pour garantir la lisibilité */
+}
+
+ </style>
     <script>
         // Fonction pour définir le montant de la donation
         function setDonationAmount(amount) {
@@ -74,9 +85,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </script>
 </head>
-<body class="reservation-page">
+<body class="donation-page">
 <main>
-    <section class="booking-sections section-padding">
+<nav class="navbar navbar-expand-lg">                
+                    <div class="container">
+                        <a class="navbar-brand d-flex align-items-center" href="index.html">
+                            <img src="../images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            بصمة
+                        </a>
+        
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+        
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-lg-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
+                                </li>
+        
+                              
+                                
+                                <li>
+                                    <a href="#section_69" class="nav-link click-scroll">Shop</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="panier.php">Panier</a>
+                                </li>
+                            </ul>
+
+                            <button id="lang-switch" class="btn btn-outline-primary me-2" >Switch Language</button>
+
+                        </div>
+                    
+                
+
+                        <div class="d-flex ms-3">
+                         <a href="#reservation" class="btn btn-outline-primary me-2">Reservation</a>
+                         <a href="donation.php" class="btn btn-outline-primary me-2">Donation</a>
+                        </div>
+                        </div>
+        </div>
+    </div>
+</nav>
+
+
+    <section >
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 col-12 mx-auto">

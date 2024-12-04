@@ -171,10 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     
         // Table headers
         $pdf->Cell(34, 10, 'Management ID', 1);
-        $pdf->Cell(28, 10, 'Donation ID', 1);
+        $pdf->Cell(28, 10, 'Donor ID', 1);
         $pdf->Cell(30, 10, 'Donor Name', 1);
         $pdf->Cell(30, 10, 'Admin Name', 1);
         $pdf->Cell(40, 10, 'distribution_date', 1);
+        $pdf->Cell(30, 10, 'Allocated Price', 1);
         $pdf->Ln();
     
         // Table data
@@ -380,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         <thead>
             <tr>
                 <th>management_id</th>
-                <th>Donation ID</th>
+                <th>Donor ID</th>
                 <th>Donor Name</th>
                 <th>Admin Name</th>
                 <th>Distribution Date</th>
