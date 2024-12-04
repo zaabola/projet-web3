@@ -113,6 +113,18 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
         <div class="container">
             <div class="text-center mb-5">
                 <h2 style="color: #b78752;">Bibliothèque</h2>
+                
+                <!-- Ajout du formulaire de recherche -->
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-6">
+                        <form action="recherche.php" method="GET" class="mb-4">
+                            <div class="input-group">
+                                <input type="text" name="q" class="form-control" placeholder="Rechercher un mot..." required>
+                                <button type="submit" class="btn btn-custom">Rechercher</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <?php if (empty($list)): ?>

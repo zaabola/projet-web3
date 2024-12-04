@@ -87,7 +87,7 @@ $list = $travelOfferC->listtheme();
                         <a href="update.php?id=<?php echo urlencode($theme['id']); ?>" class="btn btn-primary">Modifier</a>
                         <a href="del.php?id=<?php echo urlencode($theme['id']); ?>" class="btn btn-danger">Supprimer</a>
                         <a href="artc.php?id=<?php echo urlencode($theme['id']); ?>" class="btn btn-primary">
-                          Gérer les articles de <?php echo htmlspecialchars($theme['titre']); ?>
+                          Gérer les articles 
                         </a>
                       </td>
                     </tr>

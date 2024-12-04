@@ -7,14 +7,62 @@ include_once(__DIR__ . '../../../controller/theme.php');
 $articlesController = new ArticlesController();
 $themeController = new ThemeController();
 
+// Connexion à la base de données pour les feedbacks
+$host = 'localhost';
+$dbname = 'Emprunt';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Erreur de connexion : " . $e->getMessage();
+}
+
+// Traitement du formulaire de feedback
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id']) && isset($_POST['commentaire'])) {
+    try {
+        $article_id = $_POST['article_id'];
+        $commentaire = trim($_POST['commentaire']); // Nettoyer les espaces
+
+        // Validation du commentaire
+        if (empty($commentaire)) {
+            throw new Exception("Le commentaire ne peut pas être vide.");
+        }
+
+        // Vérification de la longueur
+        if (strlen($commentaire) > 500) {
+            throw new Exception("Le commentaire ne doit pas dépasser 500 caractères.");
+        }
+
+        // Nettoyer et valider le commentaire
+        $commentaire = htmlspecialchars($commentaire); // Convertit les caractères spéciaux
+        $commentaire = strip_tags($commentaire); // Supprime les balises HTML
+        
+        // Vérification plus permissive des caractères autorisés
+        if (!preg_match("/^[a-zA-ZÀ-ÿ0-9\s\.,!?'\-\"]+$/u", $commentaire)) {
+            throw new Exception("Le commentaire contient des caractères non autorisés. Utilisez uniquement des lettres, chiffres et la ponctuation basique.");
+        }
+
+        $query = "INSERT INTO feed_back (Id_article, commentaire) VALUES (:article_id, :commentaire)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':article_id', $article_id);
+        $stmt->bindParam(':commentaire', $commentaire);
+        $stmt->execute();
+
+        // Redirection pour éviter la soumission multiple du formulaire
+        header("Location: " . $_SERVER['PHP_SELF'] . "?theme_id=" . $_GET['theme_id']);
+        exit();
+    } catch (Exception $e) {
+        $error_message = $e->getMessage();
+    }
+}
+
 // Vérifier si 'theme_id' est présent dans l'URL
 if (isset($_GET['theme_id'])) {
     $theme_id = $_GET['theme_id'];
-
-    // Récupérer les informations du thème avec l'ID
     $theme = $themeController->getThemeById($theme_id);
-
-    // Récupérer les articles associés à ce thème
     $articles = $articlesController->getArticlessByTheme($theme_id);
 } else {
     echo "Aucun thème sélectionné.";
@@ -163,9 +211,42 @@ if (isset($_GET['theme_id'])) {
             text-align: center;
             margin-top: 20px;
         }
+
+        /* Ajout du style pour la popup d'alerte */
+        .alert-popup {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .alert-popup.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-popup.show {
+            display: block;
+            animation: fadeOut 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
+    <!-- Ajouter la div pour l'alerte au début du body -->
+    <div id="alertPopup" class="alert-popup"></div>
+
     <main>
         <section class="section-bg">
             <div class="container">
@@ -189,9 +270,15 @@ if (isset($_GET['theme_id'])) {
 
                                         <!-- Formulaire de feedback -->
                                         <div class="feedback-form">
-                                            <label for="feedback-<?php echo $article['id']; ?>">Votre feedback :</label>
-                                            <textarea id="feedback-<?php echo $article['id']; ?>" class="feedback-input" placeholder="Écrivez votre retour..."></textarea>
-                                            <button class="submit-btn" type="button" onclick="submitFeedback(<?php echo $article['id']; ?>)">Envoyer</button>
+                                            <form method="POST" action="" onsubmit="return validateFeedback(this, <?php echo $article['Id_article']; ?>)">
+                                                <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
+                                                <label for="feedback-<?php echo $article['Id_article']; ?>">Votre feedback :</label>
+                                                <textarea id="feedback-<?php echo $article['Id_article']; ?>" 
+                                                          name="commentaire" 
+                                                          class="feedback-input" 
+                                                          placeholder="Écrivez votre retour..."></textarea>
+                                                <button class="submit-btn" type="submit">Envoyer</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -209,20 +296,48 @@ if (isset($_GET['theme_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Fonction pour envoyer le feedback (simulation)
-        function submitFeedback(articleId) {
-            const feedback = document.getElementById(`feedback-${articleId}`).value;
-
-            if (feedback.trim() === "") {
-                alert("Veuillez écrire un feedback.");
-                return;
+        function validateFeedback(form, articleId) {
+            const commentaire = form.querySelector(`#feedback-${articleId}`).value.trim();
+            
+            // Vérification si le commentaire est vide
+            if (commentaire === '') {
+                alert('Le commentaire ne peut pas être vide.');
+                return false;
             }
 
-            // Pour l'instant, on peut juste afficher un message de confirmation
-            alert(`Feedback pour l'article ID ${articleId}: "${feedback}"`);
+            // Vérification de la longueur
+            if (commentaire.length > 500) {
+                alert('Le commentaire ne doit pas dépasser 500 caractères.');
+                return false;
+            }
 
-            // Réinitialisation du champ de feedback
-            document.getElementById(`feedback-${articleId}`).value = "";
+            // Vérification des caractères autorisés
+            const regexCaracteresAutorises = /^[a-zA-ZÀ-ÿ0-9\s\.,!?]+$/;
+            if (!regexCaracteresAutorises.test(commentaire)) {
+                alert('Caractères non autorisés. Utilisez uniquement des lettres, chiffres, espaces et ponctuation simple (.,!?)');
+                return false;
+            }
+
+            // Vérification des bad words
+            if (containsBadWords(commentaire)) {
+                alert('Votre commentaire contient des mots inappropriés.');
+                return false;
+            }
+
+            // Si toutes les validations sont passées, afficher le message de succès
+            alert('Votre feedback a été ajouté avec succès !');
+            return true;
+        }
+
+        // Reste du code pour les bad words
+        const badWords = [
+            'merde', 'putain', 'connard', 'connasse', 'salope', 'pute', 'enculé',
+            'bite', 'couille', 'fuck', 'shit', 'ass', 'bitch', 'damn'
+        ];
+
+        function containsBadWords(text) {
+            const lowerText = text.toLowerCase();
+            return badWords.some(word => lowerText.includes(word));
         }
     </script>
 </body>
