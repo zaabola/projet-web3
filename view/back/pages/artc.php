@@ -218,6 +218,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>Description</th>
             <th>Image</th>
             <th>Bibliographie</th>
+            <th>Archivé</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -229,6 +230,15 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
               <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
               <td><?php echo htmlspecialchars($article['bibliographie']); ?></td>
+              <td>
+                <form method="POST" style="display: inline;">
+                  <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
+                  <input type="hidden" name="toggle_archive" value="1">
+                  <button type="submit" class="btn btn-<?php echo $article['archivage'] ? 'warning' : 'success'; ?>">
+                    <?php echo $article['archivage'] ? 'Désarchiver' : 'Archiver'; ?>
+                  </button>
+                </form>
+              </td>
               <td>
                 <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
                 <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>

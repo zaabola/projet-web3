@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
     $titre = $_POST['titre'] ?? '';
     $description = $_POST['description'] ?? '';
     $bibliographie = $_POST['bibliographie'] ?? '';
+    $archivage = isset($_POST['archivage']) ? (int)$_POST['archivage'] : 0;
     $image = $_FILES['image']['name'] ?? '';
 
     // Si une nouvelle image est téléchargée
@@ -42,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
         $targetDir = "../../frontOfficeBib/";
         $targetFile = $targetDir . basename($image);
 
-        // Vérification de l'extension du fichier
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
 
@@ -50,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
             echo "<script>alert('Veuillez choisir un fichier avec une extension d\'image valide (jpg, jpeg, png, gif, bmp).');</script>";
         } else {
             if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                // Mise à jour avec nouvelle image
                 $updateQuery = "UPDATE articles 
                                 SET Titre_article = :titre, 
                                     Description_article = :description, 
                                     Image_article = :image, 
                                     bibliographie = :bibliographie,
+                                    archivage = :archivage,
                                     date_maj = NOW() 
                                 WHERE Id_article = :article_id";
                 $stmt = $pdo->prepare($updateQuery);
@@ -63,22 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
                 $stmt->bindParam(':description', $description);
                 $stmt->bindParam(':image', $image);
                 $stmt->bindParam(':bibliographie', $bibliographie);
+                $stmt->bindParam(':archivage', $archivage, PDO::PARAM_INT);
                 $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
                 $stmt->execute();
             }
         }
     } else {
-        // Mise à jour sans changer l'image
         $updateQuery = "UPDATE articles 
                         SET Titre_article = :titre, 
                             Description_article = :description, 
                             bibliographie = :bibliographie,
+                            archivage = :archivage,
                             date_maj = NOW() 
                         WHERE Id_article = :article_id";
         $stmt = $pdo->prepare($updateQuery);
         $stmt->bindParam(':titre', $titre);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':bibliographie', $bibliographie);
+        $stmt->bindParam(':archivage', $archivage, PDO::PARAM_INT);
         $stmt->bindParam(':article_id', $article_id, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -109,16 +111,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
       var titre = document.forms["articleForm"]["titre"].value;
       var description = document.forms["articleForm"]["description"].value;
       var bibliographie = document.forms["articleForm"]["bibliographie"].value;
+      var archivage = document.forms["articleForm"]["archivage"].value;
       var image = document.forms["articleForm"]["image"].value;
       
       var titreError = document.getElementById("titreError");
       var descriptionError = document.getElementById("descriptionError");
       var bibliographieError = document.getElementById("bibliographieError");
+      var archivageError = document.getElementById("archivageError");
       var imageError = document.getElementById("imageError");
       
       titreError.innerHTML = "";
       descriptionError.innerHTML = "";
       bibliographieError.innerHTML = "";
+      archivageError.innerHTML = "";
       imageError.innerHTML = "";
       
       if (titre == "") {
@@ -135,9 +140,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
         bibliographieError.innerHTML = "La bibliographie ne doit pas dépasser 500 caractères.";
         isValid = false;
       }
+
+      if (archivage != 0 && archivage != 1) {
+        archivageError.innerHTML = "La valeur de l'archivage doit être 0 ou 1.";
+        isValid = false;
+      }
       
       if (image != "") {
-        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.bmp)$/i;
+        var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.bmp)$/i;
         if (!allowedExtensions.exec(image)) {
           imageError.innerHTML = "Veuillez choisir un fichier avec une extension d'image valide.";
           isValid = false;
@@ -148,6 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
     }
   </script>
 </head>
+
+
+
 
 <body>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ps">
@@ -184,6 +197,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
             <input type="file" name="image" class="form-control" accept="image/*">
             <div id="imageError" class="error"></div>
             <p>Image actuelle : <img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image de l'article" width="100"></p>
+          </div>
+          
+          <div class="mb-3">
+            <label for="archivage">Archivage (0 pour archivé, 1 pour actif)</label>
+            <input type="number" 
+                   name="archivage" 
+                   id="archivage" 
+                   class="form-control" 
+                   min="0" 
+                   max="1" 
+                   value="<?php echo htmlspecialchars($article['archivage']); ?>" 
+                   onchange="validateArchivage(this)"
+                   required>
+            <div id="archivageError" class="text-danger"></div>
           </div>
           
           <button type="submit" class="btn btn-success">Mettre à jour</button>
