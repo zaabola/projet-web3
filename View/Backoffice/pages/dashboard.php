@@ -1,17 +1,55 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
+<?php
+    // Database connection settings
+    $host = "localhost";
+    $dbname = "empreinte1";
+    $username = "root";
+    $password = "";
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
+    }
 
-=========================================================
+    // Fetch all products for the dropdown and table
+    $products = [];
+    try {
+        $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+    }
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
+    // Check if the form was submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nom_produit = $_POST['Nom_Produit'] ?? null;
+        $new_quantity = $_POST['Qte'] ?? null;
+
+        // Validate inputs
+        if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
+            echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
+        } else {
+            try {
+                // Update product quantity
+                $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
+                $stmt = $pdo->prepare($update_sql);
+                $stmt->execute([
+                    'new_quantity' => $new_quantity,
+                    'nom_produit' => $nom_produit
+                ]);
+
+                echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
+
+                // Refresh the product list
+                $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (Exception $e) {
+                echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
+            }
+        }
+    }
+    ?>
 <?php    
 require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include the Commande class
 require_once 'c:/xampp/htdocs/projet/config.php';  // Include your config for DB connection
@@ -95,9 +133,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-dark" href="deletecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">DeleteOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="updatecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">UpdateOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="fetchcommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">fetchOrders</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
             <span class="nav-link-text ms-1">Complaints</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/produit.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Products</span>
           </a>
         </li>
         
@@ -379,169 +441,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="card-body px-0 pb-2">
               <div class="table-responsive">
                 <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Products</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Chachia</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 55 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">60%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                         
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Jebba</h6>
-                          </div>
-                        </div>
+                
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($products as $product) : ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($product['id_produit']); ?></td>
+                    <td><?php echo htmlspecialchars($product['Nom_Produit']); ?></td>
+                    <td><?php echo htmlspecialchars($product['Qte']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
                       </td>
                       
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 60 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">10%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-10" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Hannibaal Statue</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 68 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">100%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-success w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                         
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Khomssa</h6>
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 78 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">100%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-success w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                        
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Kholkhal</h6>
-                          </div>
-                        </div>
-                      </td>
-      
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 50 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">25%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-25" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="25"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                         
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Zarbiya</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 20 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">40%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="40"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>

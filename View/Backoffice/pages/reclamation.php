@@ -43,13 +43,37 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tables</span>
+            <span class="nav-link-text ms-1">Orders</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="deletecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">DeleteOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="updatecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">UpdateOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="fetchcommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">fetchOrders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
             <span class="nav-link-text ms-1">Complaint</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/produit.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Products</span>
           </a>
         </li>
     </ul>
@@ -82,22 +106,46 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Create operation
     if (isset($_POST['action']) && $_POST['action'] == 'create') {
-        $id_commande = $_POST['Id_commande'];
-        $commentaire = $_POST['Commentaire'];
-        $nom = $_POST['Nom'];
-        $prenom = $_POST['Prenom'];
-        $email = $_POST['Email'];
-        $tel = $_POST['Tel'];
+      $id_commande = $_POST['Id_commande'];
+      $commentaire = $_POST['Commentaire'];
+      $nom = $_POST['Nom'];
+      $prenom = $_POST['Prenom'];
+      $email = $_POST['Email'];
+      $tel = $_POST['Tel'];
 
-        $sql = "INSERT INTO reclamation (Id_commande, Commentaire, Nom, Prenom, Email, Tel) 
-                VALUES (:id_commande, :commentaire, :nom, :prenom, :email, :tel)";
-        $stmt = $pdo->prepare($sql);
-        if ($stmt->execute(compact('id_commande', 'commentaire', 'nom', 'prenom', 'email', 'tel'))) {
-            $message = "Reclamation created successfully.";
-        } else {
-            $message = "Failed to create reclamation.";
-        }
-    }
+      // Start transaction
+      $pdo->beginTransaction();
+
+      try {
+          // Insert reclamation
+          $sql = "INSERT INTO reclamation
+                  VALUES (NULL, :id_commande, :commentaire, :nom, :prenom, :email, :tel)";
+          $stmt = $pdo->prepare($sql);
+          $stmt->execute([
+              'id_commande' => $id_commande,
+              'commentaire' => $commentaire,
+              'nom' => $nom,
+              'prenom' => $prenom,
+              'email' => $email,
+              'tel' => $tel
+          ]);
+
+          // Delete corresponding commande
+          $sql = "DELETE FROM commande WHERE Id_commande = :id_commande";
+          $stmt = $pdo->prepare($sql);
+          $stmt->execute(['id_commande' => $id_commande]);
+
+          // Commit transaction
+          $pdo->commit();
+
+          $message = "Reclamation created successfully. Corresponding commande deleted successfully.";
+      } catch (PDOException $e) {
+          // Rollback transaction in case of error
+          $pdo->rollBack();
+          $message = "Failed to create reclamation and delete corresponding commande: " . $e->getMessage();
+          error_log($e->getMessage());
+      }
+  }
 
     // Update operation
     if (isset($_POST['action']) && $_POST['action'] == 'update') {
@@ -289,6 +337,3 @@ $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }
     </script>
-
-</body>
-</html>

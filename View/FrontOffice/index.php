@@ -1,79 +1,52 @@
 <?php
-require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include the Commande class
+session_start();
 
 $host = "localhost";
 $username = "root";
 $password = "";
 $dbname = "empreinte1";
 
-// Database connection
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
+// Create connection
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Create an instance of the Commande class
-$commande = new Commande($db);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $action = $_POST['action'] ?? '';
 
-// Handle different actions based on the request method
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Create a new order
-    if (isset($_POST['action']) && $_POST['action'] === 'create') {
-        $Adresse_client = $_POST['Adresse_client'];
-        $Tel_client = $_POST['Tel_client'];
-        $Nom_client = $_POST['Nom_client'];
-        $Prenom_client = $_POST['Prenom_client'];
+    switch ($action) {
+        case 'add_to_cart':
+            $id_produit = intval($_POST['id_produit']);
+            if (!isset($_SESSION['cart'])) {
+                $_SESSION['cart'] = array();
+            }
 
-        if ($commande->createCommande($Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
-            echo "Order created successfully!";
-        } else {
-            echo "Failed to create order.";
-        }
+            if (!isset($_SESSION['cart'][$id_produit])) {
+                $_SESSION['cart'][$id_produit] = 1; // Initialize with 1
+            } else {
+                $_SESSION['cart'][$id_produit] += 1; // Increment if already exists
+            }
+
+            // Check if panier_items record exists for the user (assumed id_panier = 1)
+            $check_sql = "SELECT * FROM panier_items WHERE id_panier = 1";
+            $check_result = mysqli_query($conn, $check_sql);
+
+            if (mysqli_num_rows($check_result) == 0) {
+                // Insert new record into panier_items if it does not exist
+                $insert_sql = "INSERT INTO panier_items (id_panier) VALUES (1)";
+                mysqli_query($conn, $insert_sql);
+            }
+
+            header('Location: panier.php');
+            exit();
     }
-
-    // Update an existing order
-    if (isset($_POST['action']) && $_POST['action'] === 'update') {
-        $Id_commande = $_POST['Id_commande'];
-        $Adresse_client = $_POST['Adresse_client'];
-        $Tel_client = $_POST['Tel_client'];
-        $Nom_client = $_POST['Nom_client'];
-        $Prenom_client = $_POST['Prenom_client'];
-
-        if ($commande->updateCommande($Id_commande, $Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
-            echo "Order updated successfully!";
-        } else {
-            echo "Failed to update order.";
-        }
-    }
-
-    // Delete an order
-    if (isset($_POST['action']) && $_POST['action'] === 'delete') {
-        $Id_commande = $_POST['Id_commande'];
-
-        if ($commande->deleteCommande($Id_commande)) {
-            echo "Order deleted successfully!";
-        } else {
-            echo "Failed to delete order.";
-        }
-    }
-}
-
-// Handle reading orders
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Get all orders
-    $orders = $commande->getAllCommandes();
-     // Return orders as JSON
-}
-
-// Example of getting a specific order by ID
-if (isset($_GET['Id_commande'])) {
-    $Id_commande = $_GET['Id_commande'];
-    $order = $commande->getCommandeById($Id_commande);
-     // Return the specific order as JSON
 }
 ?>
+
+
 
 <!doctype html>
 <html lang="en">
@@ -136,9 +109,13 @@ if (isset($_GET['Id_commande'])) {
                                 <li class="nav-item">
                                     <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="panier.php">Panier</a>
+                                </li>
                             </ul>
 
-                            
+                            <button id="lang-switch" class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)">Switch Language</button>
+
                         </div>
                     </div>
                 </nav>
@@ -169,260 +146,242 @@ if (isset($_GET['Id_commande'])) {
 
 <div class="hero-slides"></div>
 </section>
-
 <section class="barista-section section-padding section-bg" id="section_69">
-                    <div class="container">
-                        <div class="row justify-content-center">
-
-                            <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
-                                <em class="text-white">Experience The History Of Tuinisia </em>
-
-                                <h2 class="text-white">Shop</h2>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Chachia</h4>
-
-                                            <p class="badge ms-4"><em>10DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">The chechia is a traditional headgear worn in Tuinisia.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="chachia.png" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                    
-                                </div>
-                                <br>
-                                
-               
-            
-        </div>
-
-       
-
-
-<div class="col-lg-3 col-md-6 col-12 mb-4">
-    <div class="team-block-wrap">
-        <div class="team-block-info d-flex flex-column">
-            <div class="d-flex mt-auto mb-3">
-                <h4 class="text-white mb-0">Zarbiya Karwiya</h4>
-                <p class="badge ms-4"><em>200DT</em></p>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
+                <em class="text-white">Experience The History Of Tunisia</em>
+                <h2 class="text-white">Shop</h2>
             </div>
-            <p class="text-white mb-0">Big deals! upholstery fabric kilim orange fabric kilim boho armchair fabric kilim bohemian tribal persian ethnic rug kilim by the yard meter chair sofa Hurry.</p>
-        </div>
-        <div class="team-block-image-wrap">
-            <img src="OIP (3).jpg" class="team-block-image img-fluid" alt="">
-        </div>
-    </div>
-    
-   
 
-</div>
+            <!-- Filters Section -->
+            <div class="col-lg-12 text-center mb-4">
+                <button class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)" data-filter="all">All</button>
+                <button class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)" data-filter="price-asc">Price: Low to High</button>
+                <button class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)" data-filter="price-desc">Price: High to Low</button>
+                <button class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)" data-filter="popularity">Most Popular</button>
+                <select class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)" id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="decor">Decor</option>
+                </select>
+            </div>
 
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Kholkhal</h4>
-
-                                            <p class="badge ms-4"><em>60dt</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">The Kholkhal is a traditional accessory worn by women in Tunisia for centuries.</p>
-                                    </div>
-                                    
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="R.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                
-                            
-                               
+            <!-- Products Section -->
+            <div id="product-list" class="row">
+                <!-- Chachia -->
+                <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="10" data-popularity="50" data-category="accessories">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Chachia</h4>
+                                <p class="badge ms-4"><em>10DT</em></p>
                             </div>
-
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Khamsa</h4>
-
-                                            <p class="badge ms-4"><em>25DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">The Khamsa is a symbol representing a hand, used as an amulet, talisman and jewelry by the inhabitants of North Africa..</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                               
-                                
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Hannibal's statue</h4>
-
-                                            <p class="badge ms-4"><em>600DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">Hannibal was a Carthaginian general and politician, generally regarded as one of the greatest military tacticians in history.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                                
-                            
-                               
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Jebba</h4>
-
-                                            <p class="badge ms-4"><em>140DT</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">Sa fabrication artisanale est assurée par des artisans qui coupent, cousent et brodent, dans des variations tenant aux particularismes régionaux, à l'usage (quotidien ou cérémoniel) et au niveau de richesse.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="jebba.jpg" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                               
-                            
-                               
-                            </div>
-
-
+                            <p class="text-white mb-0">The chechia is a traditional headgear worn in Tunisia.</p>
+                        </div>
+                        <div class="team-block-image-wrap">
+                            <img src="chachia.png" class="team-block-image" alt="Chachia">
                         </div>
                     </div>
-                    
-                </section>
-               
-                <section class="booking-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div >
-                    <div class="booking-form-wrap">
-                        <div class="row">
-                            <div class="col-lg-7 col-12 p-0">
-                                <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs1()" id="createOrderForm">
-                                    <input type="hidden" name="formValid" id="formValid" value="false">
-                                    <div class="text-center mb-4 pb-lg-2">
-                                        <em class="text-white">Remplir le formulaire de commande</em>
-                                        <h2 class="text-white">Acheter une Produit</h2>
-                                    </div>
-                                    <div class="booking-form-body">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-12">
-                                                <input type="text" name="Prenom_client" id="Prenom_client" class="form-control" placeholder="Nom">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="text" name="Nom_client" id="Nom_client" class="form-control" placeholder="Prénom">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="tel" name="Tel_client" id="Tel_client" class="form-control" placeholder="Téléphone">
-                                            </div>
-                                            <div class="col-lg-6 col-12">
-                                                <input type="text" name="Adresse_client" id="Adresse_client" class="form-control" placeholder="Adresse">
-                                            </div>
-                                            <div class="col-lg-12 col-12">
-                                                <select name="destination" id="produit1" class="form-control">
-                                                    <option value="" disabled selected>Choisir une Produit</option>
-                                                    <option value="Tozeur">Chachia</option>
-                                                    <option value="Djerba">Jebba</option>
-                                                    <option value="El Jem">Kholkhal</option>
-                                                    <option value="Sidi Bou Said">Zarbiya</option>
-                                                    <option value="Carthage">Khomssa</option>
-                                                    <option value="Tunis">Hannibaal statue</option>
-                                                </select>
-                                                <textarea name="commentaire" rows="3" class="form-control" placeholder="Commentaire (optionnel)"></textarea>
-                                            </div>
-                                            <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                <button type="submit" class="form-control">Acheter</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="1">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Zarbiya Karwiya -->
+                <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="200" data-popularity="30" data-category="decor">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Zarbiya Karwiya</h4>
+                                <p class="badge ms-4"><em>200DT</em></p>
                             </div>
-                            <div class="col-lg-5 col-12 p-0">
-                               
-                            </div>
+                            <p class="text-white mb-0">Upholstery fabric kilim orange fabric kilim boho armchair fabric kilim bohemian tribal Persian ethnic rug.</p>
                         </div>
+                        <div class="team-block-image-wrap">
+                            <img src="OIP (3).jpg" class="team-block-image img-fluid" alt="Zarbiya Karwiya">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="2">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Kholkhal -->
+                <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="60" data-popularity="40" data-category="accessories">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Kholkhal</h4>
+                                <p class="badge ms-4"><em>60DT</em></p>
+                            </div>
+                            <p class="text-white mb-0">The Kholkhal is a traditional accessory worn by women in Tunisia for centuries.</p>
+                        </div>
+                        <div class="team-block-image-wrap">
+                            <img src="R.jpg" class="team-block-image img-fluid" alt="Kholkhal">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="3">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Khamsa -->
+                <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="25" data-popularity="60" data-category="accessories">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Khamsa</h4>
+                                <p class="badge ms-4"><em>25DT</em></p>
+                            </div>
+                            <p class="text-white mb-0">The Khamsa is a symbol representing a hand, used as an amulet, talisman, and jewelry in North Africa.</p>
+                        </div>
+                        <div class="team-block-image-wrap">
+                            <img src="mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="Khamsa">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="4">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Hannibal's Statue -->
+                <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="600" data-popularity="10" data-category="decor">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Hannibal's Statue</h4>
+                                <p class="badge ms-4"><em>600DT</em></p>
+                            </div>
+                            <p class="text-white mb-0">Hannibal was a Carthaginian general and politician, regarded as one of the greatest military tacticians in history.</p>
+                        </div>
+                        <div class="team-block-image-wrap">
+                            <img src="Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="Hannibal's Statue">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="5">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
+                    </div>
+                </div>
+
+                               <!-- Jebba -->
+                               <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="140" data-popularity="20" data-category="clothing">
+                    <div class="team-block-wrap">
+                        <div class="team-block-info d-flex flex-column">
+                            <div class="d-flex mt-auto mb-3">
+                                <h4 class="text-white mb-0">Jebba</h4>
+                                <p class="badge ms-4"><em>140DT</em></p>
+                            </div>
+                            <p class="text-white mb-0">Artisan-made, reflecting regional variations and ceremonial or daily use.</p>
+                        </div>
+                        <div class="team-block-image-wrap">
+                            <img src="jebba.jpg" class="team-block-image img-fluid" alt="Jebba">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <form method="POST" action="index.php">
+                            <input type="hidden" name="id_produit" value="6">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" class="animated-button">Add to cart</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <script>
-    function verifyInputs1() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => msg.remove());
+    </div>
+</section>
 
-        const lastName1 = document.getElementById('Prenom_client').value;
-        const Adresse1 = document.getElementById('Adresse_client').value;
-        const firstName1 = document.getElementById('Nom_client').value;
-        const phone1 = document.getElementById('Tel_client').value;
-        const produit1 = document.getElementById('produit1').value;
-        let isValid = true;
+<!-- JavaScript for filtering products -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const categoryFilter = document.getElementById('category-filter');
+        const productList = document.getElementById('product-list');
 
-        if (!lastName1) {
-            showError('Prenom_client', 'Remplir champ Nom.');
-            isValid = false; 
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = button.getAttribute('data-filter');
+                filterProducts(filter);
+            });
+        });
+
+        categoryFilter.addEventListener('change', function() {
+            const filter = categoryFilter.value;
+            filterProducts(filter);
+        });
+
+        function filterProducts(filter) {
+            const products = productList.querySelectorAll('.product-item');
+            products.forEach(product => {
+                if (filter === 'all' || product.getAttribute('data-category') === filter) {
+                    product.style.display = 'block';
+                } else if (filter.includes('price') || filter.includes('popularity')) {
+                    const sortedProducts = Array.from(products).sort((a, b) => {
+                        if (filter === 'price-asc') {
+                            return a.getAttribute('data-price') - b.getAttribute('data-price');
+                        } else if (filter === 'price-desc') {
+                            return b.getAttribute('data-price') - a.getAttribute('data-price');
+                        } else if (filter === 'popularity') {
+                            return b.getAttribute('data-popularity') - a.getAttribute('data-popularity');
+                        }
+                    });
+                    sortedProducts.forEach(product => {
+                        productList.appendChild(product);
+                    });
+                } else {
+                    product.style.display = 'none';
+                }
+            });
         }
-
-        if (!firstName1) {
-            showError('Nom_client', 'Remplir champ Prenom.');
-            isValid = false; 
-        }
-        if (phone1.length !== 8) {
-            showError('Tel_client', 'Le numéro doit comporter exactement 8 chiffres.');
-            isValid = false; 
-        }
-        if (!Adresse1) {
-            showError('Adresse_client', "Donne une adresse");
-            isValid = false;
-        }
-
-        if (!produit1) {
-            showError('produit1', "Choisir une Produit");
-            isValid = false;
-        }
-        
-
-        // Set the hidden input value for form validation status
-        if (isValid) {
-            document.getElementById('formValid').value = 'true';
-        } else {
-            document.getElementById('formValid').value = 'false';
-        }
-
-        return isValid; // Return false to prevent form submission if validation fails
-    }
-
-    function showError(inputId, message) {
-        const inputField = document.getElementById(inputId);
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-message';
-        errorMessage.style.color = 'red'; 
-        errorMessage.innerText = message;
-        inputField.parentNode.insertBefore(errorMessage, inputField);
-    }
+    });
 </script>
 
+
+
+<script>
+    document.querySelectorAll('.filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+            const products = document.querySelectorAll('.product-item');
+            const productList = document.getElementById('product-list');
+            
+            let sortedProducts = Array.from(products);
+
+            if (filter === 'price-asc') {
+                sortedProducts.sort((a, b) => a.getAttribute('data-price') - b.getAttribute('data-price'));
+            } else if (filter === 'price-desc') {
+                sortedProducts.sort((a, b) => b.getAttribute('data-price') - a.getAttribute('data-price'));
+            } else if (filter === 'popularity') {
+                sortedProducts.sort((a, b) => b.getAttribute('data-popularity') - a.getAttribute('data-popularity'));
+            }
+
+            productList.innerHTML = '';
+            sortedProducts.forEach(product => productList.appendChild(product));
+        });
+    });
+</script>
+   
                 <section class="contact-section section-padding" id="section_5">
                     <div class="container">
                         <div class="row">   
@@ -436,9 +395,20 @@ if (isset($_GET['Id_commande'])) {
 
                                                 <h2 class="text-white">Reclamation</h2>
                                                 <em class="text-white">if you want to make a complaint contact us at 99888777</em>
+                                                <br>
+                                                <em class="text-white">or you can visit our shop</em>
                                             </div>
+                                
+                                        </div>
+                                        <div class="col-lg-6 col-12 mx-auto mt-5 mt-lg-0 ps-lg-5">
+                                <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5039.668141741662!2d72.81814769288509!3d19.043340656729775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c994f34a7355%3A0x2680d63a6f7e33c2!2sLover%20Point!5e1!3m2!1sen!2sth!4v1692722771770!5m2!1sen!2sth" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>  
+                            </div>   
+</div>
 
-                                            
+</div>
+               
+
+                           
                 </section>
 
 
@@ -608,5 +578,144 @@ if (isset($_GET['Id_commande'])) {
                 .catch(error => console.error('Error fetching orders:', error));
         }
     </script>
+    <script>document.addEventListener('DOMContentLoaded', function() {
+    const translations = {
+        en: {
+            'welcome': 'Welcome to Our Web Site بصمة',
+            'our_story': 'Our Story',
+            'check_store': 'Check Store',
+            'reclamation_heading': 'Reclamation',
+            'reclamation_text': 'If you want to make a complaint contact us at 99888777 or you can visit our shop',
+            'or_visit_shop': 'or you can visit our shop',
+            'where_to_find': 'Where to find us?',
+            'contact': 'Contact',
+            'phone': 'Phone:',
+            'email': 'Email:',
+            'opening_hours': 'Opening Hours',
+            'monday_friday': 'Monday - Friday',
+            'saturday': 'Saturday',
+            'sunday': 'Sunday',
+            'closed': 'Closed',
+            'switch_lang': 'Switch to French',
+            'add_to_cart': 'Add to cart',
+            'home': 'Home',
+            'shop': 'Shop',
+            'reclamation_nav': 'Reclamation',
+            'panier': 'Panier',
+            'experience': 'Experience The History Of Tunisia',
+            'shop_heading': 'Shop',
+            'all': 'All',
+            'price_asc': 'Price: Low to High',
+            'price_desc': 'Price: High to Low',
+            'popularity': 'Most Popular',
+            'all_categories': 'All Categories',
+            'accessories': 'Accessories',
+            'clothing': 'Clothing',
+            'decor': 'Decor'
+        },
+        fr: {
+            'welcome': 'Bienvenue sur notre site Web بصمة',
+            'our_story': 'Notre Histoire',
+            'check_store': 'Consulter la boutique',
+            'reclamation_heading': 'Réclamation',
+            'reclamation_text': 'Si vous voulez faire une réclamation contactez-nous au 99888777 ou vous pouvez visiter notre boutique',
+            'or_visit_shop': 'ou vous pouvez visiter notre boutique',
+            'where_to_find': 'Où nous trouver?',
+            'contact': 'Contact',
+            'phone': 'Téléphone:',
+            'email': 'E-mail:',
+            'opening_hours': 'Heures d\'ouverture',
+            'monday_friday': 'Lundi - Vendredi',
+            'saturday': 'Samedi',
+            'sunday': 'Dimanche',
+            'closed': 'Fermé',
+            'switch_lang': 'Passer à l\'anglais',
+            'add_to_cart': 'Ajouter au panier',
+            'home': 'Accueil',
+            'shop': 'Boutique',
+            'reclamation_nav': 'Réclamation',
+            'panier': 'Panier',
+            'experience': 'Découvrez l\'histoire de la Tunisie',
+            'shop_heading': 'Boutique',
+            'all': 'Tout',
+            'price_asc': 'Prix: du plus bas au plus élevé',
+            'price_desc': 'Prix: du plus élevé au plus bas',
+            'popularity': 'Les plus populaires',
+            'all_categories': 'Toutes les catégories',
+            'accessories': 'Accessoires',
+            'clothing': 'Vêtements',
+            'decor': 'Décor'
+        }
+    };
+
+    let currentLang = 'en';
+
+    document.getElementById('lang-switch').addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'fr' : 'en';
+        updateText();
+    });
+
+    function updateText() {
+        document.querySelector('.hero-section .small-text').textContent = translations[currentLang]['welcome'];
+        document.querySelector('.btn.custom-btn.custom-border-btn').textContent = translations[currentLang]['our_story'];
+        document.querySelector('.btn.custom-btn.smoothscroll').textContent = translations[currentLang]['check_store'];
+        document.querySelector('.contact-section h2').textContent = translations[currentLang]['reclamation_heading'];
+        document.querySelector('.contact-section em').textContent = translations[currentLang]['reclamation_text'];
+        document.querySelector('.site-footer .text-white.d-block.mb-4').textContent = translations[currentLang]['where_to_find'];
+        document.querySelector('.site-footer .d-flex.mb-1 strong').textContent = translations[currentLang]['phone'];
+        document.querySelector('.site-footer .d-flex strong').textContent = translations[currentLang]['email'];
+        document.querySelector('.opening-hours-list').previousElementSibling.textContent = translations[currentLang]['opening_hours'];
+
+        // Update opening hours
+        const openingHoursList = document.querySelectorAll('.opening-hours-list li');
+        openingHoursList[0].childNodes[0].textContent = translations[currentLang]['monday_friday'];
+        openingHoursList[1].childNodes[0].textContent = translations[currentLang]['saturday'];
+        openingHoursList[2].childNodes[0].textContent = translations[currentLang]['sunday'];
+        openingHoursList[2].childNodes[2].textContent = translations[currentLang]['closed'];
+
+        // Update menu items
+        document.querySelectorAll('.nav-link.click-scroll')[0].textContent = translations[currentLang]['home'];
+        document.querySelectorAll('.nav-link.click-scroll')[1].textContent = translations[currentLang]['shop'];
+        document.querySelectorAll('.nav-link.click-scroll')[2].textContent = translations[currentLang]['reclamation_nav'];
+        document.querySelectorAll('.nav-link.click-scroll')[3].textContent = translations[currentLang]['panier'];
+
+        // Update section headings
+        document.querySelector('.barista-section em.text-white').textContent = translations[currentLang]['experience'];
+        document.querySelector('.barista-section h2.text-white').textContent = translations[currentLang]['shop_heading'];
+
+        // Update filter buttons and select options
+        document.querySelectorAll('.filter-btn[data-filter="all"]').forEach(btn => btn.textContent = translations[currentLang]['all']);
+        document.querySelectorAll('.filter-btn[data-filter="price-asc"]').forEach(btn => btn.textContent = translations[currentLang]['price_asc']);
+        document.querySelectorAll('.filter-btn[data-filter="price-desc"]').forEach(btn => btn.textContent = translations[currentLang]['price_desc']);
+        document.querySelectorAll('.filter-btn[data-filter="popularity"]').forEach(btn => btn.textContent = translations[currentLang]['popularity']);
+        
+        document.getElementById('category-filter').querySelectorAll('option')[0].textContent = translations[currentLang]['all_categories'];
+        document.getElementById('category-filter').querySelectorAll('option')[1].textContent = translations[currentLang]['accessories'];
+        document.getElementById('category-filter').querySelectorAll('option')[2].textContent = translations[currentLang]['clothing'];
+        document.getElementById('category-filter').querySelectorAll('option')[3].textContent = translations[currentLang]['decor'];
+
+        // Update additional text
+        document.querySelectorAll('.contact-section em')[1].textContent = translations[currentLang]['or_visit_shop'];
+
+        // Update all buttons
+        document.querySelectorAll('button, .btn').forEach(button => {
+            switch(button.id) {
+                case 'lang-switch':
+                    button.textContent = translations[currentLang]['switch_lang'];
+                    break;
+                default:
+                    if (button.textContent.trim() === 'Add to cart' || button.textContent.trim() === 'Ajouter au panier') {
+                        button.textContent = translations[currentLang]['add_to_cart'];
+                    }
+            }
+        });
+    }
+
+    updateText(); // Call to ensure the text is correctly set on page load
+});
+</script>
+
+
+
     </body>
 </html>

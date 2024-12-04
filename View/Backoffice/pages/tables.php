@@ -12,6 +12,116 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Include the Commande class
+require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; 
+
+// Database connection settings
+$host = "localhost";
+$dbname = "empreinte1";
+$username = "root";
+$password = "";
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'];
+
+    if ($action === 'create') {
+        // Retrieve form data
+        $nom_produit = $_POST['Nom_Produit'] ?? null;
+        $quantite_commande = $_POST['Qte'] ?? null;
+        $adresse_client = $_POST['Adresse_client'] ?? null;
+        $tel_client = $_POST['Tel_client'] ?? null;
+        $nom_client = $_POST['Nom_client'] ?? null;
+        $prenom_client = $_POST['Prenom_client'] ?? null;
+
+        // Validate inputs
+        if (!$nom_produit || !$quantite_commande || $quantite_commande <= 0 || !$adresse_client || !$tel_client || !$nom_client || !$prenom_client) {
+            die("<p style='color: red;'>Invalid input data. Ensure all fields are filled correctly.</p>");
+        }
+
+        try {
+            // Begin a transaction
+            $pdo->beginTransaction();
+
+            // Check product availability
+            $check_sql = "SELECT Id_produit, Qte FROM produit WHERE Nom_Produit = :nom_produit";
+            $stmt = $pdo->prepare($check_sql);
+            $stmt->execute(['nom_produit' => $nom_produit]);
+            $produit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$produit) {
+                throw new Exception("Product not found.");
+            }
+
+            if ($produit['Qte'] < $quantite_commande) {
+                throw new Exception("Insufficient stock.");
+            }
+
+            // Insert into the panier_items table to create a new panier
+            $panier_sql = "INSERT INTO panier_items (total_cost) VALUES (0)";
+            $stmt = $pdo->prepare($panier_sql);
+            $stmt->execute();
+            $id_panier = $pdo->lastInsertId(); // Get the newly created panier ID
+
+            // Insert into the commande table
+            $commande_sql = "INSERT INTO commande (Adresse_client, Tel_client, Nom_client, Prenom_client, id_panier) 
+                            VALUES (:adresse_client, :tel_client, :nom_client, :prenom_client, :id_panier)";
+            $stmt = $pdo->prepare($commande_sql);
+            $stmt->execute([
+                'adresse_client' => $adresse_client,
+                'tel_client' => $tel_client,
+                'nom_client' => $nom_client,
+                'prenom_client' => $prenom_client,
+                'id_panier' => $id_panier // Use the newly created panier ID
+            ]);
+            $id_commande = $pdo->lastInsertId(); // Get the newly created commande ID
+
+            // Update product quantity
+            $update_sql = "UPDATE produit SET Qte = Qte - :quantite WHERE Id_produit = :id_produit";
+            $stmt = $pdo->prepare($update_sql);
+            $stmt->execute([
+                'quantite' => $quantite_commande,
+                'id_produit' => $produit['Id_produit']
+            ]);
+
+            // Insert into ligne_commande table
+            $ligne_commande_sql = "INSERT INTO ligne_commande (Id_Commande, id_panier, Quantite) 
+                                VALUES (:id_commande, :id_panier, :quantite)";
+            $stmt = $pdo->prepare($ligne_commande_sql);
+            $stmt->execute([
+                'id_commande' => $id_commande,
+                'id_panier' => $id_panier, // Use the newly created panier ID
+                'quantite' => $quantite_commande
+            ]);
+
+            // Commit the transaction
+            $pdo->commit();
+
+            // Redirect to avoid form re-submission (PRG Pattern)
+            header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&commande_id=" . $id_commande);
+            exit; // Ensure no further code is executed after the redirect
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $pdo->rollBack();
+            echo "<p style='color: red;'>Error: " . $e->getMessage() . "</p>";
+        }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['success'] == 1) {
+    echo "<p style='color: green;'>Commande placed successfully! Commande ID: " . htmlspecialchars($_GET['commande_id']) . "</p>";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,9 +165,27 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/tables.html">
+          <a class="nav-link active bg-gradient-dark text-white" href="../pages/tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="deletecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">DeleteOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="updatecommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">UpdateOrder</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="fetchcommande.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">fetchOrders</span>
           </a>
         </li>
         <li class="nav-item">
@@ -66,7 +194,12 @@
             <span class="nav-link-text ms-1">Complaints</span>
           </a>
         </li>
-        
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/produit.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Products</span>
+          </a>
+        </li>
         
       </ul>
     </div>
@@ -75,86 +208,7 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-  <?php
-require_once 'c:/xampp/htdocs/projet/view/Backoffice/commande.php'; // Include the Commande class
-// require 'c:/xampp/htdocs/projet/config.php'; 
-
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "empreinte1";
-
-// Database connection
-try {
-    $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
-}
-
-// Create an instance of the Commande class
-$commande = new Commande($db);
-
-// Handle different actions based on the request method
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Create a new order
-    if (isset($_POST['action']) && $_POST['action'] === 'create') {
-        $Adresse_client = $_POST['Adresse_client'];
-        $Tel_client = $_POST['Tel_client'];
-        $Nom_client = $_POST['Nom_client'];
-        $Prenom_client = $_POST['Prenom_client'];
-
-        if ($commande->createCommande($Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
-            echo "Order created successfully!";
-        } else {
-            echo "Failed to create order.";
-        }
-    }
-
-    // Update an existing order
-    if (isset($_POST['action']) && $_POST['action'] === 'update') {
-        $Id_commande = $_POST['Id_commande'];
-        $Adresse_client = $_POST['Adresse_client'];
-        $Tel_client = $_POST['Tel_client'];
-        $Nom_client = $_POST['Nom_client'];
-        $Prenom_client = $_POST['Prenom_client'];
-
-        if ($commande->updateCommande($Id_commande, $Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
-            echo "Order updated successfully!";
-        } else {
-            echo "Failed to update order.";
-        }
-    }
-
-    // Delete an order
-    if (isset($_POST['action']) && $_POST['action'] === 'delete') {
-        $Id_commande = $_POST['Id_commande'];
-
-        if ($commande->deleteCommande($Id_commande)) {
-            echo "Order deleted successfully!";
-        } else {
-            echo "Failed to delete order.";
-        }
-    }
-}
-
-// Handle reading orders
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Get all orders
-    $orders = $commande->getAllCommandes();
-    // Return orders as JSON
-}
-
-// Example of getting a specific order by ID
-if (isset($_GET['Id_commande'])) {
-    $Id_commande = $_GET['Id_commande'];
-    $order = $commande->getCommandeById($Id_commande);
-     // Return the specific order as JSON
-}
-
-?>
-
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -198,39 +252,101 @@ if (isset($_GET['Id_commande'])) {
     <h1>Order Management System</h1>
 
     <!-- Form to create a new order -->
-    <form id="createOrderForm">
-        <h2>Create a New Order</h2>
-        <input type="text" name="Adresse_client" placeholder="Client Address" required>
-        <input type="text" name="Tel_client" placeholder="Client Phone Number" required>
-        <input type="text" name="Nom_client" placeholder="Client First Name" required>
-        <input type="text" name="Prenom_client" placeholder="Client Last Name" required>
-        <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" type="submit">Create Order</button>
-    </form>
+    <div id="createOrderForm">
+    <form method="POST" action="tables.php" onsubmit="return validateOrderForm()">
+        <input type="hidden" name="action" value="create">
 
-    <!-- Form to update an existing order -->
-    <form id="updateOrderForm">
-        <h2>Update an Order</h2>
-        <input type="number" name="Id_commande" placeholder="Order ID" required>
-        <input type="text" name="Adresse_client" placeholder="Client Address" required>
-        <input type="text" name="Tel_client" placeholder="Client Phone Number" required>
-        <input type="text" name="Nom_client" placeholder="Client First Name" required>
-        <input type="text" name="Prenom_client" placeholder="Client Last Name" required>
-        <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" type="submit">Update Order</button>
-    </form>
+        <label for="Nom_Produit">Product Name:</label><br>
+        <span id="productNameError" style="color: red;"></span>
+        <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter Product Name"><br><br>
 
-    <!-- Form to delete an order -->
-    <form id="deleteOrderForm">
-        <h2>Delete an Order</h2>
-        <input type="number" name="Id_commande" placeholder="Order ID" required>
-        <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" type="submit">Delete Order</button>
-    </form>
+        <label for="Qte">Quantity:</label><br>
+        <span id="quantityError" style="color: red;"></span>
+        <input type="number" id="Qte" name="Qte" placeholder="Enter Quantity"><br><br>
 
-    <!-- Button to fetch all orders -->
-    <button id="fetchOrdersButton" class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white">Fetch All Orders</button>
+        <label for="Adresse_client">Client Address:</label><br>
+        <span id="clientAddressError" style="color: red;"></span>
+        <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter Client Address"><br><br>
+
+        <label for="Tel_client">Client Phone:</label><br>
+        <span id="clientPhoneError" style="color: red;"></span>
+        <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter Client Phone"><br><br>
+
+        <label for="Nom_client">Client Last Name:</label><br>
+        <span id="clientLastNameError" style="color: red;"></span>
+        <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter Client Last Name"><br><br>
+
+        <label for="Prenom_client">Client First Name:</label><br>
+        <span id="clientFirstNameError" style="color: red;"></span>
+        <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter Client First Name"><br><br>
+
+        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Place Commande</button>
+    </form>
+</div>
+
+<script>
+    function validateOrderForm() {
+        var isValid = true;
+
+        var productName = document.getElementById('Nom_Produit').value;
+        var quantity = document.getElementById('Qte').value;
+        var clientAddress = document.getElementById('Adresse_client').value;
+        var clientPhone = document.getElementById('Tel_client').value;
+        var clientLastName = document.getElementById('Nom_client').value;
+        var clientFirstName = document.getElementById('Prenom_client').value;
+
+        // Clear previous error messages
+        document.getElementById('productNameError').innerText = '';
+        document.getElementById('quantityError').innerText = '';
+        document.getElementById('clientAddressError').innerText = '';
+        document.getElementById('clientPhoneError').innerText = '';
+        document.getElementById('clientLastNameError').innerText = '';
+        document.getElementById('clientFirstNameError').innerText = '';
+
+        // Validate Product Name
+        if (productName === '') {
+            document.getElementById('productNameError').innerText = 'Product Name is required.';
+            isValid = false;
+        }
+
+        // Validate Quantity
+        if (quantity === '') {
+            document.getElementById('quantityError').innerText = 'Quantity is required.';
+            isValid = false;
+        }
+
+        // Validate Client Address
+        if (clientAddress === '') {
+            document.getElementById('clientAddressError').innerText = 'Client Address is required.';
+            isValid = false;
+        }
+
+        // Validate Client Phone
+        if (clientPhone === '') {
+            document.getElementById('clientPhoneError').innerText = 'Client Phone is required.';
+            isValid = false;
+        }
+
+        // Validate Client Last Name
+        if (clientLastName === '') {
+            document.getElementById('clientLastNameError').innerText = 'Client Last Name is required.';
+            isValid = false;
+        }
+
+        // Validate Client First Name
+        if (clientFirstName === '') {
+            document.getElementById('clientFirstNameError').innerText = 'Client First Name is required.';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+</script>
+
+
     <div id="ordersList"></div>
 
     <script>
-        // Handle form submissions
         document.getElementById('createOrderForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(this);
@@ -246,41 +362,6 @@ if (isset($_GET['Id_commande'])) {
             })
             .catch(error => console.error('Error creating order:', error));
         });
-
-        document.getElementById('updateOrderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'update');
-            fetch('tables.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                fetchOrders();
-            })
-            .catch(error => console.error('Error updating order:', error));
-        });
-
-        document.getElementById('deleteOrderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'delete');
-            fetch('tables.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                fetchOrders();
-            })
-            .catch(error => console.error('Error deleting order:', error));
-        });
-
-        // Fetch all orders
-        document.getElementById('fetchOrdersButton').addEventListener('click', fetchOrders);
 
         function fetchOrders() {
             fetch('tables.php')
@@ -301,33 +382,9 @@ if (isset($_GET['Id_commande'])) {
                 })
                 .catch(error => console.error('Error fetching orders:', error));
         }
-    </script>
-    <table id="ordersTable" class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Order ID</th>
-                <th>Client Address</th>
-                <th>Client Phone</th>
-                <th>Client Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Dynamic PHP Content Here -->
-            <?php foreach ($orders as $order) { ?>
-                <tr>
-                    <td><?= htmlspecialchars($order['Id_commande']); ?></td>
-                    <td><?= htmlspecialchars($order['Adresse_client']); ?></td>
-                    <td><?= htmlspecialchars($order['Tel_client']); ?></td>
-                    <td><?= htmlspecialchars($order['Nom_client'] . " " . $order['Prenom_client']); ?></td>
-                    
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</body>
-</html>
+    </[_{{{CITATION{{{_1{](https://github.com/arimariojesus/Snake-Game/tree/32328aecc81cfb2fcdda136513902273740aeed7/app%2Fconnect.php)[_{{{CITATION{{{_2{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)[_{{{CITATION{{{_3{](https://github.com/muhammadfahrul/php-orm/tree/3de930cac5a0da72b06f477a04ef9465479d46e2/App%2FViews%2Forder%2Findex.php)>
+      </script>
 
-</main>
+<div id="ordersList"></div>
 </body>
-
 </html>

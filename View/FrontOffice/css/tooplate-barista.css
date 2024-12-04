@@ -652,16 +652,21 @@ strong {
 }
 
 .team-block-image-wrap {
-  width: 100%;
+  width: 100%; /* Ensures the image container spans the width */
+  height: 200px; /* Fixed height for uniformity */
+  overflow: hidden; /* Hides excess parts of the image */
+  display: flex; /* Ensures proper alignment */
+  justify-content: center; /* Centers the image horizontally */
+  align-items: center; /* Centers the image vertically */
 }
 
-.team-block-image {
-  display: block;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  transition: all 0.3s;
+.team-block-image-wrap img {
+  width: auto; /* Maintain the original aspect ratio */
+  height: 100%; /* Scale image to fit the container height */
+  max-width: none; /* Prevents automatic resizing based on parent width */
+  object-fit: cover; /* Crops the image to fill the container */
 }
+
 
 .team-block-info {
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(188, 108, 37, 1));
