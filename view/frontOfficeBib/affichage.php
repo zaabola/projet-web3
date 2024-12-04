@@ -256,7 +256,11 @@ if (isset($_GET['theme_id'])) {
                     </div>
                 </div>
                 <div class="row">
-                    <?php if (count($articles) > 0): ?>
+                    <?php if (empty($articles)): ?>
+                        <div class="col-12 text-center">
+                            <p class="empty-message">Aucun article actif n'est disponible pour ce thème.</p>
+                        </div>
+                    <?php else: ?>
                         <?php foreach ($articles as $article): ?>
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="article-card">
@@ -284,8 +288,6 @@ if (isset($_GET['theme_id'])) {
                                 </div>
                             </div>
                         <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="empty-message">Aucun article disponible pour ce thème.</p>
                     <?php endif; ?>
                 </div>
             </div>

@@ -81,7 +81,8 @@ class ArticlesController {
     // Obtenir des Articles par thème
     public function getArticlessByTheme($id)
     {
-        $sql = "SELECT * FROM Articles WHERE id = :id";
+        $sql = "SELECT * FROM Articles WHERE id = :id        AND archivage = 1";
+;
         $db = config::getConnexion();
         $query = $db->prepare($sql);
         $query->bindValue(':id', $id, PDO::PARAM_INT);

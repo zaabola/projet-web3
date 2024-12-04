@@ -38,7 +38,7 @@ $errorMessages = [
     'bibliographie' => ''
 ];
 $successMessage = '';
-$formVisible = true;  // Le formulaire est visible par défaut
+$formVisible = false;  // Le formulaire est visible par défaut
 
 // Initialisation des variables du formulaire
 $titre = '';
@@ -130,14 +130,22 @@ if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
 }
 
 // Récupération des articles liés au thème avec leurs feedbacks
-$query = "SELECT articles.*, feed_back.commentaire 
+$query = "SELECT DISTINCT articles.* 
           FROM articles 
-          LEFT JOIN feed_back ON articles.Id_article = feed_back.Id_article 
           WHERE articles.id = :theme_id";
 $stmt = $pdo->prepare($query);
 $stmt->bindParam(':theme_id', $theme_id, PDO::PARAM_INT);
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Pour récupérer les feedbacks séparément si nécessaire
+function getFeedbacks($pdo, $article_id) {
+    $query = "SELECT commentaire FROM feed_back WHERE Id_article = :article_id";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':article_id', $article_id);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+}
 ?>
 
 <!DOCTYPE html>
@@ -213,7 +221,6 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Feedback</th>
             <th>Titre</th>
             <th>Description</th>
             <th>Image</th>
@@ -223,27 +230,27 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($articles as $article) : ?>
+          <?php foreach ($articles as $article): ?>
             <tr>
-              <td><?php echo htmlspecialchars($article['commentaire'] ?? 'Aucun feedback'); ?></td>
-              <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
-              <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
-              <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
-              <td><?php echo htmlspecialchars($article['bibliographie']); ?></td>
-              <td>
-                <form method="POST" style="display: inline;">
-                  <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
-                  <input type="hidden" name="toggle_archive" value="1">
-                  <button type="submit" class="btn btn-<?php echo $article['archivage'] ? 'warning' : 'success'; ?>">
-                    <?php echo $article['archivage'] ? 'Désarchiver' : 'Archiver'; ?>
-                  </button>
-                </form>
-              </td>
-              <td>
-                <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
-                <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
-                <a href="fb.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-info">Gérer feedbacks</a>
-              </td>
+                <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
+                <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
+                <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
+                <td><?php echo htmlspecialchars($article['bibliographie']); ?></td> 
+                <td>
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
+                        <input type="hidden" name="toggle_archive" value="1">
+                        <button type="submit" class="btn btn-<?php echo $article['archivage'] ? 'warning' : 'success'; ?>">
+                            <?php echo $article['archivage'] ? 'Désarchiver' : 'Archiver'; ?>
+                        </button>
+                    </form>
+                </td>
+                
+                <td>
+                    <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
+                    <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
+                    <a href="fb.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-info">Gérer feedbacks</a>
+                </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
