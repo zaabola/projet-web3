@@ -31,7 +31,9 @@ if (!empty($searchTerm)) {
                 articles.Titre_article LIKE :search 
                 OR articles.Description_article LIKE :search
                 OR articles.bibliographie LIKE :search
-                OR theme.titre LIKE :search";
+                OR theme.titre LIKE :search
+                AND articles.archivage = 1";  // Ajout de cette condition
+
                 
     $stmt = $pdo->prepare($query);
     $searchPattern = "%{$searchTerm}%";

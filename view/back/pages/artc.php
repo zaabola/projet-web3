@@ -138,13 +138,27 @@ $stmt->bindParam(':theme_id', $theme_id, PDO::PARAM_INT);
 $stmt->execute();
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Pour récupérer les feedbacks séparément si nécessaire
-function getFeedbacks($pdo, $article_id) {
-    $query = "SELECT commentaire FROM feed_back WHERE Id_article = :article_id";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':article_id', $article_id);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+// Au début du fichier, après la connexion à la base de données
+// Requête pour obtenir le nombre de feedbacks par article pour ce thème spécifique
+$queryFeedbacks = "SELECT articles.Titre_article, COUNT(feed_back.Id_article) as nb_feedbacks 
+                   FROM articles 
+                   LEFT JOIN feed_back ON articles.Id_article = feed_back.Id_article 
+                   WHERE articles.id = :theme_id
+                   GROUP BY articles.Id_article 
+                   ORDER BY nb_feedbacks DESC 
+                   LIMIT 5";
+
+$stmtFeedbacks = $pdo->prepare($queryFeedbacks);
+$stmtFeedbacks->bindParam(':theme_id', $theme_id);
+$stmtFeedbacks->execute();
+$feedbackData = $stmtFeedbacks->fetchAll(PDO::FETCH_ASSOC);
+
+// Préparer les données pour le graphique
+$labels = [];
+$data = [];
+foreach ($feedbackData as $item) {
+    $labels[] = $item['Titre_article'];
+    $data[] = $item['nb_feedbacks'];
 }
 ?>
 
@@ -155,6 +169,7 @@ function getFeedbacks($pdo, $article_id) {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Gestion des Articles - <?php echo htmlspecialchars($theme['titre']); ?></title>
   <link href="../assets/css/material-dashboard.min.css?v=3.2.0" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -221,6 +236,7 @@ function getFeedbacks($pdo, $article_id) {
       <table class="table table-striped">
         <thead>
           <tr>
+         
             <th>Titre</th>
             <th>Description</th>
             <th>Image</th>
@@ -230,31 +246,45 @@ function getFeedbacks($pdo, $article_id) {
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($articles as $article): ?>
+          <?php foreach ($articles as $article) : ?>
             <tr>
-                <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
-                <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
-                <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
-                <td><?php echo htmlspecialchars($article['bibliographie']); ?></td> 
-                <td>
+              <td><?php echo htmlspecialchars($article['Titre_article']); ?></td>
+              <td><?php echo htmlspecialchars($article['Description_article']); ?></td>
+              <td><img src="../../frontOfficeBib/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image" width="100"></td>
+              <td><?php echo htmlspecialchars($article['bibliographie']); ?></td>
+              <td>
                     <form method="POST" style="display: inline;">
                         <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
                         <input type="hidden" name="toggle_archive" value="1">
                         <button type="submit" class="btn btn-<?php echo $article['archivage'] ? 'warning' : 'success'; ?>">
-                            <?php echo $article['archivage'] ? 'Désarchiver' : 'Archiver'; ?>
+                            <?php echo $article['archivage'] ? 'Actif' : 'Archivé'; ?>
                         </button>
                     </form>
                 </td>
-                
-                <td>
-                    <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
-                    <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
-                    <a href="fb.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-info">Gérer feedbacks</a>
-                </td>
+              <td>
+                <a href="updatearticle.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-warning">Modifier</a>
+                <a href="?delete_id=<?php echo $article['Id_article']; ?>&id=<?php echo $theme_id; ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
+                <a href="fb.php?id=<?php echo $article['Id_article']; ?>" class="btn btn-info">Gérer feedbacks</a>
+              </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
+    </div>
+    
+
+    <!-- Ajouter après votre tableau d'articles -->
+    <div class="row mt-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h6>Articles les plus commentés de ce thème</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
     <a href="bib.php" class="btn btn-primary mb-3">Retour aux thèmes</a>
 
@@ -273,6 +303,57 @@ function getFeedbacks($pdo, $article_id) {
     const form = document.getElementById('addArticleForm');
     form.style.display = (form.style.display === 'none') ? 'block' : 'none';
   }
+
+  const ctx = document.getElementById('feedbackChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: <?php echo json_encode($labels); ?>,
+        datasets: [{
+            label: 'Nombre de feedbacks',
+            data: <?php echo json_encode($data); ?>,
+            backgroundColor: [
+                '#BC6C25',
+                '#DDA15E',
+                '#b78752',
+                '#a36d46',
+                '#8b5e3c'
+            ],
+            borderColor: [
+                '#BC6C25',
+                '#DDA15E',
+                '#b78752',
+                '#a36d46',
+                '#8b5e3c'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            title: {
+                display: true,
+                text: 'Nombre de feedbacks par article',
+                color: '#333',
+                font: {
+                    size: 16
+                }
+            }
+        }
+    }
+  });
 </script>
 </body>
 </html>

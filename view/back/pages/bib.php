@@ -45,10 +45,11 @@ $list = $travelOfferC->listtheme();
         <span>Emreinte</span>
       </a>
     </div>
+    
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="themes.php">
-          <i class="material-icons">receipt_long</i>
+        <a class="Gestion Thèmes" href="bib.php">
+          <i class="material-icons"></i>
           <span>Gestion Thèmes</span>
         </a>
       </li>
