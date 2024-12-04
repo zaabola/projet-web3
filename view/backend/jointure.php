@@ -2,7 +2,7 @@
 // Include required files
 include('C:/xampp/htdocs/web/controller/donation_management.php');
 include('C:/xampp/htdocs/web/controller/donation_controller.php');
-
+include('C:/xampp/htdocs/web/vendor/autoload.php') ;
 // Database connection
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=emprunt', 'root', '');
@@ -140,6 +140,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
       elseif ($tableSelection === 'management') { $showManagementTable = true; } 
       elseif ($tableSelection === 'donation') { $showDonationTable = true; }
      }
+     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (isset($_POST['generate_management_pdf'])) {
+            // Generate PDF for Donation Management when button is clicked
+            generateManagementPDF($uniqueDonationsManagement);
+        }
+    
+        if (isset($_POST['generate_donations_pdf'])) {
+            // Generate PDF for Donations when button is clicked
+            generateDonationsPDF($donations);
+        }
+    }
+    
+    function generateManagementPDF($uniqueDonationsManagement) {
+        // Create new TCPDF instance
+        $pdf = new TCPDF();
+    
+        // Set PDF properties
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('Donation Management Report');
+        $pdf->SetMargins(10, 10, 10);
+        $pdf->AddPage();
+    
+        // Set font
+        $pdf->SetFont('helvetica', '', 12);
+    
+        // Add Donation Management Table
+        $pdf->Cell(0, 10, 'Donation Management', 0, 1, 'C');
+        $pdf->Ln(4); // Line break
+    
+        // Table headers
+        $pdf->Cell(34, 10, 'Management ID', 1);
+        $pdf->Cell(28, 10, 'Donation ID', 1);
+        $pdf->Cell(30, 10, 'Donor Name', 1);
+        $pdf->Cell(30, 10, 'Admin Name', 1);
+        $pdf->Cell(40, 10, 'distribution_date', 1);
+        $pdf->Ln();
+    
+        // Table data
+        foreach ($uniqueDonationsManagement as $management) {
+            $pdf->Cell(34, 10, $management['management_id'], 1);
+            $pdf->Cell(28, 10, $management['id_donation'], 1);
+            $pdf->Cell(30, 10, $management['donor_name'], 1);
+            $pdf->Cell(30, 10, $management['admin_name'], 1);
+            $pdf->Cell(40, 10, $management['distribution_date'], 1);
+            $pdf->Cell(30, 10, $management['allocated_price'], 1);
+            $pdf->Ln();
+        }
+    
+        // Output the PDF
+        $pdf->Output('Donation_Management_Report.pdf', 'I');
+    }
+    
+    function generateDonationsPDF($donations) {
+        // Create new TCPDF instance
+        $pdf = new TCPDF();
+    
+        // Set PDF properties
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetTitle('Donations Report');
+        $pdf->SetMargins(10, 10, 10);
+        $pdf->AddPage();
+    
+        // Set font
+        $pdf->SetFont('helvetica', '', 12);
+    
+        // Add Donations Table
+        $pdf->Cell(0, 10, 'Donations', 0, 1, 'C');
+        $pdf->Ln(4); // Line break
+    
+        // Table headers
+        $pdf->Cell(10, 10, 'ID', 1);
+        $pdf->Cell(50, 10, 'Donor Name', 1);
+        $pdf->Cell(70, 10, 'Email', 1); 
+        $pdf->Cell(20, 10, 'Amount', 1);
+        $pdf->Cell(40, 10, 'Message', 1);
+        $pdf->Ln();
+    
+        // Table data
+        foreach ($donations as $donation) {
+            $pdf->Cell(10, 10, $donation['id_donation'], 1);
+            $pdf->Cell(50, 10, $donation['donor_name'], 1);
+            $pdf->Cell(70, 10, $donation['donor_email'], 1);
+            $pdf->Cell(20, 10, $donation['donation_amount'], 1);
+            $pdf->Cell(40, 10, $donation['message'], 1);
+            $pdf->Ln();
+        }
+    
+        // Output the PDF
+        $pdf->Output('Donations_Report.pdf', 'I');
+    }
 ?>
 
 <!DOCTYPE html>
@@ -157,6 +247,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
     <script src="../validation.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table-bordered {
+            border: 1px solid #ddd;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #ddd;
+        }
+
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        /* Add spacing between the tables */
+        .table-container + .table-container {
+            margin-top: 20px;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -216,7 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             <!-- Management Table -->
             <?php if ($showManagementTable): ?>
                 <h4>Donation Management</h4>
-                <table class="table">
+                <table class="table table-bordered">
         <thead>
             <tr>
                 <th>management_id</th>
@@ -275,6 +435,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 </table>
             <?php endif; ?>
         </div>
+        <form method="POST">
+        <button type="submit" name="generate_management_pdf" class="btn btn-primary">Generate Donation Management PDF</button>
+    </form>
+
+    <!-- Button to generate Donations PDF -->
+    <form method="POST">
+        <button type="submit" name="generate_donations_pdf" class="btn btn-primary">Generate Donations PDF</button>
+    </form>
+
     </main>
 </body>
 </html>
