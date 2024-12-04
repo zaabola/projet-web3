@@ -22,7 +22,7 @@ class GestionReservation
         }
     }
 
-    public function createReservation(reservevation $reservation)
+    public function createReservation(reservation $reservation)
     {
         try {
             // Step 1: Check if there are any buses available for the given destination

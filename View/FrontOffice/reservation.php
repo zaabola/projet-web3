@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
         $date = new DateTime(); // Current date and time
 
         // Create a reservation object
-        $reservation = new reservevation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date, null);
+        $reservation = new reservation($nom, $prenom, $mail, $tel, $destination, $commentaire, $date, null);
 
         // Use GestionReservation to add the reservation
         $gestionReservation = new GestionReservation();
