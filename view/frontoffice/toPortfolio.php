@@ -3,7 +3,7 @@ include 'C:/xampp/htdocs/web/controller/PortfolioC.php';
 
 $PortfolioC = new PortfolioC();
 $guides = $PortfolioC->findone($_GET['id']);
-?>
+?> 
 <!doctype html>
 <html lang="en">
     <head>
@@ -22,45 +22,8 @@ $guides = $PortfolioC->findone($_GET['id']);
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-icons.css" rel="stylesheet">
         <link href="css/tooplate-barista.css" rel="stylesheet">
+        <link href="portfolio.css" rel="stylesheet">
         
-        <!-- Inline CSS -->
-        <style>
-            body {
-                font-family: 'Plus Jakarta Sans', sans-serif;
-                background-color: #f8f9fa;
-            }
-            .portfolio-card {
-                background: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                margin-top: 20px;
-                text-align: center;
-            }
-            .portfolio-card img {
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-                border-radius: 50%;
-                margin-bottom: 15px;
-            }
-            .portfolio-card h2 {
-                font-size: 1.8rem;
-                color: #333;
-            }
-            .portfolio-card p {
-                color: #666;
-                margin-bottom: 10px;
-            }
-            .portfolio-card .specialite, .portfolio-card .langue {
-                font-weight: bold;
-                color: #444;
-            }
-            .container {
-                max-width: 800px;
-                margin: 50px auto;
-            }
-        </style>
     </head>
     
     <body>
@@ -69,7 +32,7 @@ $guides = $PortfolioC->findone($_GET['id']);
             <div class="container">
                 <?php foreach ($guides as $g): ?>
                     <div class="portfolio-card">
-                        <img src="<?= $g['photo'] ?>" alt="<?= $g['nom'] ?> <?= $g['prenom'] ?>">
+                        <img src="images/<?= $g['photo'] ?>" alt="<?= $g['nom'] ?> <?= $g['prenom'] ?>">
                         <h2><?= $g['nom'] ?> <?= $g['prenom'] ?></h2>
                         <p class="specialite">Specialty: <?= $g['specialite'] ?></p>
                         <p class="langue">Language: <?= $g['langue'] ?></p>
@@ -88,3 +51,5 @@ $guides = $PortfolioC->findone($_GET['id']);
         <script src="js/custom.js"></script>
     </body>
 </html>
+*/
+

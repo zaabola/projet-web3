@@ -164,10 +164,10 @@ $p = new Portfolio(
 
     <!-- Photo -->
     <div class="input-group input-group-static mb-4">
-    <p>Photo</p>
-        <input type="text" name="photo" id="photo" class="form-control" >
+        <p>Photo</p>
+        <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
         <?php if (!empty($p['photo'])): ?>
-            <img src="<?= htmlspecialchars($p['photo']) ?>" alt="Photo of <?= htmlspecialchars($p['nom']) ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+            <img src="images/<?= htmlspecialchars($p['photo']) ?>" alt="Photo of <?= htmlspecialchars($p['nom']) ?>" style="width: 100px; height: 100px; margin-top: 10px;">
         <?php endif; ?>
         <span id="photoError"></span>
     </div>
@@ -237,6 +237,14 @@ $p = new Portfolio(
             isValid = false;
         }
 
+        // Validate photo
+        if (photo.files.length === 0) {
+                    // Only show this error if there's no existing photo
+                    if (!<?= json_encode(!empty($p['photo'])) ?>) {
+                        document.getElementById('photoError').innerHTML = "Veuillez ajouter une photo.";
+                        isValid = false;
+                    }
+                }
        
         // Validate langue
         if (langue.value.trim() === '') {

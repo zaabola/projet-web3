@@ -8,6 +8,10 @@ if(isset($_GET['addVolantaire']))
     $Volontaire = new Volontaire($_POST['nom'],$_POST['prenom'],$_POST['numero'],$_POST['message'],$_POST['email']);
     $volntaireC->create($Volontaire);
 }
+if(isset($_GET['rate']))
+{
+    $volntaireC->rate($_GET['rate'],1,$_GET['id']);
+}
 $guides=$PortfolioC->read();
 ?>
 <!doctype html>
@@ -278,6 +282,8 @@ $guides=$PortfolioC->read();
                             </div>
                         <?php
                             foreach ($guides as $guide) :
+                            $volntaireC = new VolontaireC();
+                            $israte = $volntaireC->israte(1,$guide['id_portfolio']);
                         ?>
                             <div class="col-lg-4 col-md-4 col-4 mb-4">
                             <a href="toPortfolio.php?id=<?=$guide['id_portfolio']?>">
@@ -287,13 +293,88 @@ $guides=$PortfolioC->read();
                                             <h4 class="text-white mb-0"><?=$guide['nom']?> <?=$guide['prenom']?></h4>   
                                         </div>
                                         <p class="text-white mb-0"><?=$guide['specialite']?></p>
+                                        
                                     </div>
 
                                     <div class="team-block-image-wrap">
-                                        <img src="<?=$guide['photo']?>" class="team-block-image img-fluid" alt="">
+                                        <img src="images/<?=$guide['photo']?>" class="team-block-image img-fluid" alt="">
                                     </div>
                                 </div>
                             </a>
+                            <?php                             
+                                $volntaireC = new VolontaireC();
+                                $rating = $volntaireC->note($guide['id_portfolio']);
+                             ?>
+                            <h6>Score : <?=$rating['note']?>/5 </h6>
+                            <?php
+                                if (!$israte) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                elseif($israte['rate']==1) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star-fill">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                elseif ($israte['rate']==2) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star-fill">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                elseif ($israte['rate']==3) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star-fill">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                elseif ($israte['rate']==4) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star-fill">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                elseif ($israte['rate']==5) :
+                            ?>
+                            <div class="row">
+                            <a href="?rate=1&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=2&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=3&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=4&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star-fill">
+                            <a href="?rate=5&&id=<?=$guide['id_portfolio']?>" class="social-icon-link bi-star" hidden disabled>
+                            </div>
+                            <?php
+                                endif ;
+                            ?>
                             </div>
                             <?php
                             endforeach;
@@ -317,7 +398,7 @@ $guides=$PortfolioC->read();
 
                                 <ul class="social-icon mt-4">
                                     <li class="social-icon-item">
-                                        <a href="#" class="social-icon-link bi-facebook">
+                                        <a href="#" class="social-icon-link bi-star">
                                         </a>
                                     </li>
         

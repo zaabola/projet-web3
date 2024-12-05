@@ -24,7 +24,68 @@ class VolontaireC
         }
     }
 
+    public function rate($rate, $id_u, $id_v) 
+    {
+        // SQL query to insert a rating into the 'rating' table
+        $sql = "INSERT INTO `rating`(`id_v`, `id_u`, `rate`) VALUES (:id_v, :id_u, :rate) ON DUPLICATE KEY UPDATE `rate` = VALUES(`rate`);";
+        
+        // Get the database connection
+        $db = config::getConnexion();
+        
+        try {
+            // Prepare the query
+            $query = $db->prepare($sql);
+            
+            // Execute the query with the provided parameters
+            $query->execute([
+                'id_v' => $id_v,
+                'id_u' => $id_u,
+                'rate' => $rate
+            ]);
+            
+            // Redirect after successful insertion
+            header('Location: index.php');
+            exit();  // It's important to call exit() after header() to stop further script execution
+        } catch (Exception $e) {
+            // Handle errors and display the exception message
+            echo 'Erreur: ' . $e->getMessage();
+        }
+    }
 
+    
+    // Read all Portfolio records
+    public function israte($idu,$idv)
+    {
+        $sql = "SELECT * FROM `rating` WHERE `id_u` =" . $idu . " AND `id_v` =" . $idv;
+        $db = config::getConnexion();
+        try {
+            $list = $db->query($sql);
+            $f = $list->fetch();
+            return $f; // Return all portfolio entries
+        } catch (Exception $e) {
+            die('Erreur: ' . $e->getMessage());
+        }
+    }
+
+    // Read all Portfolio records
+    public function note($idv)
+    {
+        $sql = "SELECT 
+                    IFNULL(FORMAT(SUM(`rate`) / NULLIF(COUNT(*), 0), 1), '0') AS `note`, 
+                    COUNT(*) AS `lignes` 
+                FROM 
+                    `rating` 
+                WHERE 
+                    `id_v` = " . $idv;
+        $db = config::getConnexion();
+        try {
+            $list = $db->query($sql);
+            $f = $list->fetch();
+            return $f; // Return all portfolio entries
+        } catch (Exception $e) {
+            die('Erreur: ' . $e->getMessage());
+        }
+    }
 
 
     public function read()
@@ -44,6 +105,32 @@ class VolontaireC
             die('Erreur:' . $e->getMessage());
         }
     }
+
+    public function search($d)
+    {
+        $sql = "SELECT v.*, 
+                    CASE 
+                        WHEN p.id_portfolio IS NOT NULL THEN 1 
+                        ELSE 0 
+                    END AS has_portfolio
+                FROM volontaire v
+                LEFT JOIN portfolio p ON v.id = p.id_volontaire
+                WHERE v.nom LIKE :search 
+                OR v.prenom LIKE :search 
+                OR v.numero LIKE :search";
+                
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute([
+                'search' => "%$d%" // Bind the search term with wildcards
+            ]);
+            return $query->fetchAll(); // Fetch all matching results
+        } catch (Exception $e) {
+            die('Erreur: ' . $e->getMessage());
+        }
+    }
+
 
     public function delete($id)
     {

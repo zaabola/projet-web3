@@ -60,45 +60,43 @@ if(isset($_GET['addPortfolio']))
                             </div>
 
                             <div class="col-lg-6 col-12">
-                            <form action="?addPortfolio=<?=$_GET['id']?>" method="post" id="portfolioForm" class="custom-form contact-form" role="form" enctype="multipart/form-data">
+                            <form action="?addPortfolio=<?=$_GET['id']?>" method="post" id="portfolioForm" class="custom-form contact-form">
     <div class="row">
-
         <div class="col-lg-6 col-12">
             <label for="nom" class="form-label">Nom <sup class="text-danger">*</sup></label>
             <input type="text" name="nom" id="nom" class="form-control" placeholder="Ex: Ferchichi">
-            <span id="nomError"></span>
+            <span id="nomError" class="text-danger"></span>
         </div>
 
         <div class="col-lg-6 col-12">
             <label for="prenom" class="form-label">Prenom <sup class="text-danger">*</sup></label>
             <input type="text" name="prenom" id="prenom" class="form-control" placeholder="Ex: Mariem">
-            <span id="prenomError"></span>
+            <span id="prenomError" class="text-danger"></span>
         </div>
 
         <div class="col-12">
             <label for="photo" class="form-label">Photo <sup class="text-danger">*</sup></label>
-            <input type="text" name="photo" id="photo" class="form-control" >
-            <span id="photoError"></span>
+            <input type="file" name="photo" id="photo" class="form-control">
+            <span id="photoError" class="text-danger"></span>
         </div>
 
         <div class="col-lg-6 col-12">
             <label for="langue" class="form-label">Langue <sup class="text-danger">*</sup></label>
             <input type="text" name="langue" id="langue" class="form-control" placeholder="Ex: Français, Anglais">
-            <span id="langueError"></span>
+            <span id="langueError" class="text-danger"></span>
         </div>
 
         <div class="col-lg-6 col-12">
             <label for="specialite" class="form-label">Spécialité <sup class="text-danger">*</sup></label>
             <input type="text" name="specialite" id="specialite" class="form-control" placeholder="Ex: Historien, Guide">
-            <span id="specialiteError"></span>
+            <span id="specialiteError" class="text-danger"></span>
         </div>
 
         <div class="col-12">
             <label for="biographie" class="form-label">Biographie <sup class="text-danger">*</sup></label>
             <textarea name="biographie" id="biographie" rows="4" class="form-control" placeholder="Écrivez une courte biographie..."></textarea>
-            <span id="biographieError"></span>
+            <span id="biographieError" class="text-danger"></span>
         </div>
-
     </div>
 
     <div class="col-lg-5 col-12 mx-auto mt-3">
@@ -111,7 +109,7 @@ if(isset($_GET['addPortfolio']))
         let isValid = true;
 
         // Regex for text fields
-        const textRegex = /^[a-zA-Z-\s]+$/;
+        const textRegex = /^[a-zA-ZÀ-ÿ\s-]+$/; // Adjusted to include accented characters
 
         // Get all input values
         let nom = document.getElementById('nom');

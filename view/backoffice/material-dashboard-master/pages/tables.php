@@ -2,7 +2,13 @@
 include 'C:/xampp/htdocs/web/controller/volntaireC.php';
 
 $volntaireC = new VolontaireC();
-$volontaires = $volntaireC->read();
+if(isset($_GET['search']))
+{
+  $volontaires =$volntaireC->search($_GET['search']);
+}
+else{
+  $volontaires = $volntaireC->read();
+}
 if(isset($_GET['delete']))
 {
   $volntaireC->delete($_GET['delete']);
@@ -11,6 +17,7 @@ if(isset($_GET['update']))
 {
   $volntaireC->update($_GET['id'],$_GET['update'],$_GET['email']);
 }
+
 ?>
 
 <!--
@@ -142,8 +149,9 @@ if(isset($_GET['update']))
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group input-group-outline">
-              <label class="form-label">Type here...</label>
-              <input type="text" class="form-control">
+              <form action="" method="get">
+              <input type="text" class="form-control" placeholder = "Type here..." name="search">
+              </form>
             </div>
           </div>
           <ul class="navbar-nav d-flex align-items-center  justify-content-end">
