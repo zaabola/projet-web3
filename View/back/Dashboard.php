@@ -15,7 +15,7 @@ $statistics = $userC->getStatisticsByNationality();
   <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <title>
-    Material Dashboard 3 by Creative Tim
+    Dashboard Empreinte Tunisie
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
@@ -36,7 +36,7 @@ $statistics = $userC->getStatisticsByNationality();
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
         <img src="assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Creative Tim</span>
+        <span class="ms-1 text-sm text-dark">BASMA</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -45,22 +45,9 @@ $statistics = $userC->getStatisticsByNationality();
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="Dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Dashboard User</span>
           </a>
         </li>
-        
-      
-       
-       
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="pages/notifications.html">
-            <i class="material-symbols-rounded opacity-5">notifications</i>
-            <span class="nav-link-text ms-1">Notifications</span>
-          </a>
-        </li>
-    
-     
-
        
       </ul>
     </div>

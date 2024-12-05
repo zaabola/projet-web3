@@ -1,4 +1,8 @@
 
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+?>
 
 <!doctype html>
 <html lang="en">
@@ -42,7 +46,7 @@ Bootstrap 5 HTML CSS Template
             <main>
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <a class="navbar-brand d-flex align-items-center" href="index.php">
                             <img src="logo.png" class="navbar-brand-image img-fluid" alt="logo basma">
                             Basma
                         </a>
@@ -75,10 +79,12 @@ Bootstrap 5 HTML CSS Template
                             </ul>
 
                             <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="signin.php">
-                                    Sign in
-                                    <i class="bi-arrow-up-right ms-2"></i>
-                                </a>
+                                
+                                <?php if (!$isLoggedIn): ?>
+                                <li><a class="btn custom-btn custom-border-btn" href="signin.php">Se connecter <i class="bi-arrow-up-right ms-2"></i></a></li>
+                                <?php else: ?>
+                                <li><a class="btn custom-btn custom-border-btn" href="logout.php" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">Se déconnecter <i class="bi-arrow-up-right ms-2"></i></a></li>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

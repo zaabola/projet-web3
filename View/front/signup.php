@@ -40,7 +40,7 @@ if (isset($_POST['entrer'])) {
             // Succès
             echo '<script>
                     alert("Inscription réussie !");
-                    window.location.href = "index.html";
+                    window.location.href = "index.php";
                   </script>';
             exit();
         }
@@ -130,7 +130,7 @@ if (isset($_POST['entrer'])) {
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
                             <div class="d-flex justify-content-center py-4">
-                                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <a href="index.php" class="logo d-flex align-items-center w-auto">
                                     <img src="logosignin.png" alt="logo">
                                     <span class="d-none d-lg-block">Basma</span>
                                 </a>
@@ -183,9 +183,9 @@ if (isset($_POST['entrer'])) {
                 <option value="" disabled selected>Choisissez votre nationalité</option>
                 <option value="Tunisienne">Tunisienne</option>
                 <option value="Étrangère">Étrangère</option>
-                <span id="nationaliteError" class="error-message"></span>
+                
             </select>
-            
+            <span id="nationaliteError" class="error-message"></span>
         </div>
         <button type="submit" class="btn btn-success btn-block" name="entrer">Register</button>
     </form>
@@ -253,10 +253,7 @@ if (isset($_POST['entrer'])) {
             isValid = false;
         }
         
-        if (nationalite === 'Choisissez votre nationalité') {
-            document.getElementById('nationaliteError').textContent = 'nationalite is required.';
-            isValid = false;
-        }
+        
         // Validate telephone (phone number)
         if (telephone === '') {
             document.getElementById('telephoneError').textContent = 'Phone number is required.';
@@ -290,6 +287,14 @@ if (isset($_POST['entrer'])) {
             isValid = false;
         } else if (password !== confirmPassword) {
             document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+            isValid = false;
+        }
+        //nationalite
+        if (nationalite === '') {
+            document.getElementById('nationaliteError').textContent = 'nationalite obligatoire.';
+        }
+        if (nationalite === 'Choisissez votre nationalité') {
+            document.getElementById('nationaliteError').textContent = 'nationalite is required.';
             isValid = false;
         }
 

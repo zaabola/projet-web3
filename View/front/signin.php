@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
                     if ($user["role"] == 1) {
                         header("Location: ../back/Dashboard.php");
                     } else {
-                        header("Location: index.html");
+                        header("Location: index.php");
                     }
                     exit(); // Toujours utiliser exit() après une redirection
                 } else {
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
           <div class="card mb-3">
             <div class="card-body">
             <div class="d-flex justify-content-center py-4">
-                                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <a href="index.php" class="logo d-flex align-items-center w-auto">
                                     <img src="logosignin.png" alt="logo">
                                     <span class="d-none d-lg-block">Basma</span>
                                 </a>
