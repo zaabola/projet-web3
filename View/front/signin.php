@@ -2,55 +2,72 @@
 session_start();
 require_once("../../config.php");
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) { 
     $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]); 
+    $password = trim($_POST["password"]);
+    $recaptchaResponse = $_POST['g-recaptcha-response'];
+    $secretKey = '6LfJS5UqAAAAAMXRGlgSN7yytyScWNyR_9zXnLQv'; // Replace with your secret key
 
-    // Contrôle de saisie
-    if (empty($email) && empty($password)) {
+    // Input validation (Check fields first)
+    if (empty($email) || empty($password)) {
         echo '<div class="alert alert-danger">Tous les champs doivent être remplis.</div>';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo '<div class="alert alert-danger">L\'adresse email n\'est pas valide.</div>';
     } else {
-        try {
-            // Connexion à la base de données
-            $conn = config::getConnexion();
+        // Check if reCAPTCHA was completed
+        if (empty($recaptchaResponse)) {
+            echo '<div class="alert alert-danger">Please complete the reCAPTCHA.</div>';
+        } else {
+            // Verify the reCAPTCHA response with Google's API
+            $verifyResponse = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$recaptchaResponse");
+            $responseData = json_decode($verifyResponse);
 
-            // Préparer la requête
-            $stmt = $conn->prepare("SELECT id, nom, email, mdp, role FROM user WHERE email = :email");
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-
-            // Récupérer les données de l'utilisateur
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user) {
-                // Vérification du mot de passe (assurez-vous que mdp est haché dans votre base)
-                if ($password === $user["mdp"]) {
-                    // Stocker les informations en session
-                    $_SESSION["user_id"] = $user["id"];
-                    $_SESSION["user_name"] = $user["nom"];
-                    $_SESSION["user_role"] = $user["role"];
-
-                    // Rediriger selon le rôle
-                    if ($user["role"] == 1) {
-                        header("Location: ../back/Dashboard.php");
-                    } else {
-                        header("Location: index.php");
-                    }
-                    exit(); // Toujours utiliser exit() après une redirection
-                } else {
-                    echo '<div class="alert alert-danger">Mot de passe incorrect.</div>';
-                }
+            if (!$responseData->success) {
+                echo '<div class="alert alert-danger">reCAPTCHA verification failed. Please try again.</div>';
             } else {
-                echo '<div class="alert alert-danger">Aucun utilisateur trouvé avec cet email.</div>';
+                // Proceed with login logic
+                try {
+                    // Connect to the database
+                    $conn = config::getConnexion();
+
+                    // Prepare the query
+                    $stmt = $conn->prepare("SELECT id, nom, email, mdp, role FROM user WHERE email = :email");
+                    $stmt->bindParam(':email', $email);
+                    $stmt->execute();
+
+                    // Fetch the user data
+                    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($user) {
+                        // Verify password (ensure it is hashed in your database)
+                        if ($password === $user["mdp"]) {
+                            // Store user data in session
+                            $_SESSION["user_id"] = $user["id"];
+                            $_SESSION["user_name"] = $user["nom"];
+                            $_SESSION["user_role"] = $user["role"];
+
+                            // Redirect based on role
+                            if ($user["role"] == 1) {
+                                header("Location: ../back/Dashboard.php");
+                            } else {
+                                header("Location: index.php");
+                            }
+                            exit(); // Always use exit() after a redirect
+                        } else {
+                            echo '<div class="alert alert-danger">Mot de passe incorrect.</div>';
+                        }
+                    } else {
+                        echo '<div class="alert alert-danger">Aucun utilisateur trouvé avec cet email.</div>';
+                    }
+                } catch (PDOException $e) {
+                    echo '<div class="alert alert-danger">Erreur lors de la connexion à la base de données : ' . htmlspecialchars($e->getMessage()) . '</div>';
+                }
             }
-        } catch (PDOException $e) {
-            echo '<div class="alert alert-danger">Erreur lors de la connexion à la base de données : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -95,6 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
             margin-bottom: 20px;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -126,6 +144,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
                   <label for="password" class="form-label">🔑 Password</label>
                   <input type="password" name="password" class="form-control" id="password" >
                 </div>
+                <html>
+  
+              
+              <div class="g-recaptcha" data-sitekey="6LfJS5UqAAAAADIXlprda-YuA8Bj_SUwrmLZPldj"></div>
+              <br/>
+  
                 <div class="col-12 text-center">
                   <a >if you forgot your password</a>
                    <a href="recover_password.php" class="btn btn-link">Click here to recover it</a>
