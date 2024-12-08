@@ -1,13 +1,9 @@
 <?php
-// Activer l'affichage des erreurs pour le débogage
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once('tcpdf/tcpdf.php');
 require_once(__DIR__ . '../../../controller/Articlee.php');
 
-// Récupérer l'ID de l'article avec le bon nom de paramètre
-$Id_article = isset($_GET['article_id']) ? $_GET['article_id'] : null;
+// Récupérer l'ID de l'article
+$Id_article = isset($_GET['Id_article']) ? $_GET['Id_article'] : null;
 
 // Vérifier si l'ID est présent
 if (!$Id_article) {
