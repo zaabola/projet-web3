@@ -133,50 +133,74 @@ if (isset($_GET['theme_id'])) {
         }
 
         .article-card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100%);
+            border-radius: 10px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            border-radius: var(--border-radius-small);
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            background-color: var(--primary-color); /* Changer la couleur des cartes */
-            transition: transform 0.2s;
-        }
-
-        .article-card:hover {
-            transform: scale(1.05);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+            margin: 20px auto;
         }
 
         .article-card img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
-            border-top-left-radius: var(--border-radius-small);
-            border-top-right-radius: var(--border-radius-small);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .article-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1;
         }
 
         .card-body {
-            padding: 15px;
-        }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+
+    /* Ajout du scrolling vertical */
+    overflow-y: auto;
+    max-height: 90%; /* Ajustez selon vos besoins */
+}
+
+.article-card:hover .card-body {
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 1;
+}
+
 
         .card-title {
-            font-size: var(--h5-font-size);
-            font-weight: var(--font-weight-bold);
-            color: var(--white-color); /* Couleur du texte des titres */
-        }
+    font-size: var(--h5-font-size);
+    font-weight: var(--font-weight-bold);
+    color: #000000; /* Couleur noire */
+}
 
-        .card-text {
-            font-size: var(--p-font-size);
-            color: var(--white-color); /* Couleur du texte des descriptions */
-            margin-bottom: 10px;
-        }
+.card-text {
+    font-size: var(--p-font-size);
+    color: #000000; /* Couleur noire */
+    margin-bottom: 10px;
+}
 
-        .bibliography {
-            font-size: var(--btn-font-size);
-            color: var(--white-color); /* Couleur du texte des bibliographies */
-            margin-top: 10px;
-        }
+.bibliography {
+    font-size: var(--btn-font-size);
+    color: #000000; /* Couleur noire */
+    margin-top: 10px;
+}
+
 
         .feedback-form {
             margin-top: 20px;
@@ -193,12 +217,18 @@ if (isset($_GET['theme_id'])) {
         }
 
         .submit-btn {
-            background-color: var(--secondary-color); /* Couleur plus claire pour le bouton */
-            color: var(--dark-color); /* Texte sombre pour contraste */
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius-small);
-            cursor: pointer;
+            padding: 3px 8px; /* Réduit de 5px 10px à 3px 8px */
+        background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100%);
+        border: none;
+        border-radius: 4px; /* Réduit de 5px à 4px */
+        color: white;
+        cursor: pointer;
+        font-size: 11px; /* Réduit de 12px à 11px */
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        white-space: nowrap; 
         }
 
         .submit-btn:hover {
@@ -244,8 +274,24 @@ if (isset($_GET['theme_id'])) {
 
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            .card-title {
+    font-size: var(--h5-font-size);
+    font-weight: var(--font-weight-bold);
+    color: #000000; /* Couleur noire */
+}
+
+.card-text {
+    font-size: var(--p-font-size);
+    color: #000000; /* Couleur noire */
+    margin-bottom: 10px;
+}
+
+.bibliography {
+    font-size: var(--btn-font-size);
+    color: #000000; /* Couleur noire */
+    margin-top: 10px;
+}
+
         }
 
         .button-group .submit-btn {
@@ -297,6 +343,8 @@ if (isset($_GET['theme_id'])) {
                                                           name="commentaire" 
                                                           class="feedback-input" 
                                                           placeholder="Écrivez votre retour..."></textarea>
+                                                          <button type="button" onclick="startVoiceRecognition(<?php echo $article['Id_article']; ?>)">🎤 Enregistrer</button>
+
                                                 <div class="button-group">
                                                     <button class="submit-btn" type="submit">Envoyer</button>
                                                     <a href="generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>" 
@@ -365,5 +413,43 @@ if (isset($_GET['theme_id'])) {
             return badWords.some(word => lowerText.includes(word));
         }
     </script>
+    <script>
+    // Fonction de démarrage de la reconnaissance vocale
+    function startVoiceRecognition(articleId) {
+        // Vérifiez si le navigateur prend en charge la reconnaissance vocale
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("La reconnaissance vocale n'est pas prise en charge dans ce navigateur.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'fr-FR'; // Définit la langue à français
+        recognition.interimResults = false; // Désactive les résultats intermédiaires
+        recognition.maxAlternatives = 1; // Limite à une seule alternative
+
+        // Démarre la reconnaissance
+        recognition.start();
+
+        recognition.onstart = () => {
+            alert('Parlez maintenant, la reconnaissance vocale est activée.');
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+        };
+
+        recognition.onresult = (event) => {
+            const result = event.results[0][0].transcript; // Transcription de l'audio
+            const textarea = document.querySelector(`#feedback-${articleId}`);
+            textarea.value += result; // Ajoute la transcription au champ de texte
+        };
+
+        recognition.onerror = (event) => {
+            alert('Erreur lors de la reconnaissance vocale : ' + event.error);
+        };
+    }
+</script>
+
 </body>
 </html>
