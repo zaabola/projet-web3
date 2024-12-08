@@ -181,6 +181,7 @@ if (!empty($searchTerm)) {
                 <a href="index.php" class="btn btn-custom">Retour à l'accueil</a>
             </div>
         </div>
+        
     </main>
 
     <!-- Scripts -->

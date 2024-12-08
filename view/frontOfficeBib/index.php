@@ -49,6 +49,7 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/vegas.min.css" rel="stylesheet">
     <link href="css/tooplate-barista.css" rel="stylesheet">
+    <link rel="icon" href="logo (1).png">
 
     <style>
         body {
@@ -112,7 +113,7 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
                         <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="logo(1).png"  >
+                        <img src="logo (1).png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
                             Empreinte
                         </a>
         
@@ -154,14 +155,15 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
             <div class="text-center mb-5">
                 <h2 style="color: #b78752;">Bibliothèque</h2>
                 
-                <!-- Ajout du formulaire de recherche -->
+                <!-- Modification du formulaire de recherche -->
                 <div class="row justify-content-center mt-4">
                     <div class="col-md-6">
-                        <form action="recherche.php" method="GET" class="mb-4">
+                        <form action="recherche.php" method="GET" class="mb-4" id="searchForm" onsubmit="return validateSearch()">
                             <div class="input-group">
-                                <input type="text" name="q" class="form-control" placeholder="Rechercher un mot..." required>
+                                <input type="text" name="q" id="searchInput" class="form-control" placeholder="Rechercher un mot..." >
                                 <button type="submit" class="btn btn-custom">Rechercher</button>
                             </div>
+                            <small id="searchError" class="text-danger" style="display: none;">Veuillez saisir un terme de recherche</small>
                         </form>
                     </div>
                 </div>
@@ -311,5 +313,36 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
 <script src="js/click-scroll.js"></script>
 <script src="js/vegas.min.js"></script>
 <script src="js/custom.js"></script>
+
+<!-- Ajout du script JavaScript avant la fermeture du body -->
+<script>
+function validateSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchError = document.getElementById('searchError');
+    
+    // Nettoyer les espaces au début et à la fin
+    const searchValue = searchInput.value.trim();
+    
+    // Vérifier si le champ est vide
+    if (searchValue === '') {
+        searchError.style.display = 'block';
+        searchInput.classList.add('is-invalid');
+        return false;
+    }
+    
+    // Si la validation passe
+    searchError.style.display = 'none';
+    searchInput.classList.remove('is-invalid');
+    return true;
+}
+
+// Ajouter un écouteur d'événement pour masquer le message d'erreur lors de la saisie
+document.getElementById('searchInput').addEventListener('input', function() {
+    if (this.value.trim() !== '') {
+        document.getElementById('searchError').style.display = 'none';
+        this.classList.remove('is-invalid');
+    }
+});
+</script>
 </body>
 </html>

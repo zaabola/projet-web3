@@ -241,6 +241,22 @@ if (isset($_GET['theme_id'])) {
             70% { opacity: 1; }
             100% { opacity: 0; }
         }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .button-group .submit-btn {
+            flex: 1;
+        }
+
+        .button-group a.submit-btn {
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -281,7 +297,14 @@ if (isset($_GET['theme_id'])) {
                                                           name="commentaire" 
                                                           class="feedback-input" 
                                                           placeholder="Écrivez votre retour..."></textarea>
-                                                <button class="submit-btn" type="submit">Envoyer</button>
+                                                <div class="button-group">
+                                                    <button class="submit-btn" type="submit">Envoyer</button>
+                                                    <a href="generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>" 
+                                                       class="submit-btn" 
+                                                       target="_blank">
+                                                        <i class="bi bi-download"></i> Télécharger PDF
+                                                    </a>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>

@@ -92,16 +92,16 @@ if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES["ima
     <ul class="navbar-nav">
       <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.html">
-            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <i class="material-symbols-rounded opacity-5"></i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
 
 
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/billing.html">
-            <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">gestion themes</span>
+        <a class="nav-link active bg-gradient-dark text-white" href="bib.php">
+            <i class="material-symbols-rounded opacity-5"></i>
+            <span class="nav-link-text ms-1">Gestion theme</span>
           </a>
         </li>
         

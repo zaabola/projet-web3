@@ -6,10 +6,14 @@ include_once(__DIR__ . '/../model/themem.php'); // Inclusion du modèle Theme
 class ArticlesController {
     private $db;
 
-    /*public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
-    }*/
+    public function __construct() {
+        try {
+            // Utiliser la classe config pour la connexion
+            $this->db = config::getConnexion();
+        } catch (Exception $e) {
+            die('Erreur: ' . $e->getMessage());
+        }
+    }
 
     // Liste des Articles
     public function listArticless() {
@@ -67,15 +71,16 @@ class ArticlesController {
     }
 
     // Obtenir un Article par ID
-    public function getArticlesById($Id_Articles) {
-        $query = "SELECT a.*, t.titre AS theme_titre 
-                  FROM Articless a 
-                  LEFT JOIN themes t ON a.id = t.id 
-                  WHERE a.Id_article = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindValue(':id', $Id_Articles);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function getArticleById($id) {
+        $sql = "SELECT * FROM Articles WHERE Id_article = :id";
+        try {
+            $query = $this->db->prepare($sql);
+            $query->bindValue(':id', $id, PDO::PARAM_INT);
+            $query->execute();
+            return $query->fetch();
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
 
     // Obtenir des Articles par thème
