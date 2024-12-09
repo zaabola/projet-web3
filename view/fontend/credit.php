@@ -40,9 +40,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Donation Form</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>emprunt - Donation Form</title>
+    <!-- CSS FILES -->                
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap-icons.css" rel="stylesheet">
+    <link href="../css/tooplate-barista.css" rel="stylesheet">  
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -53,6 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      background: url('../images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; 
+      background-size: cover;
+      color: #fff;
+    }
+    .form-container-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px; /* Space between the form and image */
     }
     .form-container {
       background: white;
@@ -110,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       width: 40px;
       height: auto;
       position: absolute;
-      right: 10px;
+      right: 20px;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -118,89 +136,170 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       position: relative;
     }
     .card-number-container input {
-      padding-right: 50px; /* Add space for the logo */
+      padding-right: 50px;
     }
+    .form-container-wrapper {
+  display: flex;
+  align-items: stretch; /* Ensures the form and image have the same height */
+  justify-content: center;
+  gap: 20px;
+}
+
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures the form content is spaced out */
+}
+
+.image-container {
+  flex-shrink: 0;
+  height: 100%; /* Ensures the image fills the height of its container */
+}
+
+.side-image {
+  width: 550px;
+  height: 100%; /* Set to 100% height to match the form container */
+  object-fit: cover; /* Ensures the image fits proportionally within the container */
+  border-radius: 5px;
+}
+
   </style>
 </head>
-<body>
-  <div class="form-container">
-    <h2>Make a Donation</h2>
-    <p>Your contribution will make a big difference.</p>
-    <form method="POST" action="">
-      <div class="form-row">
-        <input type="text" name="firstName" placeholder="First Name" value="<?php echo htmlspecialchars($_POST['firstName'] ?? ''); ?>">
-        <span class="error-message"><?php echo $errors["firstName"] ?? ""; ?></span>
-        <input type="text" name="lastName" placeholder="Last Name" value="<?php echo htmlspecialchars($_POST['lastName'] ?? ''); ?>">
-        <span class="error-message"><?php echo $errors["lastName"] ?? ""; ?></span>
-      </div>
-      <div class="form-row card-number-container">
-        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234" value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo()">
-        <img id="cardLogo" src="../images/other.jpeg" alt="Card Logo" class="card-logo">
-        <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
-      </div>
-      <div class="form-row">
-        <select name="expirationMonth">
-          <option value="">Month</option>
-          <?php for ($i = 1; $i <= 12; $i++): ?>
-            <option value="<?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>" <?php echo ($_POST['expirationMonth'] ?? '') === str_pad($i, 2, "0", STR_PAD_LEFT) ? "selected" : ""; ?>>
-              <?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>
-            </option>
-          <?php endfor; ?>
-        </select>
-        <select name="expirationYear">
-          <option value="">Year</option>
-          <?php for ($i = date("Y"); $i <= date("Y") + 20; $i++): ?>
-            <option value="<?php echo $i; ?>" <?php echo ($_POST['expirationYear'] ?? '') == $i ? "selected" : ""; ?>>
-              <?php echo $i; ?>
-            </option>
-          <?php endfor; ?>
-        </select>
-        <span class="error-message"><?php echo $errors["expiration"] ?? ""; ?></span>
-      </div>
-      <div class="form-row">
-        <input type="text" name="cvc" placeholder="CVC" value="<?php echo htmlspecialchars($_POST['cvc'] ?? ''); ?>">
-        <span class="error-message"><?php echo $errors["cvc"] ?? ""; ?></span>
-      </div>
-      <div class="form-row">
-        <select name="country">
-          <option value="">Select Country</option>
-          <?php
-          $countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
-            "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-            "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
-            "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)",
-            "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-            "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France",
-            "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti",
-            "Holy See", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan",
-            "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea (North)", "Korea (South)", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia",
-            "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives",
-            "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
-            "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria",
-            "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru",
-            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
-            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles",
-            "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "Spain", "Sri Lanka", "Sudan",
-            "South Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
-            "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
-            "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-          ];
-          foreach ($countries as $country) {
-            $selected = ($_POST['country'] ?? '') === $country ? 'selected' : '';
-            echo "<option value=\"$country\" $selected>$country</option>";
-          }
-          ?>
-        </select>
-      </div>
-      <button type="submit">Donate Now</button>
-      <?php if ($successMessage): ?>
-        <p class="success-message"><?php echo $successMessage; ?></p>
-      <?php endif; ?>
-    </form>
-  </div>
+<body class="donation-page">
+<main>
+<nav class="navbar navbar-expand-lg">                
+                    <div class="container">
+                        <a class="navbar-brand d-flex align-items-center" href="index.html">
+                            <img src="../images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            بصمة
+                        </a>
+        
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+        
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-lg-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
+                                </li>
+                                <li>
+                                    <a href="#section_69" class="nav-link click-scroll">Shop</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="panier.php">Panier</a>
+                                </li>
+                            </ul>
 
-  <script>
+                            <button id="lang-switch" class="btn btn-outline-primary me-2" >Switch Language</button>
+
+                        </div>
+                    
+                        <div class="d-flex ms-3">
+                         <a href="#reservation" class="btn btn-outline-primary me-2">Reservation</a>
+                         <a href="donation.php" class="btn btn-outline-primary me-2">Donation</a>
+                        </div>
+                    </div>
+                </nav>
+
+    <section>
+      <div class="form-container-wrapper">
+        <!-- Form Container -->
+        <div class="form-container">
+          <h2>Make a Donation</h2>
+          <p>Your contribution will make a big difference.</p>
+          <form method="POST" action="">
+            <div class="form-row">
+              <input type="text" name="firstName" placeholder="First Name" value="<?php echo htmlspecialchars($_POST['firstName'] ?? ''); ?>">
+              <span class="error-message"><?php echo $errors["firstName"] ?? ""; ?></span>
+              <input type="text" name="lastName" placeholder="Last Name" value="<?php echo htmlspecialchars($_POST['lastName'] ?? ''); ?>">
+              <span class="error-message"><?php echo $errors["lastName"] ?? ""; ?></span>
+            </div>
+            <div class="form-row card-number-container">
+              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234" value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo()">
+              <img id="cardLogo" src="../images/other.jpeg" alt="Card Logo" class="card-logo">
+              <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
+            </div>
+            <div class="form-row">
+              <select name="expirationMonth">
+                <option value="">Month</option>
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                  <option value="<?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>" <?php echo ($_POST['expirationMonth'] ?? '') === str_pad($i, 2, "0", STR_PAD_LEFT) ? "selected" : ""; ?>>
+                    <?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>
+                  </option>
+                <?php endfor; ?>
+              </select>
+              <select name="expirationYear">
+                <option value="">Year</option>
+                <?php for ($i = date("Y"); $i <= date("Y") + 20; $i++): ?>
+                  <option value="<?php echo $i; ?>" <?php echo ($_POST['expirationYear'] ?? '') == $i ? "selected" : ""; ?>>
+                    <?php echo $i; ?>
+                  </option>
+                <?php endfor; ?>
+              </select>
+              <span class="error-message"><?php echo $errors["expiration"] ?? ""; ?></span>
+            </div>
+            <div class="form-row">
+              <input type="text" name="cvc" placeholder="CVC" value="<?php echo htmlspecialchars($_POST['cvc'] ?? ''); ?>">
+              <span class="error-message"><?php echo $errors["cvc"] ?? ""; ?></span>
+            </div>
+            <div class="form-row">
+              <select name="country">
+                <option value="">Select Country</option>
+                <?php
+                $countries = [
+                  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+                  "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
+                  "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
+                  "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)",
+                  "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia (Czech Republic)", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+                  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France",
+                  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti",
+                  "Holy See", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan",
+                  "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea (North)", "Korea (South)", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia",
+                  "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives",
+                  "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+                  "Morocco", "Mozambique", "Myanmar (Burma)", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria",
+                  "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine State", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
+                  "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+                  "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia",
+                  "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland",
+                  "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
+                  "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan",
+                  "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+                ];
+
+                foreach ($countries as $countryOption) {
+                  $selected = (isset($_POST["country"]) && $_POST["country"] === $countryOption) ? "selected" : "";
+                  echo "<option value=\"$countryOption\" $selected>$countryOption</option>";
+                }
+                ?>
+              </select>
+              <span class="error-message"><?php echo $errors["country"] ?? ""; ?></span>
+            </div>
+            <button type="submit">Donate Now</button>
+          </form>
+          <?php if ($successMessage): ?>
+            <div class="success-message"><?php echo $successMessage; ?></div>
+          <?php endif; ?>
+        </div>
+
+        <!-- Image Container -->
+        <div class="image-container">
+          <img src="../images/don.webp" alt="Image Description" class="side-image">
+        </div>
+      </div>
+    </section>
+</main>
+<script>
 function updateCardLogo() {
   var cardNumber = document.getElementById('cardNumber').value.replace(/\D/g, ''); 
   var cardLogo = document.getElementById('cardLogo');

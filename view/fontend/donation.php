@@ -43,9 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $error = "Erreur lors de l'enregistrement : " . $e->getMessage();
             }
         }
-    } else {
+        if  (empty($errors)) {
+            // Redirection vers credit.php après un délai de 1 seconde (temps pour l'utilisateur de voir le message)
+            header("Location: credit.php");
+            exit();
+    } 
+    } 
+    else {
         $error = "Veuillez remplir tous les champs obligatoires.";
     }
+   
 }
 ?>
 
@@ -135,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <section >
         <div class="container">
-            <div class="row">
+            <div class="form-container">
                 <div class="col-lg-10 col-12 mx-auto">
                     <div class="booking-form-wrap">
                         <form class="custom-form booking-form" method="post" action="">
@@ -170,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                     </div>
                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                        <button type="submit" class="form-control">Envoyer</button>
+                                        <button type="submit" class="form-control">suivant</button>
                                     </div>
                                 </div>
                             </div>
