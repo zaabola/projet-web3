@@ -1,12 +1,46 @@
 <?php
 session_start(); // Start the session to use session variables
 require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
+require 'vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 
 // Initialize variables for messages
 $success = $error = "";
 
 // Check if form was submitted and data is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && isset($_POST['formValid']) && $_POST['formValid'] == 'true') {
+    $mail = new PHPMailer(true);
+    $dateTime = new DateTime();
+    $date = $dateTime->format('Y-m-d');
+
+    
+
+    try {
+          
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; 
+        $mail->SMTPAuth = true;
+        $mail->Username = 'khalilboujemaa2@gmail.com'; 
+        $mail->Password = 'rqoy nrsm quej iocf'; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+          
+        $mail->setFrom('khalilboujemaa2@gmail.com', 'Emprunt');
+        $mail->addAddress($_POST['mail'], $_POST['first-name'] . ' ' . $_POST['last-name']);
+        $mail->isHTML(true);
+        $mail->Subject = 'Confirmation de reservation';
+        $mail->Body = "<h1>Bonjour {$_POST['first-name']} {$_POST['last-name']}</h1>
+                         <p>Votre reservation a etait bien effectuer vous devez presentez voter code QR pour acceder au bus.</p>
+                         <p>Date de soumission : {$date}</p>
+                         <p>Votre code QR :</p>
+                         <img src='https://upload.wikimedia.org/wikipedia/commons/7/78/Qrcode_wikipedia_fr_v2clean.png' style='width:150px; height:auto;'>";
+        $mail->send();
+      } catch (Exception $e) {
+        echo "Erreur : {$mail->ErrorInfo}";
+      }
+    
     try {
         // Extract form data
         $nom = $_POST['last-name'] ?? '';
@@ -55,6 +89,7 @@ if (isset($_SESSION['error'])) {
 <!doctype html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Reservation Form for Excursions">
