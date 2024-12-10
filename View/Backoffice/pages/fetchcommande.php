@@ -16,10 +16,32 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Fetch all commandes
+// Determine the total number of commandes
 try {
-    $sql = "SELECT * FROM commande";
+    $sql = "SELECT COUNT(*) FROM commande";
     $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $total_commandes = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    die("Error fetching total commandes: " . $e->getMessage());
+}
+
+// Set the number of commandes per page and calculate the total number of pages
+$commandes_per_page = 5;
+$total_pages = ceil($total_commandes / $commandes_per_page);
+
+// Get the current page from the query parameter; default to 1 if not present
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Calculate the OFFSET for the SQL query
+$offset = ($current_page - 1) * $commandes_per_page;
+
+// Fetch commandes for the current page
+try {
+    $sql = "SELECT * FROM commande LIMIT :limit OFFSET :offset";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':limit', $commandes_per_page, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
 
     // Fetch all rows as an associative array
@@ -30,7 +52,6 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -107,7 +128,6 @@ try {
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0">
-      
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
@@ -151,6 +171,51 @@ try {
                   </tbody>
                 </table>
               </div>
+              <style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #000; /* Black text color */
+    border: 1px solid #000; /* Black border color */
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #000; /* Black background color on hover */
+    color: #fff; /* White text color on hover */
+}
+
+.pagination a.active {
+    background-color: #000; /* Black background color for active page */
+    color: #fff; /* White text color for active page */
+    pointer-events: none;
+}
+</style>
+
+              <!-- Pagination controls -->
+              <div class="pagination">
+    <?php if ($current_page > 1): ?>
+        <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
+    <?php endif; ?>
+
+    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+        <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
+    <?php endfor; ?>
+
+    <?php if ($current_page < $total_pages): ?>
+        <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
+    <?php endif; ?>
+</div>
+
+              </div>
             </div>
           </div>
         </div>
@@ -159,3 +224,4 @@ try {
   </main>
 </body>
 </html>
+

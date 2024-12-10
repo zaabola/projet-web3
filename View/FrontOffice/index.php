@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </li>
                             </ul>
 
-                            <button id="lang-switch" class="btn btn-light filter-btn" style="background-color: rgba(255, 111, 0, 0.61)">Switch Language</button>
+                            <button id="lang-switch" class="btn btn-outline-warning me-2">Switch Language</button>
 
                         </div>
                     </div>
@@ -261,7 +261,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </form>
                     </div>
                 </div>
-
                 <!-- Hannibal's Statue -->
                 <div class="col-lg-3 col-md-6 col-12 mb-4 product-item" data-price="600" data-popularity="10" data-category="decor">
                     <div class="team-block-wrap">

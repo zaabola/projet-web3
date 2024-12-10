@@ -106,46 +106,45 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Create operation
     if (isset($_POST['action']) && $_POST['action'] == 'create') {
-      $id_commande = $_POST['Id_commande'];
-      $commentaire = $_POST['Commentaire'];
-      $nom = $_POST['Nom'];
-      $prenom = $_POST['Prenom'];
-      $email = $_POST['Email'];
-      $tel = $_POST['Tel'];
+        $id_commande = $_POST['Id_commande'];
+        $commentaire = $_POST['Commentaire'];
+        $nom = $_POST['Nom'];
+        $prenom = $_POST['Prenom'];
+        $email = $_POST['Email'];
+        $tel = $_POST['Tel'];
 
-      // Start transaction
-      $pdo->beginTransaction();
+        // Start transaction
+        $pdo->beginTransaction();
 
-      try {
-          // Insert reclamation
-          $sql = "INSERT INTO reclamation
-                  VALUES (NULL, :id_commande, :commentaire, :nom, :prenom, :email, :tel)";
-          $stmt = $pdo->prepare($sql);
-          $stmt->execute([
-              'id_commande' => $id_commande,
-              'commentaire' => $commentaire,
-              'nom' => $nom,
-              'prenom' => $prenom,
-              'email' => $email,
-              'tel' => $tel
-          ]);
+        try {
+            // Insert reclamation
+            $sql = "INSERT INTO reclamation VALUES (NULL, :id_commande, :commentaire, :nom, :prenom, :email, :tel)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                'id_commande' => $id_commande,
+                'commentaire' => $commentaire,
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'email' => $email,
+                'tel' => $tel
+            ]);
 
-          // Delete corresponding commande
-          $sql = "DELETE FROM commande WHERE Id_commande = :id_commande";
-          $stmt = $pdo->prepare($sql);
-          $stmt->execute(['id_commande' => $id_commande]);
+            // Delete corresponding commande
+            $sql = "DELETE FROM commande WHERE Id_commande = :id_commande";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['id_commande' => $id_commande]);
 
-          // Commit transaction
-          $pdo->commit();
+            // Commit transaction
+            $pdo->commit();
 
-          $message = "Reclamation created successfully. Corresponding commande deleted successfully.";
-      } catch (PDOException $e) {
-          // Rollback transaction in case of error
-          $pdo->rollBack();
-          $message = "Failed to create reclamation and delete corresponding commande: " . $e->getMessage();
-          error_log($e->getMessage());
-      }
-  }
+            $message = "Reclamation created successfully. Corresponding commande deleted successfully.";
+        } catch (PDOException $e) {
+            // Rollback transaction in case of error
+            $pdo->rollBack();
+            $message = "Failed to create reclamation and delete corresponding commande: " . $e->getMessage();
+            error_log($e->getMessage());
+        }
+    }
 
     // Update operation
     if (isset($_POST['action']) && $_POST['action'] == 'update') {
@@ -181,16 +180,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch all reclamations to display
-$sql = "SELECT * FROM reclamation";
-$stmt = $pdo->query($sql);
-$reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+// Determine the total number of reclamations
+try {
+    $sql = "SELECT COUNT(*) FROM reclamation";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $total_reclamations = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    die("Error fetching total reclamations: " . $e->getMessage());
+}
 
+// Set the number of reclamations per page and calculate the total number of pages
+$reclamations_per_page = 5;
+$total_pages = ceil($total_reclamations / $reclamations_per_page);
+
+// Get the current page from the query parameter; default to 1 if not present
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Calculate the OFFSET for the SQL query
+$offset = ($current_page - 1) * $reclamations_per_page;
+
+// Fetch reclamations for the current page
+try {
+    $sql = "SELECT * FROM reclamation LIMIT :limit OFFSET :offset";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':limit', $reclamations_per_page, PDO::PARAM_INT);
+    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Fetch all rows as an associative array
+    $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching reclamations: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reclamation CRUD</title>
     <style>
@@ -219,11 +246,28 @@ $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         button:hover {
             background-color: #0056b3;
         }
-        #ordersList div {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #000; /* Black text color */
+            border: 1px solid #000; /* Black border color */
             border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .pagination a:hover {
+            background-color: #000; /* Black background color on hover */
+            color: #fff; /* White text color on hover */
+        }
+        .pagination a.active {
+            background-color: #000; /* Black background color for active page */
+            color: #fff; /* White text color for active page */
+            pointer-events: none;
         }
     </style>
 </head>
@@ -245,7 +289,7 @@ $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="email" name="Email" placeholder="Email" required>
         <input type="text" name="Tel" placeholder="Tel" required>
         <input type="hidden" name="action" value="create">
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white">Create Reclamation</button>
+        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Create Reclamation</button>
     </form>
 
     <!-- Form to update an existing reclamation -->
@@ -259,7 +303,7 @@ $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <input type="email" name="Email" placeholder="Email" required>
         <input type="text" name="Tel" placeholder="Tel" required>
         <input type="hidden" name="action" value="update">
-        <button type="submit"  class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white">Update Reclamation</button>
+        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Update Reclamation</button>
     </form>
 
     <!-- Form to delete a reclamation -->
@@ -267,73 +311,54 @@ $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>Delete a Reclamation</h2>
         <input type="number" name="Id_reclamation" placeholder="Reclamation ID" required>
         <input type="hidden" name="action" value="delete">
-        <button type="submit "  class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white">Delete Reclamation</button>
+        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Delete Reclamation</button>
     </form>
 
     <!-- Display all reclamations -->
     <h2>All Reclamations</h2>
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Commande ID</th>
-            <th>Commentaire</th>
-            <th>Nom</th>
-            <th>Prenom</th>
-            <th>Email</th>
-            <th>Tel</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($reclamations as $reclamation): ?>
-            <tr>
-                <td><?php echo $reclamation['Id_reclamation']; ?></td>
-                <td><?php echo $reclamation['Id_commande']; ?></td>
-                <td><?php echo $reclamation['Commentaire']; ?></td>
-                <td><?php echo $reclamation['Nom']; ?></td>
-                <td><?php echo $reclamation['Prenom']; ?></td>
-                <td><?php echo $reclamation['Email']; ?></td>
-                <td><?php echo $reclamation['Tel']; ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    <script>
-                async function fetchReclamations() {
-            try {
-                const response = await fetch('reclamation.php');
-                const data = await response.json();
-                
-                if (data.length === 0) {
-                    document.getElementById('reclamationsList').innerHTML = 'No reclamations found.';
-                } else {
-                    let tableHTML = '<table>';
-                    tableHTML += `<tr>
-                                    <th>ID</th>
-                                    <th>Commande ID</th>
-                                    <th>Commentaire</th>
-                                    <th>Nom</th>
-                                    <th>Prenom</th>
-                                    <th>Email</th>
-                                    <th>Tel</th>
-                                  </tr>`;
-                    data.forEach(row => {
-                        tableHTML += `<tr>
-                                        <td>${row.Id_reclamation}</td>
-                                        <td>${row.Id_commande}</td>
-                                        <td>${row.Commentaire}</td>
-                                        <td>${row.Nom}</td>
-                                        <td>${row.Prenom}</td>
-                                        <td>${row.Email}</td>
-                                        <td>${row.Tel}</td>
-                                      </tr>`;
-                    });
-                    tableHTML += '</table>';
-                    document.getElementById('reclamationsList').innerHTML = tableHTML;
-                }
-            } catch (error) {
-                console.error('Error fetching reclamations:', error);
-                document.getElementById('reclamationsList').innerHTML = 'Error loading reclamations.';
-            }
-        }
-    </script>
+    <div id="reclamationsList">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Commande ID</th>
+                    <th>Commentaire</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Email</th>
+                    <th>Tel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($reclamations as $reclamation): ?>
+                    <tr>
+                        <td><?php echo $reclamation['Id_reclamation']; ?></td>
+                        <td><?php echo $reclamation['Id_commande']; ?></td>
+                        <td><?php echo $reclamation['Commentaire']; ?></td>
+                        <td><?php echo $reclamation['Nom']; ?></td>
+                        <td><?php echo $reclamation['Prenom']; ?></td>
+                        <td><?php echo $reclamation['Email']; ?></td>
+                        <td><?php echo $reclamation['Tel']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination controls -->
+    <div class="pagination">
+        <?php if ($current_page > 1): ?>
+            <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+            <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+
+        <?php if ($current_page < $total_pages): ?>
+            <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
+        <?php endif; ?>
+    </div>
+</body>
+</html>
+
