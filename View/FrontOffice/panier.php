@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once('tcpdf/tcpdf.php'); // Include the TCPDF library
 
 $host = "localhost";
 $username = "root";
@@ -48,10 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Calculate total cost for the panier
         $total_cost = 0;
+        $product_list = [];
         foreach ($_SESSION['cart'] as $id_produit => $quantity) {
-            $result = $conn->query("SELECT Prix, Qte FROM produit WHERE Id_produit = $id_produit");
+            $result = $conn->query("SELECT Nom_Produit, Prix, Qte FROM produit WHERE Id_produit = $id_produit");
             $product = $result->fetch_assoc();
             $total_cost += $product['Prix'] * $quantity;
+
+            // Add product details to the list
+            $product_list[] = [
+                'name' => $product['Nom_Produit'],
+                'price' => $product['Prix'],
+                'quantity' => $quantity,
+                'total' => $product['Prix'] * $quantity
+            ];
 
             // Update product quantity
             $new_quantity = $product['Qte'] - $quantity;
@@ -80,6 +90,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             die("Error inserting commande: " . $conn->error);
         }
     }
+
+    // Handle receipt generation
+    if ($action == 'generate_receipt') {
+        $Adresse_Client = $_POST['Adresse_Client'];
+        $Tel_Client = $_POST['Tel_Client'];
+        $Nom_Client = $_POST['Nom_Client'];
+        $Prenom_Client = $_POST['Prenom_Client'];
+        $total_cost = $_POST['total_cost'];
+
+        // Generate PDF receipt
+        generatePDFReceipt($Adresse_Client, $Tel_Client, $Nom_Client, $Prenom_Client, $total_cost);
+    }
+}
+
+// Function to generate PDF receipt
+function generatePDFReceipt($Adresse_Client, $Tel_Client, $Nom_Client, $Prenom_Client, $total_cost) {
+    // Create new PDF document
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    
+    // Set document information
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Your Company');
+    $pdf->SetTitle('Receipt');
+    $pdf->SetSubject('Receipt');
+
+    // Add a page
+    $pdf->AddPage();
+
+    // Set some content
+    $html = "
+    <h1>Receipt</h1>
+    <p><strong>Client Name:</strong> {$Nom_Client} {$Prenom_Client}</p>
+    <p><strong>Address:</strong> {$Adresse_Client}</p>
+    <p><strong>Phone:</strong> {$Tel_Client}</p>
+    <p><strong>Total Cost:</strong> {$total_cost} DT</p>
+    <p>We received your order. We will make sure that it will reach you shortly.</p>
+    ";
+
+    // Print text using writeHTMLCell()
+    $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+    // Close and output PDF document
+    $pdf->Output('receipt.pdf', 'D'); // 'D' for download
 }
 
 // Fetch cart items
@@ -99,7 +152,7 @@ if (count($cart_items) > 0) {
     SELECT 
         p.Id_produit,
         p.Nom_Produit,
-        p.Prix
+                p.Prix
     FROM 
         produit p
     WHERE 
@@ -118,15 +171,7 @@ if (count($cart_items) > 0) {
 $conn->close();
 ?>
 
-
-
-
-<!-- Include the HTML part -->
-
-
-
-<!-- Include the HTML part -->
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -310,94 +355,143 @@ $conn->close();
     </div>
 
     <div id="paymentForm" style="display: none; margin-top: 20px;">
-    <form method="POST" action="panier.php" onsubmit="return validateForm()">
-        <input type="hidden" name="action" value="submit_payment">
+        <form method="POST" action="panier.php" onsubmit="return validateForm()">
+            <input type="hidden" name="action" value="submit_payment">
 
-        <div class="form-group">
-            <label for="Adresse_Client">Address</label>
-            <span id="addressError" style="color: red;"></span>
-            <input type="text" class="form-control" id="Adresse_Client" name="Adresse_Client">
-        </div>
+            <div class="form-group">
+                <label for="Adresse_Client">Address</label>
+                <span id="addressError" style="color: red;"></span>
+                <input type="text" class="form-control" id="Adresse_Client" name="Adresse_Client">
+            </div>
 
-        <div class="form-group">
-            <label for="Tel_Client">Phone</label>
-            <span id="phoneError" style="color: red;"></span>
-            <input type="text" class="form-control" id="Tel_Client" name="Tel_Client">
-        </div>
+            <div class="form-group">
+                <label for="Tel_Client">Phone</label>
+                <span id="phoneError" style="color: red;"></span>
+                <input type="text" class="form-control" id="Tel_Client" name="Tel_Client">
+            </div>
 
-        <div class="form-group">
-            <label for="Nom_Client">First Name</label>
-            <span id="firstNameError" style="color: red;"></span>
-            <input type="text" class="form-control" id="Nom_Client" name="Nom_Client">
-        </div>
+            <div class="form-group">
+                <label for="Nom_Client">First Name</label>
+                <span id="firstNameError" style="color: red;"></span>
+                <input type="text" class="form-control" id="Nom_Client" name="Nom_Client">
+            </div>
 
-        <div class="form-group">
-            <label for="Prenom_Client">Last Name</label>
-            <span id="lastNameError" style="color: red;"></span>
-            <input type="text" class="form-control" id="Prenom_Client" name="Prenom_Client">
-        </div>
+            <div class="form-group">
+                <label for="Prenom_Client">Last Name</label>
+                <span id="lastNameError" style="color: red;"></span>
+                <input type="text" class="form-control" id="Prenom_Client" name="Prenom_Client">
+            </div>
 
-        <button type="submit" class="btn btn-primary">Submit Payment</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Submit Payment</button>
+            <button type="button" class="btn btn-secondary" onclick="generateReceipt()">Receipt</button>
+        </form>
+    </div>
+
+    <script>
+        function showPaymentForm() {
+            document.getElementById('paymentForm').style.display = 'block';
+        }
+
+        function validateForm() {
+            var isValid = true;
+
+            var address = document.getElementById('Adresse_Client').value;
+            var phone = document.getElementById('Tel_Client').value;
+            var firstName = document.getElementById('Nom_Client').value;
+            var lastName = document.getElementById('Prenom_Client').value;
+
+            // Clear previous error messages
+            document.getElementById('addressError').innerText = '';
+            document.getElementById('phoneError').innerText = '';
+            document.getElementById('firstNameError').innerText = '';
+            document.getElementById('lastNameError').innerText = '';
+
+            // Validate Address
+            if (address === '') {
+                document.getElementById('addressError').innerText = 'Address is required.';
+                isValid = false;
+            }
+
+            // Validate Phone
+            if (phone === '') {
+                document.getElementById('phoneError').innerText = 'Phone is required.';
+                isValid = false;
+            }
+
+            // Validate First Name
+            if (firstName === '') {
+                document.getElementById('firstNameError').innerText = 'First Name is required.';
+                isValid = false;
+            }
+
+            // Validate Last Name
+            if (lastName === '') {
+                document.getElementById('lastNameError').innerText = 'Last Name is required.';
+                isValid = false;
+            }
+
+            // Additional validation can be added here
+
+            return isValid;
+        }
+
+        function generateReceipt() {
+            var address = document.getElementById('Adresse_Client').value;
+            var phone = document.getElementById('Tel_Client').value;
+            var firstName = document.getElementById('Nom_Client').value;
+            var lastName = document.getElementById('Prenom_Client').value;
+
+            // Create a form and submit it to generate receipt
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'panier.php';
+
+            var actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'generate_receipt';
+            form.appendChild(actionInput);
+
+            var addressInput = document.createElement('input');
+            addressInput.type = 'hidden';
+            addressInput.name = 'Adresse_Client';
+            addressInput.value = address;
+            form.appendChild(addressInput);
+
+            var phoneInput = document.createElement('input');
+            phoneInput.type = 'hidden';
+            phoneInput.name = 'Tel_Client';
+            phoneInput.value = phone;
+            form.appendChild(phoneInput);
+
+            var firstNameInput = document.createElement('input');
+            firstNameInput.type = 'hidden';
+            firstNameInput.name = 'Nom_Client';
+            firstNameInput.value = firstName;
+            form.appendChild(firstNameInput);
+
+            var lastNameInput = document.createElement('input');
+            lastNameInput.type = 'hidden';
+            lastNameInput.name = 'Prenom_Client';
+            lastNameInput.value = lastName;
+            form.appendChild(lastNameInput);
+
+            var productListInput = document.createElement('input');
+            productListInput.type = 'hidden';
+            productListInput.name = 'product_list';
+            productListInput.value = JSON.stringify(<?php echo json_encode($products); ?>);
+            form.appendChild(productListInput);
+
+            var totalCostInput = document.createElement('input');
+            totalCostInput.type = 'hidden';
+            totalCostInput.name = 'total_cost';
+            totalCostInput.value = '<?php echo $total_cost; ?>';
+            form.appendChild(totalCostInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 </div>
-
-<script>
-    function toggleForm() {
-        var form = document.getElementById('paymentForm');
-        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function validateForm() {
-        var isValid = true;
-
-        var address = document.getElementById('Adresse_Client').value;
-        var phone = document.getElementById('Tel_Client').value;
-        var firstName = document.getElementById('Nom_Client').value;
-        var lastName = document.getElementById('Prenom_Client').value;
-
-        // Clear previous error messages
-        document.getElementById('addressError').innerText = '';
-        document.getElementById('phoneError').innerText = '';
-        document.getElementById('firstNameError').innerText = '';
-        document.getElementById('lastNameError').innerText = '';
-
-        // Validate Address
-        if (address === '') {
-            document.getElementById('addressError').innerText = 'Address is required.';
-            isValid = false;
-        }
-
-        // Validate Phone
-        if (phone === '') {
-            document.getElementById('phoneError').innerText = 'Phone is required.';
-            isValid = false;
-        }
-
-        // Validate First Name
-        if (firstName === '') {
-            document.getElementById('firstNameError').innerText = 'First Name is required.';
-            isValid = false;
-        }
-
-        // Validate Last Name
-        if (lastName === '') {
-            document.getElementById('lastNameError').innerText = 'Last Name is required.';
-            isValid = false;
-        }
-
-        // Additional validation can be added here
-
-        return isValid;
-    }
-</script>
-
-
-</div>
-
-<script>
-function showPaymentForm() {
-    document.getElementById('paymentForm').style.display = 'block';
-}
-</script>
 </body>
 </html>

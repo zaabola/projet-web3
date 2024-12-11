@@ -346,19 +346,14 @@ a:hover {
           
         </div>
         
-      <div class="row mb-4">
+      <div class="row "  >
  
 
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
+        <div  >
+          <div class="card" >
+            <div class="card-header pb-0" style=' width: 60vw; '>
               <div class="row">
-                <div class="col-lg-6 col-7">
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-check text-info" aria-hidden="true"></i>
-                    
-                  </p>
-                </div>
+               
                 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -376,6 +371,7 @@ a:hover {
             display: flex;
             flex-direction: column; /* Arrange the main container vertically */
             align-items: center;
+
         }
         .top-charts {
             display: flex;
@@ -410,9 +406,63 @@ a:hover {
         <div class="chart-container-large">
             <canvas id="lineChart"></canvas>
         </div>
+        <div class="col-md-6"> <div class="card"> <div class="card-body"> <h5 class="card-title">Total Benefits</h5> <p class="card-text" id="totalCostSummary"></p> </div> </div> </div>
     </div>
 
     <script>
+      async function fetchTotalCostData() {
+    try {
+        const response = await fetch('fetch_total_cost.php'); // Ensure this path is correct based on your server setup
+        const data = await response.json();
+        console.log("Fetched Total Costs: ", data); // Debugging: log the fetched data
+
+        // Parse and return the costs
+        return data.map(item => parseFloat(item.total_cost));
+    } catch (error) {
+        console.error('Error fetching total cost data:', error);
+        return [];
+    }
+}
+
+function calculateTotalSum(totalCosts) {
+    // Calculate the total sum of all benefits
+    const sum = totalCosts.reduce((acc, curr) => acc + curr, 0);
+    console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
+    return sum;
+}
+
+async function displayTotalCost() {
+    const totalCosts = await fetchTotalCostData();
+    const totalSum = calculateTotalSum(totalCosts);
+
+    // Display total sum in the summary section
+    document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
+}
+
+displayTotalCost();
+
+
+function calculateTotalSum(totalCosts) {
+    // Ensure all values are parsed correctly
+    const sum = totalCosts.reduce((acc, curr) => {
+        const parsedValue = isNaN(curr) ? 0 : curr; // Handle potential NaN values
+        return acc + parsedValue;
+    }, 0);
+
+    console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
+    return sum;
+}
+
+async function displayTotalCost() {
+    const totalCosts = await fetchTotalCostData();
+    const totalSum = calculateTotalSum(totalCosts);
+
+    // Display total sum in the summary section
+    document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
+}
+
+displayTotalCost();
+
         async function fetchPieChartData() {
             try {
                 const response = await fetch('product_stock.php');
