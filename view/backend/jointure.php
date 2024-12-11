@@ -84,6 +84,46 @@ try {
     $uniqueDonationsManagement = [];
     $error = $e->getMessage();
 }
+$searchTerm = isset($_POST['donor_name_search']) ? htmlspecialchars($_POST['donor_name_search']) : (isset($_GET['donor_name_search']) ? htmlspecialchars($_GET['donor_name_search']) : '');
+
+// Capture the specific donor name if provided (GET)
+$donorName = isset($_GET['donor_name']) ? $_GET['donor_name'] : '';
+
+try {
+    // Retrieve and process donations management list
+    $donationsManagement = $donationManagementController->listDonationManagement();
+    $seenManagementIds = [];
+    $uniqueDonationsManagement = [];
+    $totalDonationAmount = 0; // Initialize total donation amount
+
+    foreach ($donationsManagement as $management) {
+        if (!in_array($management['management_id'], $seenManagementIds)) {
+            $seenManagementIds[] = $management['management_id'];
+
+            // Fetch detailed donation data
+            $donationDetails = $donationManagementController->getDonationDetailsById($management['id_donation']);
+            $management['donor_name'] = $donationDetails['donor_name'] ?? 'Unknown';
+            $management['donation_amount'] = $donationDetails['donation_amount'] ?? 0;
+
+            // Calculate financial details
+            $price_per_unit = 1; // Adjust if needed
+            $totalPrice = $management['donation_amount'] * $price_per_unit;
+            $allocatedPrice = $totalPrice * ($management['allocated_percentage'] / 100);
+            $management['allocated_price'] = number_format($allocatedPrice, 2);
+
+            // Check if donor name matches the search term
+            if (empty($searchTerm) || stripos($management['donor_name'], $searchTerm) !== false) {
+                $uniqueDonationsManagement[] = $management;
+                $totalDonationAmount += $management['donation_amount']; // Add to total
+            }
+        }
+    }
+} catch (Exception $e) {
+    $uniqueDonationsManagement = [];
+    $totalDonationAmount = 0; // Reset total on error
+    $error = $e->getMessage();
+}
+
 $donationController = new DonationController();
 $success = $error = "";
 
@@ -247,8 +287,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
-    <script src="../validation.js"></script>
     <style>
+        html, body {
+    height: 100%;
+    margin: 0; /* Removes default margin */
+    padding: 0; /* Removes default padding */
+    overflow: auto; /* Allow scrolling */
+}
+.main-content {
+    max-height: 100vh; /* Make sure it's constrained within the viewport */
+    overflow-y: auto;  /* Enables vertical scrolling */
+}
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -317,6 +367,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         .btn:hover {
             background-color: #0056b3;
         }
+        html, body {
+    height: 100%;
+    overflow: auto; /* Allow scrolling */
+}
     </style>
 </head>
 
@@ -361,7 +415,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         </div>
     </aside>
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ps ps--active-x ps--active-y">
-        
+    <form method="POST" class="mb-4">
+            <label for="donor_name_search" class="form-label">Search by Donor Name:</label>
+            <input type="text" name="donor_name_search" id="donor_name_search" class="form-control" value="<?= $searchTerm ?>">
+            <button type="submit" name="search_donor" class="btn btn-primary mt-3">Search</button>
+        </form>
         <div class="container-fluid-py-2">
             <!-- Form for table selection -->
             <form method="POST" class="mb-4">
@@ -406,7 +464,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     </tbody>
                 </table>
             <?php endif; ?>
-
+            <div class="total-donation">
+    <?php if (!empty($donorName)): ?>
+        <h5>Total Donation Amount for <?= htmlspecialchars($donorName) ?>: <?= number_format($totalDonationAmount, 2) ?></h5>
+    <?php else: ?>
+        <h5>Total Donation Amount for All Donors: <?= number_format($totalDonationAmount, 2) ?></h5>
+    <?php endif; ?>
+</div>
             <!-- Donations Table -->
             <?php if ($showDonationTable): ?>
                 <h4>Donations</h4>
@@ -436,6 +500,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 </table>
             <?php endif; ?>
         </div>
+        
+       
+    </div>
         <form method="POST">
         <button type="submit" name="generate_management_pdf" class="btn btn-primary">Generate Donation Management PDF</button>
     </form>

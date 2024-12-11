@@ -9,34 +9,67 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Échec de la connexion : " . $e->getMessage());
+    die("\u00c9chec de la connexion : " . $e->getMessage());
 }
 
 $errors = [];
 $successMessage = ""; // Initialize the variable
 
+function validateCardNumber($cardNumber) {
+    $number = preg_replace('/\D/', '', $cardNumber); // Remove non-numeric characters
+    $sum = 0;
+    $alt = false;
+
+    for ($i = strlen($number) - 1; $i >= 0; $i--) {
+        $n = (int)$number[$i];
+        if ($alt) {
+            $n *= 2;
+            if ($n > 9) {
+                $n -= 9;
+            }
+        }
+        $sum += $n;
+        $alt = !$alt;
+    }
+
+    return ($sum % 10 == 0);
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  $firstName = trim($_POST["firstName"]);
-  $lastName = trim($_POST["lastName"]);
-  $cardNumber = trim($_POST["cardNumber"]);
-  $expirationMonth = $_POST["expirationMonth"];
-  $expirationYear = $_POST["expirationYear"];
-  $cvc = trim($_POST["cvc"]);
-  $country = $_POST["country"];
+    $firstName = trim($_POST["firstName"]);
+    $lastName = trim($_POST["lastName"]);
+    $cardNumber = trim($_POST["cardNumber"]);
+    $expirationMonth = $_POST["expirationMonth"];
+    $expirationYear = $_POST["expirationYear"];
+    $cvc = trim($_POST["cvc"]);
+    $country = $_POST["country"];
 
-  if (empty($firstName)) $errors["firstName"] = "First Name is required.";
-  if (empty($lastName)) $errors["lastName"] = "Last Name is required.";
-  if (!preg_match('/^\d{16}$/', $cardNumber)) $errors["cardNumber"] = "Card number must be 16 digits.";
-  if (empty($expirationMonth) || empty($expirationYear)) $errors["expiration"] = "Expiration date is required.";
-  if (!preg_match('/^\d{3,4}$/', $cvc)) $errors["cvc"] = "CVC must be 3 digits.";
-  if (empty($country)) $errors["country"] = "Country is required.";
+    // Validation
+    if (empty($firstName)) $errors["firstName"] = "First Name is required.";
+    if (empty($lastName)) $errors["lastName"] = "Last Name is required.";
+    if (empty($cardNumber)) {
+        $errors["cardNumber"] = "Card number is required.";
+    } elseif (!preg_match('/^\d{16}$/', $cardNumber)) {
+        $errors["cardNumber"] = "Card number must be 16 digits.";
+    } elseif (!validateCardNumber($cardNumber)) {
+        $errors["cardNumber"] = "Invalid card number.";
+    }
 
-  if (empty($errors)) {
-    $successMessage = "Donation submitted successfully!";
-  }
+    if (empty($expirationMonth) || empty($expirationYear)) {
+        $errors["expiration"] = "Expiration date is required.";
+    }
+
+    if (!preg_match('/^\d{3,4}$/', $cvc)) {
+        $errors["cvc"] = "CVC must be 3 or 4 digits.";
+    }
+
+    if (empty($country)) $errors["country"] = "Country is required.";
+
+    if (empty($errors)) {
+        $successMessage = "Donation submitted successfully!";
+    }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,20 +157,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       margin-top: -10px;
       margin-bottom: 10px;
     }
-    .card-logo {
-      width: 40px;
-      height: auto;
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
     .card-number-container {
-      position: relative;
-    }
-    .card-number-container input {
-      padding-right: 50px;
-    }
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.card-number-container input {
+    padding-right: 50px; /* Leave space for the logo */
+}
+
+.card-logo {
+    width: 40px;
+    height: auto;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: top 0.2s ease-in-out; /* Smooth adjustment */
+}
+
+.card-number-container .error-message {
+    position: absolute;
+    top: 100%; /* Place the error message below the input field */
+    left: 0;
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
     .form-container-wrapper {
   display: flex;
   align-items: stretch; /* Ensures the form and image have the same height */
@@ -224,10 +271,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               <span class="error-message"><?php echo $errors["lastName"] ?? ""; ?></span>
             </div>
             <div class="form-row card-number-container">
-              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234" value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo()">
-              <img id="cardLogo" src="../images/other.jpeg" alt="Card Logo" class="card-logo">
-              <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
-            </div>
+    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234"
+        value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo(); updateCardLogoPosition();">
+    <img id="cardLogo" src="../images/other.jpeg" alt="Card Logo" class="card-logo">
+    <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
+</div>
+
             <div class="form-row">
               <select name="expirationMonth">
                 <option value="">Month</option>
@@ -333,6 +382,20 @@ function getCardLogo(cardNumber) {
 
   return null;  
 }
+function updateCardLogoPosition() {
+    const cardNumberInput = document.querySelector('#cardNumber');
+    const cardLogo = document.querySelector('#cardLogo');
+    const errorMessage = cardNumberInput.nextElementSibling; // Assuming the error message is the next element
+
+    if (errorMessage && errorMessage.textContent.trim() !== "") {
+        cardLogo.style.top = '30%'; // Move up if the error is shown
+    } else {
+        cardLogo.style.top = '50%'; // Reset to center if no error
+    }
+}
+
+document.querySelector('#cardNumber').addEventListener('input', updateCardLogo);
+document.querySelector('#cardNumber').addEventListener('input', updateCardLogoPosition);
 
 
   </script>

@@ -117,7 +117,6 @@ $donations = $donationController->listDonations();
                         <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
                     </ol>
                 </nav>
-                
             </div>
         </nav>
 
@@ -221,6 +220,7 @@ $donations = $donationController->listDonations();
             </div>
         </div>
     </main>
+    
 </body>
 
 </html>

@@ -86,5 +86,7 @@ class DonationController
             echo 'Error: ' . $e->getMessage();
         }
     }
+    
 }
+
 ?>
