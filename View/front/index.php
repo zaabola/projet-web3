@@ -18,7 +18,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
         <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
         
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="icon" href="logo.png" type="image/png">
+
 
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
             
@@ -48,7 +49,7 @@ Bootstrap 5 HTML CSS Template
                     <div class="container">
                         <a class="navbar-brand d-flex align-items-center" href="index.php">
                             <img src="logo.png" class="navbar-brand-image img-fluid" alt="logo basma">
-                            Basma
+                            بصمة
                         </a>
         
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,9 +82,9 @@ Bootstrap 5 HTML CSS Template
                             <div class="ms-lg-3">
                                 
                                 <?php if (!$isLoggedIn): ?>
-                                <li><a class="btn custom-btn custom-border-btn" href="signin.php">Se connecter <i class="bi-arrow-up-right ms-2"></i></a></li>
+                                <li><a class="btn custom-btn custom-border-btn" href="signin.php">Log In <i class="bi-arrow-up-right ms-2"></i></a></li>
                                 <?php else: ?>
-                                <li><a class="btn custom-btn custom-border-btn" href="logout.php" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">Se déconnecter <i class="bi-arrow-up-right ms-2"></i></a></li>
+                                <li><a class="btn custom-btn custom-border-btn" href="logout.php" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')">Sign Out <i class="bi-arrow-up-right ms-2"></i></a></li>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -99,7 +100,7 @@ Bootstrap 5 HTML CSS Template
                             <div class="col-lg-6 col-12 mx-auto">
                                 <em class="small-text">welcome to Empreinte Tunisie</em>
                                 
-                                <h1>Basma</h1>
+                                <h1>بصمة</h1>
 
                                 <p class="text-white mb-4 pb-lg-2">
                                     your <em>favourite</em> guide to Tunisia.
