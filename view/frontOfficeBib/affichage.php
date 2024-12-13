@@ -303,6 +303,61 @@ if (isset($_GET['theme_id'])) {
             text-decoration: none;
             display: inline-block;
         }
+
+        .feedback-item {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feedback-content {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100%);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Ajouter ces styles pour le bouton de lecture */
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .submit-btn i {
+            font-size: 14px;
+        }
+
+        .submit-btn.reading {
+            background: #ff0f7b;
+        }
+
+        /* Animation pour l'icône de lecture */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .reading i {
+            animation: pulse 1s infinite;
+        }
     </style>
 </head>
 <body>
@@ -345,12 +400,35 @@ if (isset($_GET['theme_id'])) {
                                                           placeholder="Écrivez votre retour..."></textarea>
                                                           <button type="button" onclick="startVoiceRecognition(<?php echo $article['Id_article']; ?>)">🎤 Enregistrer</button>
 
+                                                          
+
                                                 <div class="button-group">
-                                                    <button class="submit-btn" type="submit">Envoyer</button>
+                                                    <button class="submit-btn" type="submit" data-translate="envoyer">Envoyer</button>
                                                     <a href="generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>" 
                                                        class="submit-btn" 
                                                        target="_blank">
-                                                        <i class="bi bi-download"></i> Télécharger PDF
+                                                        <i class="bi bi-download"></i> PDF
+                                                    </a>
+                                                    <button type="button" class="submit-btn" onclick="loadFeedbacks(<?php echo $article['Id_article']; ?>)">
+                                                        <i class="bi bi-chat-dots"></i> Feedbacks
+                                                    </button>
+                                                    <button type="button" class="submit-btn" onclick="readArticle(this)" 
+                                                            data-title="<?php echo htmlspecialchars($article['Titre_article']); ?>"
+                                                            data-description="<?php echo htmlspecialchars($article['Description_article']); ?>"
+                                                            data-bibliography="<?php echo htmlspecialchars($article['bibliographie']); ?>">
+                                                        <i class="bi bi-volume-up"></i>
+                                                        <span class="read-text">Lire</span>
+                                                    </button>
+                                                    <!-- Boutons de partage sur les réseaux sociaux -->
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>" 
+                                                       class="submit-btn" 
+                                                       target="_blank">
+                                                        <i class="bi bi-facebook"></i> Partager
+                                                    </a>
+                                                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>&text=<?php echo urlencode($article['Titre_article']); ?>" 
+                                                       class="submit-btn" 
+                                                       target="_blank">
+                                                        <i class="bi bi-twitter"></i> Tweeter
                                                     </a>
                                                 </div>
                                             </form>
@@ -449,6 +527,105 @@ if (isset($_GET['theme_id'])) {
             alert('Erreur lors de la reconnaissance vocale : ' + event.error);
         };
     }
+</script>
+
+<script>
+function loadFeedbacks(articleId) {
+    const modal = new bootstrap.Modal(document.getElementById('feedbacksModal'));
+    const feedbacksList = document.getElementById('feedbacksList');
+    
+    feedbacksList.innerHTML = '<div class="text-center">Chargement...</div>';
+    
+    fetch(`get_feedbacks.php?article_id=${articleId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                feedbacksList.innerHTML = '<p class="text-center">Aucun feedback pour cet article.</p>';
+            } else {
+                feedbacksList.innerHTML = data.map(feedback => `
+                    <div class="feedback-item">
+                        <p class="feedback-content">${feedback.commentaire}</p>
+                        <hr>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(error => {
+            feedbacksList.innerHTML = '<p class="text-center text-danger">Erreur lors du chargement des feedbacks.</p>';
+            console.error('Erreur:', error);
+        });
+    
+    modal.show();
+}
+</script>
+
+<!-- Modal pour les feedbacks -->
+<div class="modal fade" id="feedbacksModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Feedbacks</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="feedbacksList">
+                <!-- Les feedbacks seront chargés ici -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let isReading = false;
+let currentUtterance = null;
+
+function readArticle(button) {
+    if (!isReading) {
+        // Commencer la lecture
+        const synth = window.speechSynthesis;
+        const title = button.getAttribute('data-title');
+        const description = button.getAttribute('data-description');
+        const bibliography = button.getAttribute('data-bibliography');
+        
+        const textToRead = `Titre: ${title}. Description: ${description}. Bibliographie: ${bibliography}.`;
+        currentUtterance = new SpeechSynthesisUtterance(textToRead);
+        currentUtterance.lang = 'fr-FR';
+        currentUtterance.rate = 1.0; // Vitesse normale
+        
+        // Mettre à jour le bouton
+        button.querySelector('.bi').classList.remove('bi-volume-up');
+        button.querySelector('.bi').classList.add('bi-pause-fill');
+        button.querySelector('.read-text').textContent = 'Pause';
+        
+        // Événement de fin de lecture
+        currentUtterance.onend = function() {
+            resetButton(button);
+        };
+        
+        synth.speak(currentUtterance);
+        isReading = true;
+    } else {
+        // Arrêter la lecture
+        window.speechSynthesis.cancel();
+        resetButton(button);
+    }
+}
+
+function resetButton(button) {
+    button.querySelector('.bi').classList.remove('bi-pause-fill');
+    button.querySelector('.bi').classList.add('bi-volume-up');
+    button.querySelector('.read-text').textContent = 'Lire';
+    isReading = false;
+    currentUtterance = null;
+}
+
+// Arrêter la lecture quand la modal est fermée
+document.addEventListener('hidden.bs.modal', function () {
+    if (isReading) {
+        window.speechSynthesis.cancel();
+        const buttons = document.querySelectorAll('.submit-btn');
+        buttons.forEach(resetButton);
+    }
+});
 </script>
 
 </body>

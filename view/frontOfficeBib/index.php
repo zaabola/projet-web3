@@ -168,7 +168,7 @@ $totalPages = ceil($totalThemes / $itemsPerPage);
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin: 1200px,1200px,1200px;">
                 <?php if (empty($list)): ?>
                     <div class="col-12">
                         <p class="text-center">Aucun thème disponible.</p>
