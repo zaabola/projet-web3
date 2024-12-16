@@ -206,6 +206,12 @@ a:hover {
             <span class="nav-link-text ms-1">Products</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/bib.php">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Gestion theme</span>
+          </a>
+        </li>
         
       </ul>
     </div>
