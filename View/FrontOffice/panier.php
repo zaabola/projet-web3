@@ -350,7 +350,7 @@ $conn->close();
 
     <!-- Buttons -->
     <div style="margin-top: 20px;">
-        <a href="index.php" class="btn btn-primary">Back to Main Page</a>
+        <a href="index1.php" class="btn btn-primary">Back to Main Page</a>
         <button onclick="showPaymentForm()" class="btn btn-success">Pay</button>
     </div>
 
