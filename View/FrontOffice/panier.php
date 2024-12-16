@@ -5,7 +5,7 @@ require_once('tcpdf/tcpdf.php'); // Include the TCPDF library
 $host = "localhost";
 $username = "root";
 $password = "";
-$dbname = "empreinte1";
+$dbname = "emprunt";
 
 // Create connection
 $conn = new mysqli($host, $username, $password, $dbname);
