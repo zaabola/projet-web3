@@ -236,6 +236,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <li class="nav-item">
                                     <a class="nav-link" href="index.php">Reservation</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index2.php">Guides</a>
+                                </li>
                                 <li>
                                     <a href="#section_69" class="nav-link click-scroll">Shop</a>
                                 </li>
