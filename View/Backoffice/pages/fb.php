@@ -83,6 +83,12 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+        <li class="nav-item">
+                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+                    <i class="material-symbols-rounded opacity-5">dashboard</i>
+                        <span class="nav-link-text ms-1">ReservationDashboard</span>
+                    </a>
+                </li>
       <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
@@ -123,6 +129,36 @@ $feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <a class="nav-link active bg-gradient-dark text-white" href="bib.php">
             <i class="material-symbols-rounded opacity-5"></i>
             <span class="nav-link-text ms-1">Gestion theme</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/reservation_tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Reservation</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/edit_reservation.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Modification des reservations</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/ajoutbus.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Ajouter un bus</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/bus_tables.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Bus</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/edit_bus.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
       </ul>

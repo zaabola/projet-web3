@@ -2,9 +2,9 @@
 
 // Inclure les fichiers nécessaires
 
-include_once(__DIR__ . '../../../Control/Articlee.php');
+include_once(__DIR__ . '../../../Controller/Articlee.php');
 
-include_once(__DIR__ . '../../../Control/theme.php');
+include_once(__DIR__ . '../../../Controller/theme.php');
 
 
 // Instancier les contrôleurs
@@ -18,7 +18,7 @@ $themeController = new ThemeController();
 
 $host = 'localhost';
 
-$dbname = 'empreinte1';
+$dbname = 'emprunt';
 
 $username = 'root';
 
