@@ -251,11 +251,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <li class="nav-item">
                                     <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="#section_5">Donate</a>
+                                </li>
                             </ul>
-
                             <button id="lang-switch" class="btn btn-outline-warning me-2">Switch Language</button>
-
                         </div>
                     </div>
                 </nav>
