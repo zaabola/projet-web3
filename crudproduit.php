@@ -11,7 +11,7 @@
     <?php
     // Database connection settings
     $host = "localhost";
-    $dbname = "empreinte1";
+    $dbname = "emprunt";
     $username = "root";
     $password = "";
 

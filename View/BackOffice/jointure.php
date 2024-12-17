@@ -1,8 +1,8 @@
 <?php
 // Include required files
-include('C:/xampp/htdocs/web/controller/donation_management.php');
-include('C:/xampp/htdocs/web/controller/donation_controller.php');
-include('C:/xampp/htdocs/web/vendor/autoload.php') ;
+include('C:/xampp/htdocs/reservation/Controller/donation_management.php');
+include('C:/xampp/htdocs/reservation/Controller/donation_controller.php');
+include('C:/xampp/htdocs/reservation/vendor/autoload.php') ;
 // Database connection
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=emprunt', 'root', '');

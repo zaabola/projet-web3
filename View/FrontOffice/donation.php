@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                               
                                 
                                 <li>
-                                    <a href="#section_69" class="nav-link click-scroll">Shop</a>
+                                    <a href="index1.php#section_69" class="nav-link click-scroll">Shop</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
 
                         <div class="d-flex ms-3">
-                         <a href="#reservation" class="btn btn-outline-primary me-2">Reservation</a>
+                         <a href="reservation.php" class="btn btn-outline-primary me-2">Reservation</a>
                          <a href="donation.php" class="btn btn-outline-primary me-2">Donation</a>
                         </div>
                         </div>

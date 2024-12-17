@@ -1,72 +1,83 @@
-<?php 
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Database connection settings
 $host = "localhost";
 $dbname = "emprunt";
 $username = "root";
-$password = "";
+$password = ""; // Your database password
 
-// Database connection
 try {
+    // Create a PDO instance for database connection
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Enable exception handling for errors
 } catch (PDOException $e) {
-    die("\u00c9chec de la connexion : " . $e->getMessage());
+    die("Connection failed: " . $e->getMessage()); // If connection fails, show error message
 }
 
 $errors = [];
-$successMessage = ""; // Initialize the variable
+$successMessage = '';
 
-function validateCardNumber($cardNumber) {
-    $number = preg_replace('/\D/', '', $cardNumber); // Remove non-numeric characters
-    $sum = 0;
-    $alt = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form values
+    $firstName = $_POST['firstName'] ?? '';
+    $lastName = $_POST['lastName'] ?? '';
+    $cardNumber = $_POST['cardNumber'] ?? '';
+    $expirationMonth = $_POST['expirationMonth'] ?? '';
+    $expirationYear = $_POST['expirationYear'] ?? '';
+    $cvc = $_POST['cvc'] ?? '';
+    $country = $_POST['country'] ?? '';
+    $donationAmount = $_POST['donationAmount'] ?? 0;
 
-    for ($i = strlen($number) - 1; $i >= 0; $i--) {
-        $n = (int)$number[$i];
-        if ($alt) {
-            $n *= 2;
-            if ($n > 9) {
-                $n -= 9;
-            }
-        }
-        $sum += $n;
-        $alt = !$alt;
+    // Form validation
+    if (empty($firstName)) {
+        $errors['firstName'] = 'First name is required.';
     }
-
-    return ($sum % 10 == 0);
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $firstName = trim($_POST["firstName"]);
-    $lastName = trim($_POST["lastName"]);
-    $cardNumber = trim($_POST["cardNumber"]);
-    $expirationMonth = $_POST["expirationMonth"];
-    $expirationYear = $_POST["expirationYear"];
-    $cvc = trim($_POST["cvc"]);
-    $country = $_POST["country"];
-
-    // Validation
-    if (empty($firstName)) $errors["firstName"] = "First Name is required.";
-    if (empty($lastName)) $errors["lastName"] = "Last Name is required.";
+    if (empty($lastName)) {
+        $errors['lastName'] = 'Last name is required.';
+    }
     if (empty($cardNumber)) {
-        $errors["cardNumber"] = "Card number is required.";
-    } elseif (!preg_match('/^\d{16}$/', $cardNumber)) {
-        $errors["cardNumber"] = "Card number must be 16 digits.";
-    } elseif (!validateCardNumber($cardNumber)) {
-        $errors["cardNumber"] = "Invalid card number.";
+        $errors['cardNumber'] = 'Card number is required.';
     }
-
     if (empty($expirationMonth) || empty($expirationYear)) {
-        $errors["expiration"] = "Expiration date is required.";
+        $errors['expiration'] = 'Expiration date is required.';
     }
-
-    if (!preg_match('/^\d{3,4}$/', $cvc)) {
-        $errors["cvc"] = "CVC must be 3 or 4 digits.";
+    if (empty($cvc)) {
+        $errors['cvc'] = 'CVC is required.';
     }
-
-    if (empty($country)) $errors["country"] = "Country is required.";
-
+    if (empty($country)) {
+        $errors['country'] = 'Country is required.';
+    }
+    
+    // If no errors, insert data into the database
     if (empty($errors)) {
-        $successMessage = "Donation submitted successfully!";
+        try {
+            // SQL query to insert data into 'payement_don' table
+            $stmt = $pdo->prepare("
+                INSERT INTO payement_don 
+                (first_name, last_name, card_number, expiration_month, expiration_year, cvc, country)
+                VALUES
+                (:first_name, :last_name, :card_number, :expiration_month, :expiration_year, :cvc, :country)
+            ");
+
+            // Execute the prepared statement with values
+            $stmt->execute([
+                ':first_name' => $firstName,
+                ':last_name' => $lastName,
+                ':card_number' => $cardNumber,
+                ':expiration_month' => $expirationMonth,
+                ':expiration_year' => $expirationYear,
+                ':cvc' => $cvc,
+                ':country' => $country,
+            ]);
+
+            $successMessage = "Donation submitted successfully and saved to the database!";
+        } catch (PDOException $e) {
+            $errors['database'] = "Error saving to the database: " . $e->getMessage();
+            error_log($e->getMessage()); // Log error to the server log
+        }
     }
 }
 ?>
@@ -233,10 +244,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ms-lg-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
+                                    <a class="nav-link click-scroll" href="index1.php">Home</a>
                                 </li>
                                 <li>
-                                    <a href="#section_69" class="nav-link click-scroll">Shop</a>
+                                    <a href="index1.php#section_69" class="nav-link click-scroll">Shop</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
@@ -251,7 +262,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
                     
                         <div class="d-flex ms-3">
-                         <a href="#reservation" class="btn btn-outline-primary me-2">Reservation</a>
+                         <a href="reservation.php" class="btn btn-outline-primary me-2">Reservation</a>
                          <a href="donation.php" class="btn btn-outline-primary me-2">Donation</a>
                         </div>
                     </div>
@@ -273,7 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="form-row card-number-container">
     <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234"
         value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo(); updateCardLogoPosition();">
-    <img id="cardLogo" src="../images/other.jpeg" alt="Card Logo" class="card-logo">
+    <img id="cardLogo" src=" ../FrontOffice/images/other.jpeg" alt="Card Logo" class="card-logo">
     <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
 </div>
 
@@ -334,6 +345,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               </select>
               <span class="error-message"><?php echo $errors["country"] ?? ""; ?></span>
             </div>
+            <!-- Read-only donation amount field -->
+            <div class="form-row">
+              <input type="text" name="donationAmount" class="readonly-input" value="<?php echo htmlspecialchars($_POST['amount'] ?? ''); ?>" readonly>
+              <span class="error-message"><?php echo $errors["amount"] ?? ""; ?></span>
+            </div>
             <button type="submit">Donate Now</button>
           </form>
           <?php if ($successMessage): ?>
@@ -356,16 +372,16 @@ function updateCardLogo() {
   var defaultLogo = 'other.jpeg';  
 
   if (cardNumber === '') {
-    cardLogo.src = '/web/view/images/' + defaultLogo;
+    cardLogo.src = '/view/FrontOffice/images/' + defaultLogo;
     return;  
   }
 
   var logo = getCardLogo(cardNumber);
 
   if (logo) {
-    cardLogo.src = '/web/view/images/' + logo;
+    cardLogo.src = '/view/FrontOffice/images/' + logo;
   } else {
-    cardLogo.src = '/web/view/images/' + defaultLogo;
+    cardLogo.src = '/view/FrontOffice/images/' + defaultLogo;
   }
 }
 

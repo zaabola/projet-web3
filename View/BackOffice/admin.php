@@ -1,5 +1,5 @@
 <?php
-include('C:/xampp/htdocs/web/controller/donation_management.php');
+include('C:/xampp/htdocs/reservation/Controller/donation_management.php');
 
 $donationManagementController = new DonationManagementController();
 $success = $error = "";

@@ -1,5 +1,5 @@
 <?php
-require_once '../donation_controller.php';
+require_once 'Controller/donation_controller.php';
 
 $controller = new DonationController();
 $donations = $controller->listDonations();
