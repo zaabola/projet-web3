@@ -347,6 +347,75 @@ if (isset($_GET['theme_id'])) {
         .submit-btn.reading {
             background: #ff0f7b;
         }
+        /* From Uiverse.io by Cornerstone-04 */ 
+.box {
+  width: 140px;
+  height: auto;
+  float: left;
+  transition: .5s linear;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 15px;
+  text-align: center;
+  margin: 0 5px;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.box:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(100%);
+}
+
+.box:after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-top: 4px solid transparent;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(-100%);
+}
+
+.box:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.box:hover:before {
+  border-color: #262626;
+  height: 100%;
+  transform: translateX(0);
+  transition: .3s transform linear, .3s height linear .3s;
+}
+
+.box:hover:after {
+  border-color: #262626;
+  height: 100%;
+  transform: translateX(0);
+  transition: .3s transform linear, .3s height linear .5s;
+}
+
+button {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: transparent;
+}
 
         /* Animation pour l'icône de lecture */
         @keyframes pulse {
@@ -398,39 +467,35 @@ if (isset($_GET['theme_id'])) {
                                                           name="commentaire" 
                                                           class="feedback-input" 
                                                           placeholder="Écrivez votre retour..."></textarea>
-                                                          <button type="button" onclick="startVoiceRecognition(<?php echo $article['Id_article']; ?>)">🎤 Enregistrer</button>
-
+                                                          <button type="button"  onclick="startVoiceRecognition(<?php echo $article['Id_article']; ?>)">
+        🎤 <span class="box">Enregistrer</span>
+    </button>
                                                           
 
-                                                <div class="button-group">
-                                                    <button class="submit-btn" type="submit" data-translate="envoyer">Envoyer</button>
-                                                    <a href="generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>" 
-                                                       class="submit-btn" 
-                                                       target="_blank">
-                                                        <i class="bi bi-download"></i> PDF
-                                                    </a>
-                                                    <button type="button" class="submit-btn" onclick="loadFeedbacks(<?php echo $article['Id_article']; ?>)">
-                                                        <i class="bi bi-chat-dots"></i> Feedbacks
-                                                    </button>
-                                                    <button type="button" class="submit-btn" onclick="readArticle(this)" 
-                                                            data-title="<?php echo htmlspecialchars($article['Titre_article']); ?>"
-                                                            data-description="<?php echo htmlspecialchars($article['Description_article']); ?>"
-                                                            data-bibliography="<?php echo htmlspecialchars($article['bibliographie']); ?>">
-                                                        <i class="bi bi-volume-up"></i>
-                                                        <span class="read-text">Lire</span>
-                                                    </button>
-                                                    <!-- Boutons de partage sur les réseaux sociaux -->
-                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>" 
-                                                       class="submit-btn" 
-                                                       target="_blank">
-                                                        <i class="bi bi-facebook"></i> Partager
-                                                    </a>
-                                                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>&text=<?php echo urlencode($article['Titre_article']); ?>" 
-                                                       class="submit-btn" 
-                                                       target="_blank">
-                                                        <i class="bi bi-twitter"></i> Tweeter
-                                                    </a>
-                                                </div>
+                                                          <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+    <button  type="submit" data-translate="envoyer">
+        <i class="bi bi-send"></i> <span class="box">Envoyer</span>
+    </button>
+    <button type="button"  onclick="window.open('generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>', '_blank')">
+        <i class="bi bi-download"></i> <span class="box">PDF</span>
+    </button>
+    <button type="button"  onclick="loadFeedbacks(<?php echo $article['Id_article']; ?>)">
+        <i class="bi bi-chat-dots"></i> <span class="box">Feedbacks</span>
+    </button>
+    <button type="button"  onclick="readArticle(this)" 
+            data-title="<?php echo htmlspecialchars($article['Titre_article']); ?>"
+            data-description="<?php echo htmlspecialchars($article['Description_article']); ?>"
+            data-bibliography="<?php echo htmlspecialchars($article['bibliographie']); ?>">
+        <i class="bi bi-volume-up"></i> <span class="box">Lire</span>
+    </button>
+    <button type="button"  onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>', '_blank')">
+        <i class="bi bi-facebook"></i> <span class="box">Partager</span>
+    </button>
+    <button type="button"  onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>&text=<?php echo urlencode($article['Titre_article']); ?>', '_blank')">
+        <i class="bi bi-twitter"></i> <span class="box">Tweeter</span>
+    </button>
+</div>
+
                                             </form>
                                         </div>
                                     </div>
