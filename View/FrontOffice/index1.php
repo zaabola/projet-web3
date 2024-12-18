@@ -1,4 +1,17 @@
 <?php
+session_start();
+require_once('session_check.php');
+verifierSession();
+
+// Débogage des variables de session
+error_log("Contenu de la session : " . print_r($_SESSION, true));
+
+// Vérification de l'ID
+if (!isset($_SESSION['id'])) {
+    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+    header("Location: ../FrontOffice/login.php");
+    exit();
+}
 // Connexion à la base de données
 $host = "localhost";
 $username = "root";
@@ -255,7 +268,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <a class="nav-link click-scroll" href="donation.php">Donate</a>
                                 </li>
                             </ul>
-                            <button id="lang-switch" class="btn btn-outline-warning me-2">Switch Language</button>
+                            <div class="ms-lg-3">
+                                <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -782,142 +797,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 .catch(error => console.error('Error fetching orders:', error));
         }
     </script>
-    <script>document.addEventListener('DOMContentLoaded', function() {
-    const translations = {
-        en: {
-            'welcome': 'Welcome to Our Web Site بصمة',
-            'our_story': 'Our Story',
-            'check_store': 'Check Store',
-            'reclamation_heading': 'Reclamation',
-            'reclamation_text': 'If you want to make a complaint contact us at 99888777 or you can visit our shop',
-            'or_visit_shop': 'or you can visit our shop',
-            'where_to_find': 'Where to find us?',
-            'contact': 'Contact',
-            'phone': 'Phone:',
-            'email': 'Email:',
-            'opening_hours': 'Opening Hours',
-            'monday_friday': 'Monday - Friday',
-            'saturday': 'Saturday',
-            'sunday': 'Sunday',
-            'closed': 'Closed',
-            'switch_lang': 'Switch to French',
-            'add_to_cart': 'Add to cart',
-            'home': 'Home',
-            'shop': 'Shop',
-            'reclamation_nav': 'Library',
-            'panier': 'Panier',
-            'experience': 'Experience The History Of Tunisia',
-            'shop_heading': 'Shop',
-            'all': 'All',
-            'price_asc': 'Price: Low to High',
-            'price_desc': 'Price: High to Low',
-            'popularity': 'Most Popular',
-            'all_categories': 'All Categories',
-            'accessories': 'Accessories',
-            'clothing': 'Clothing',
-            'decor': 'Decor'
-        },
-        fr: {
-            'welcome': 'Bienvenue sur notre site Web بصمة',
-            'our_story': 'Notre Histoire',
-            'check_store': 'Consulter la boutique',
-            'reclamation_heading': 'Réclamation',
-            'reclamation_text': 'Si vous voulez faire une réclamation contactez-nous au 99888777 ou vous pouvez visiter notre boutique',
-            'or_visit_shop': 'ou vous pouvez visiter notre boutique',
-            'where_to_find': 'Où nous trouver?',
-            'contact': 'Contact',
-            'phone': 'Téléphone:',
-            'email': 'E-mail:',
-            'opening_hours': 'Heures d\'ouverture',
-            'monday_friday': 'Lundi - Vendredi',
-            'saturday': 'Samedi',
-            'sunday': 'Dimanche',
-            'closed': 'Fermé',
-            'switch_lang': 'Passer à l\'anglais',
-            'add_to_cart': 'Ajouter au panier',
-            'home': 'Accueil',
-            'shop': 'Boutique',
-            'reclamation_nav': 'Bibliothèque',
-            'panier': 'Panier',
-            'experience': 'Découvrez l\'histoire de la Tunisie',
-            'shop_heading': 'Boutique',
-            'all': 'Tout',
-            'price_asc': 'Prix: du plus bas au plus élevé',
-            'price_desc': 'Prix: du plus élevé au plus bas',
-            'popularity': 'Les plus populaires',
-            'all_categories': 'Toutes les catégories',
-            'accessories': 'Accessoires',
-            'clothing': 'Vêtements',
-            'decor': 'Décor'
-        }
-    };
-
-    let currentLang = 'en';
-
-    document.getElementById('lang-switch').addEventListener('click', () => {
-        currentLang = currentLang === 'en' ? 'fr' : 'en';
-        updateText();
-    });
-
-    function updateText() {
-        document.querySelector('.hero-section .small-text').textContent = translations[currentLang]['welcome'];
-        document.querySelector('.btn.custom-btn.custom-border-btn').textContent = translations[currentLang]['our_story'];
-        document.querySelector('.btn.custom-btn.smoothscroll').textContent = translations[currentLang]['check_store'];
-        document.querySelector('.contact-section h2').textContent = translations[currentLang]['reclamation_heading'];
-        document.querySelector('.contact-section em').textContent = translations[currentLang]['reclamation_text'];
-        document.querySelector('.site-footer .text-white.d-block.mb-4').textContent = translations[currentLang]['where_to_find'];
-        document.querySelector('.site-footer .d-flex.mb-1 strong').textContent = translations[currentLang]['phone'];
-        document.querySelector('.site-footer .d-flex strong').textContent = translations[currentLang]['email'];
-        document.querySelector('.opening-hours-list').previousElementSibling.textContent = translations[currentLang]['opening_hours'];
-
-        // Update opening hours
-        const openingHoursList = document.querySelectorAll('.opening-hours-list li');
-        openingHoursList[0].childNodes[0].textContent = translations[currentLang]['monday_friday'];
-        openingHoursList[1].childNodes[0].textContent = translations[currentLang]['saturday'];
-        openingHoursList[2].childNodes[0].textContent = translations[currentLang]['sunday'];
-        openingHoursList[2].childNodes[2].textContent = translations[currentLang]['closed'];
-
-        // Update menu items
-        document.querySelectorAll('.nav-link.click-scroll')[0].textContent = translations[currentLang]['home'];
-        document.querySelectorAll('.nav-link.click-scroll')[1].textContent = translations[currentLang]['shop'];
-        document.querySelectorAll('.nav-link.click-scroll')[2].textContent = translations[currentLang]['reclamation_nav'];
-        document.querySelectorAll('.nav-link.click-scroll')[3].textContent = translations[currentLang]['panier'];
-
-        // Update section headings
-        document.querySelector('.barista-section em.text-white').textContent = translations[currentLang]['experience'];
-        document.querySelector('.barista-section h2.text-white').textContent = translations[currentLang]['shop_heading'];
-
-        // Update filter buttons and select options
-        document.querySelectorAll('.filter-btn[data-filter="all"]').forEach(btn => btn.textContent = translations[currentLang]['all']);
-        document.querySelectorAll('.filter-btn[data-filter="price-asc"]').forEach(btn => btn.textContent = translations[currentLang]['price_asc']);
-        document.querySelectorAll('.filter-btn[data-filter="price-desc"]').forEach(btn => btn.textContent = translations[currentLang]['price_desc']);
-        document.querySelectorAll('.filter-btn[data-filter="popularity"]').forEach(btn => btn.textContent = translations[currentLang]['popularity']);
-        
-        document.getElementById('category-filter').querySelectorAll('option')[0].textContent = translations[currentLang]['all_categories'];
-        document.getElementById('category-filter').querySelectorAll('option')[1].textContent = translations[currentLang]['accessories'];
-        document.getElementById('category-filter').querySelectorAll('option')[2].textContent = translations[currentLang]['clothing'];
-        document.getElementById('category-filter').querySelectorAll('option')[3].textContent = translations[currentLang]['decor'];
-
-        // Update additional text
-        document.querySelectorAll('.contact-section em')[1].textContent = translations[currentLang]['or_visit_shop'];
-
-        // Update all buttons
-        document.querySelectorAll('button, .btn').forEach(button => {
-            switch(button.id) {
-                case 'lang-switch':
-                    button.textContent = translations[currentLang]['switch_lang'];
-                    break;
-                default:
-                    if (button.textContent.trim() === 'Add to cart' || button.textContent.trim() === 'Ajouter au panier') {
-                        button.textContent = translations[currentLang]['add_to_cart'];
-                    }
-            }
-        });
-    }
-
-    updateText(); // Call to ensure the text is correctly set on page load
-});
-</script>
 <script>
 function validateSearch() {
     const searchInput = document.getElementById('searchInput');

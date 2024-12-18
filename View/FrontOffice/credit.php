@@ -1,4 +1,17 @@
 <?php
+session_start();
+require_once('session_check.php');
+verifierSession();
+
+// Débogage des variables de session
+error_log("Contenu de la session : " . print_r($_SESSION, true));
+
+// Vérification de l'ID
+if (!isset($_SESSION['id'])) {
+    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+    header("Location: ../FrontOffice/login.php");
+    exit();
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);

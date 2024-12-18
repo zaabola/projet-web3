@@ -1,5 +1,17 @@
 <?php
-session_start(); // Start the session to use session variables
+session_start();
+require_once('session_check.php');
+verifierSession();
+
+// Débogage des variables de session
+error_log("Contenu de la session : " . print_r($_SESSION, true));
+
+// Vérification de l'ID
+if (!isset($_SESSION['id'])) {
+    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+    header("Location: ../FrontOffice/login.php");
+    exit();
+}
 require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
 require 'vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
@@ -127,7 +139,7 @@ if (isset($_SESSION['error'])) {
                     <li class="nav-item"><a class="nav-link" href="index.php#section_5">Contact</a></li>
                 </ul>
                 <div class="ms-lg-3">
-                    <a class="btn custom-btn custom-border-btn" href="index.php">Go Back<i class="bi-arrow-up-right ms-2"></i></a>
+                    <a class="btn custom-btn custom-border-btn" href="index1.php">Go Back<i class="bi-arrow-up-right ms-2"></i></a>
                 </div>
             </div>
         </div>
@@ -162,13 +174,13 @@ if (isset($_SESSION['error'])) {
                                     <div class="booking-form-body">
                                         <div class="row">
                                             <div class="col-lg-6 col-12">
-                                                <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Nom">
+                                                <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Nom" readonly value = "<?php echo $_SESSION['nom'] ?>" >
                                             </div>
                                             <div class="col-lg-6 col-12">
-                                                <input type="text" name="first-name" id="first-name" class="form-control" placeholder="Prénom">
+                                                <input type="text" name="first-name" id="first-name" class="form-control" placeholder="Prénom" readonly value = "<?php echo $_SESSION['prenom'] ?>">
                                             </div>
                                             <div class="col-lg-6 col-12">
-                                                <input type="email" name="mail" id="mail" class="form-control" placeholder="Email">
+                                                <input type="email" name="mail" id="mail" class="form-control" placeholder="Email" readonly value = "<?php echo $_SESSION['email'] ?>">
                                             </div>
                                             <div class="col-lg-6 col-12">
                                                 <input type="tel" name="tel" id="tel" class="form-control" placeholder="Téléphone">
