@@ -38,18 +38,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'arrowspider2@gmail.com';
-                $mail->Password   = 'eoyltjhhkouuvhya';
+                $mail->Username   = 'khalilboujemaa2@gmail.com';
+                $mail->Password   = 'rqoy nrsm quej iocf ';
                 $mail->SMTPSecure = 'ssl';
                 $mail->Port       = 465;
 
-                $mail->setFrom('arrowspider2@gmail.com','FIND JIIL');
+                $mail->setFrom('khalilboujemaa2@gmail.com','Emprunt');
                 $mail->addAddress($email);
 
                 $mail->isHTML(true);
-                $mail->Subject = 'Réinitialisation de votre mot de passe';
+                $mail->Subject = 'Reinitialisation de votre mot de passe';
                 $mail->Body    = "Cliquez sur le lien suivant pour changer votre mot de passe :<br>";
-                $mail->Body   .= "<a href='http://localhost/MVC/view/frontoffice/reinitialiser_motdepasse.php?code=" . $reset_code . "'>Reinitialiser le mot de passe</a>";
+                $mail->Body   .= "#" . $reset_code . "'>Reinitialiser le mot de passe</a>";
 
                 $mail->send();
                 $message = "Un e-mail a été envoyé à votre adresse.";
@@ -192,8 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn">Réinitialiser le mot de passe</button>
             </form>
             <div class="links">
-                <a href="login.php">Connexion</a>
-                <a href="index.html">page d'acceuil</a>
+                <a href="login.php">page d'acceuil</a>
             </div>
         </div>
     </div>

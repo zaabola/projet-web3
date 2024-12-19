@@ -49,6 +49,8 @@ $guides=$PortfolioC->read();
         <link href="css/vegas.min.css" rel="stylesheet">
 
         <link href="css/tooplate-barista.css" rel="stylesheet">
+
+        <link rel="icon" href="logo.png">
    
     </head>
     
@@ -57,9 +59,9 @@ $guides=$PortfolioC->read();
             <main>
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index2.html">
-                            <img src="images/coffee-beans.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
-                            Barista
+                    <a class="navbar-brand d-flex align-items-center" href="index1.php">
+                            <img src="images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            بصمة
                         </a>
         
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,19 +101,19 @@ $guides=$PortfolioC->read();
                         <div class="row align-items-center">
 
                             <div class="col-lg-6 col-12 mx-auto">
-                                <em class="small-text">welcome to Barista.co</em>
+                                <em class="small-text">Bienvenue A</em>
                                 
-                                <h1>Cafe Klang</h1>
+                                <h1>بصمة</h1>
 
                                 <p class="text-white mb-4 pb-lg-2">
-                                    your <em>favourite</em> coffee daily lives.
+                                    votre site <em>favorie</em> 
                                 </p>
 
                                 <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_2">
-                                    Our Story
+                                    A propos
                                 </a>
 
-                                <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_3"><strong>Check Menu</strong></a>
+                                <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_3"><strong>Excursion</strong></a>
                             </div>
 
                         </div>

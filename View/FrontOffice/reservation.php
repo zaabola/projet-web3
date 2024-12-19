@@ -116,6 +116,7 @@ if (isset($_SESSION['error'])) {
     <link href="css/bootstrap-icons.css" rel="stylesheet">
     <link href="css/vegas.min.css" rel="stylesheet">
     <link href="css/tooplate-barista.css" rel="stylesheet">
+    <link rel="icon" href="logo.png">
 </head>
 
 <body class="reservation-page">
@@ -133,14 +134,14 @@ if (isset($_SESSION['error'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-lg-auto">
                     <li class="nav-item"><a class="nav-link" href="index1.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#section_2">About us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#section_3">Excursion</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#section_4">Reviews</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#section_5">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#section_1">About us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#section_2">Excursion</a></li>
+                    <li><a href="index1.php#section_69" class="nav-link click-scroll">Shop</a></li>
+                    <li><a href="index1.php#section_3" class="nav-link click-scroll">Bibliothèque</a></li>
+                    <li class="nav-item"><a class="nav-link click-scroll" href="index2.php">Volontairiat</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#section_3">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.php#section_4">Contact</a></li>
                 </ul>
-                <div class="ms-lg-3">
-                    <a class="btn custom-btn custom-border-btn" href="index1.php">Go Back<i class="bi-arrow-up-right ms-2"></i></a>
-                </div>
             </div>
         </div>
     </nav>

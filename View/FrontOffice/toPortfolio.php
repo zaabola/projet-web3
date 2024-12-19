@@ -22,7 +22,7 @@ $guides = $PortfolioC->findone($_GET['id']);
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-icons.css" rel="stylesheet">
         <link href="css/tooplate-barista.css" rel="stylesheet">
-        <link href="portfolio.css" rel="stylesheet">
+        <link href="css/portfolio.css" rel="stylesheet">
         
     </head>
     

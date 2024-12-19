@@ -26,15 +26,7 @@
 
         <link href="css/tooplate-barista.css" rel="stylesheet">
         
-<!--
-
-Tooplate 2137 Barista Cafe
-
-https://www.tooplate.com/view/2137-barista-cafe
-
-Bootstrap 5 HTML CSS Template
-
--->
+        <link rel="icon" href="logo.png">
     </head>
     
     <body>
@@ -42,7 +34,7 @@ Bootstrap 5 HTML CSS Template
             <main>
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.php">
+                        <a class="navbar-brand d-flex align-items-center" href="index1.php">
                             <img src="images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
                             بصمة
                         </a>
@@ -58,19 +50,19 @@ Bootstrap 5 HTML CSS Template
                                 </li>
         
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_2">About</a>
+                                    <a class="nav-link" href="#section_1">About</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_3">Excursion</a>
+                                    <a class="nav-link" href="#section_2">Excursion</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_4">Reviews</a>
+                                    <a class="nav-link" href="#section_3">Reviews</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_5">Contact</a>
+                                    <a class="nav-link" href="#section_4">Contact</a>
                                 </li>
                             </ul>
 
@@ -85,7 +77,7 @@ Bootstrap 5 HTML CSS Template
                 </nav>
 
 
-                <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+                <section class="hero-section d-flex justify-content-center align-items-center">
 
                     <div class="container">
                         <div class="row align-items-center">
@@ -99,7 +91,7 @@ Bootstrap 5 HTML CSS Template
                                     votre site <em>favorie</em> 
                                 </p>
 
-                                <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_2">
+                                <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_1">
                                     A propos
                                 </a>
 
@@ -113,7 +105,7 @@ Bootstrap 5 HTML CSS Template
                 </section>
 
 
-                <section class="about-section section-padding" id="section_2">
+                <section class="about-section section-padding" id="section_1">
                     <div class="section-overlay"></div>
                     <div class="container">
                         <div class="row align-items-center">
@@ -142,7 +134,7 @@ Bootstrap 5 HTML CSS Template
                 </section>
 
                 <!--debut-->
-                <section class="menu-section section-padding" id="section_3">
+                <section class="menu-section section-padding" id="section_2">
                     <div class="container">
                         <div class="row">
 
@@ -308,7 +300,7 @@ Bootstrap 5 HTML CSS Template
                     </div>
                 </section>
 
-                <section class="reviews-section section-padding section-bg" id="section_4">
+                <section class="reviews-section section-padding section-bg" id="section_3">
                     <div class="container">
                         <div class="row justify-content-center">
 
@@ -417,7 +409,7 @@ Bootstrap 5 HTML CSS Template
                     </div>
                 </section>
 
-                <section class="contact-section section-padding" id="section_5">
+                <section class="contact-section section-padding" id="section_4">
                     <div class="container">
                         <div class="row">   
 

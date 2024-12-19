@@ -167,12 +167,12 @@ try {
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Creative Tim</span>
+        <span class="ms-1 text-sm text-dark">Emprunt</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
@@ -189,9 +189,9 @@ try {
                     <i class="material-symbols-rounded opacity-5">dashboard</i>
                         <span class="nav-link-text ms-1">ReservationDashboard</span>
                     </a>
-                </li>
+        </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/tables.php">
+          <a class="nav-link text-dark" href="table.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
           </a>
@@ -217,7 +217,7 @@ try {
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaint</span>
+            <span class="nav-link-text ms-1">Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -241,7 +241,7 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des reservations</span>
+            <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
@@ -262,7 +262,38 @@ try {
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
-    </ul>
+        <li class="nav-item">
+                    <a class="nav-link text-dark" href="liste.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Liste</span>
+                    </a>
+                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="admin.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Management</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="jointure.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Tableaux</span>
+                    </a>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="test.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">credit</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="tables.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">volontaires</span>
+                    </a>
+                    </li>
+      </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
       

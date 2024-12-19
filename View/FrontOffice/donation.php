@@ -86,6 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/bootstrap-icons.css" rel="stylesheet">
     <link href="../css/tooplate-barista.css" rel="stylesheet">
+    <link rel="icon" href="logo.png">
  <style>
     body {
     font-family: Arial, sans-serif;
@@ -121,31 +122,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ms-lg-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
+                                    <a class="nav-link click-scroll" href="index1.php">Home</a>
                                 </li>
-        
-                              
-                                
                                 <li>
                                     <a href="index1.php#section_69" class="nav-link click-scroll">Shop</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
+                                <li>
+                                    <a href="index1.php#section_3" class="nav-link click-scroll">Bibliothèque</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="panier.php">Panier</a>
+                                    <a class="nav-link click-scroll" href="index2.php">Volontairiat</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link click-scroll" href="reservation.php">Reservation</a>
                                 </li>
                             </ul>
-
-                            <button id="lang-switch" class="btn btn-outline-primary me-2" >Switch Language</button>
-
-                        </div>
-                    
-                
-
-                        <div class="d-flex ms-3">
-                         <a href="reservation.php" class="btn btn-outline-primary me-2">Reservation</a>
-                         <a href="donation.php" class="btn btn-outline-primary me-2">Donation</a>
                         </div>
                         </div>
         </div>

@@ -1,3 +1,25 @@
+<?php
+include 'C:/xampp/htdocs/reservation/Controller/volntaireC.php';
+
+$volntaireC = new VolontaireC();
+if(isset($_GET['search']))
+{
+  $volontaires =$volntaireC->search($_GET['search']);
+}
+else{
+  $volontaires = $volntaireC->read();
+}
+if(isset($_GET['delete']))
+{
+  $volntaireC->delete($_GET['delete']);
+}
+if(isset($_GET['update']))
+{
+  $volntaireC->update($_GET['id'],$_GET['update'],$_GET['email']);
+}
+
+?>
+
 <!--
 =========================================================
 * Material Dashboard 3 - v3.2.0
@@ -12,129 +34,6 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
-<?php
-session_start();
-require_once('../../FrontOffice/session_check.php');
-verifierSession();
-
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
-
-// Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
-}
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Include the Commande class
-require_once '../commande.php'; 
-
-// Database connection settings
-$host = "localhost";
-$dbname = "emprunt";
-$username = "root";
-$password = "";
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'];
-
-    if ($action === 'create') {
-        // Retrieve form data
-        $nom_produit = $_POST['Nom_Produit'] ?? null;
-        $quantite_commande = $_POST['Qte'] ?? null;
-        $adresse_client = $_POST['Adresse_client'] ?? null;
-        $tel_client = $_POST['Tel_client'] ?? null;
-        $nom_client = $_POST['Nom_client'] ?? null;
-        $prenom_client = $_POST['Prenom_client'] ?? null;
-
-        // Validate inputs
-        if (!$nom_produit || !$quantite_commande || $quantite_commande <= 0 || !$adresse_client || !$tel_client || !$nom_client || !$prenom_client) {
-            die("<p style='color: red;'>Invalid input data. Ensure all fields are filled correctly.</p>");
-        }
-
-        try {
-            // Begin a transaction
-            $pdo->beginTransaction();
-
-            // Check product availability
-            $check_sql = "SELECT Id_produit, Qte FROM produit WHERE Nom_Produit = :nom_produit";
-            $stmt = $pdo->prepare($check_sql);
-            $stmt->execute(['nom_produit' => $nom_produit]);
-            $produit = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$produit) {
-                throw new Exception("Product not found.");
-            }
-
-            if ($produit['Qte'] < $quantite_commande) {
-                throw new Exception("Insufficient stock.");
-            }
-
-            // Insert into the panier_items table to create a new panier
-            $panier_sql = "INSERT INTO panier_items (total_cost) VALUES (0)";
-            $stmt = $pdo->prepare($panier_sql);
-            $stmt->execute();
-            $id_panier = $pdo->lastInsertId(); // Get the newly created panier ID
-
-            // Insert into the commande table
-            $commande_sql = "INSERT INTO commande (Adresse_client, Tel_client, Nom_client, Prenom_client, id_panier) 
-                            VALUES (:adresse_client, :tel_client, :nom_client, :prenom_client, :id_panier)";
-            $stmt = $pdo->prepare($commande_sql);
-            $stmt->execute([
-                'adresse_client' => $adresse_client,
-                'tel_client' => $tel_client,
-                'nom_client' => $nom_client,
-                'prenom_client' => $prenom_client,
-                'id_panier' => $id_panier // Use the newly created panier ID
-            ]);
-            $id_commande = $pdo->lastInsertId(); // Get the newly created commande ID
-
-            // Update product quantity
-            $update_sql = "UPDATE produit SET Qte = Qte - :quantite WHERE Id_produit = :id_produit";
-            $stmt = $pdo->prepare($update_sql);
-            $stmt->execute([
-                'quantite' => $quantite_commande,
-                'id_produit' => $produit['Id_produit']
-            ]);
-
-            // Insert into ligne_commande table
-            $ligne_commande_sql = "INSERT INTO ligne_commande (Id_Commande, id_panier, Quantite) 
-                                VALUES (:id_commande, :id_panier, :quantite)";
-            $stmt = $pdo->prepare($ligne_commande_sql);
-            $stmt->execute([
-                'id_commande' => $id_commande,
-                'id_panier' => $id_panier, // Use the newly created panier ID
-                'quantite' => $quantite_commande
-            ]);
-
-            // Commit the transaction
-            $pdo->commit();
-
-            // Redirect to avoid form re-submission (PRG Pattern)
-            header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&commande_id=" . $id_commande);
-            exit; // Ensure no further code is executed after the redirect
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $pdo->rollBack();
-            echo "<p style='color: red;'>Error: " . $e->getMessage() . "</p>";
-        }
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['success'] == 1) {
-    echo "<p style='color: green;'>Commande placed successfully! Commande ID: " . htmlspecialchars($_GET['commande_id']) . "</p>";
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -160,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -172,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-dark" href="dashboard.php">
+          <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
@@ -182,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
                     <i class="material-symbols-rounded opacity-5">dashboard</i>
                         <span class="nav-link-text ms-1">ReservationDashboard</span>
                     </a>
-                </li>
+        </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="../pages/tables.php">
+          <a class="nav-link text-dark" href="table.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
           </a>
@@ -234,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des reservations</span>
+            <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
@@ -255,6 +154,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
+        <li class="nav-item">
+                    <a class="nav-link text-dark" href="liste.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Liste</span>
+                    </a>
+                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="admin.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Management</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="jointure.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Tableaux</span>
+                    </a>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="test.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">credit</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active bg-gradient-dark text-white" href="tables.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">volontaires</span>
+                    </a>
+                    </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
@@ -262,183 +192,178 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        form input, form button {
-            margin: 5px 0;
-            padding: 8px;
-            width: 100%;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #ordersList div {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Order Management System</h1>
-
-    <!-- Form to create a new order -->
-    <div id="createOrderForm">
-    <form method="POST" action="tables.php" onsubmit="return validateOrderForm()">
-        <input type="hidden" name="action" value="create">
-
-        <label for="Nom_Produit">Product Name:</label><br>
-        <span id="productNameError" style="color: red;"></span>
-        <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter Product Name"><br><br>
-
-        <label for="Qte">Quantity:</label><br>
-        <span id="quantityError" style="color: red;"></span>
-        <input type="number" id="Qte" name="Qte" placeholder="Enter Quantity"><br><br>
-
-        <label for="Adresse_client">Client Address:</label><br>
-        <span id="clientAddressError" style="color: red;"></span>
-        <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter Client Address"><br><br>
-
-        <label for="Tel_client">Client Phone:</label><br>
-        <span id="clientPhoneError" style="color: red;"></span>
-        <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter Client Phone"><br><br>
-
-        <label for="Nom_client">Client Last Name:</label><br>
-        <span id="clientLastNameError" style="color: red;"></span>
-        <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter Client Last Name"><br><br>
-
-        <label for="Prenom_client">Client First Name:</label><br>
-        <span id="clientFirstNameError" style="color: red;"></span>
-        <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter Client First Name"><br><br>
-
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Place Commande</button>
-    </form>
-</div>
-
-<script>
-    function validateOrderForm() {
-        var isValid = true;
-
-        var productName = document.getElementById('Nom_Produit').value;
-        var quantity = document.getElementById('Qte').value;
-        var clientAddress = document.getElementById('Adresse_client').value;
-        var clientPhone = document.getElementById('Tel_client').value;
-        var clientLastName = document.getElementById('Nom_client').value;
-        var clientFirstName = document.getElementById('Prenom_client').value;
-
-        // Clear previous error messages
-        document.getElementById('productNameError').innerText = '';
-        document.getElementById('quantityError').innerText = '';
-        document.getElementById('clientAddressError').innerText = '';
-        document.getElementById('clientPhoneError').innerText = '';
-        document.getElementById('clientLastNameError').innerText = '';
-        document.getElementById('clientFirstNameError').innerText = '';
-
-        // Validate Product Name
-        if (productName === '') {
-            document.getElementById('productNameError').innerText = 'Product Name is required.';
-            isValid = false;
-        }
-
-        // Validate Quantity
-        if (quantity === '') {
-            document.getElementById('quantityError').innerText = 'Quantity is required.';
-            isValid = false;
-        }
-
-        // Validate Client Address
-        if (clientAddress === '') {
-            document.getElementById('clientAddressError').innerText = 'Client Address is required.';
-            isValid = false;
-        }
-
-        // Validate Client Phone
-        if (clientPhone === '') {
-            document.getElementById('clientPhoneError').innerText = 'Client Phone is required.';
-            isValid = false;
-        }
-
-        // Validate Client Last Name
-        if (clientLastName === '') {
-            document.getElementById('clientLastNameError').innerText = 'Client Last Name is required.';
-            isValid = false;
-        }
-
-        // Validate Client First Name
-        if (clientFirstName === '') {
-            document.getElementById('clientFirstNameError').innerText = 'Client First Name is required.';
-            isValid = false;
-        }
-
-        return isValid;
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
+          </ol>
+        </nav>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <main class="main-content position-relative border-radius-lg ">
+      <div class="container-fluid py-4">
+          <h2 class="text-center">Liste des Volontaires</h2>
+          <div class="table-responsive">
+              <table class="table align-items-center">
+                  <thead>
+                      <tr>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Prénom</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Numéro</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exp</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">État</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Option</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <?php 
+                        foreach($volontaires as $volontaire) :
+                    ?>
+                      <tr>
+                          <td><?=$volontaire['id']?></td>
+                          <td><?=$volontaire['nom']?></td>
+                          <td><?=$volontaire['prenom']?></td>
+                          <td><?=$volontaire['numero']?></td>
+                          <td><?=$volontaire['exp']?></td>
+                          <td><?=$volontaire['email']?></td>
+                          <td>
+                            <?php 
+                              if($volontaire['etat']==0) :
+                            ?>
+                              <a href="?update=1&&id=<?=$volontaire['id']?>&&email=<?=$volontaire['email']?>" class="btn btn-success">Accepter</a>
+                              <a href="?update=2&&id=<?=$volontaire['id']?>&&email=<?=$volontaire['email']?>" class="btn btn-danger">Refuser</a>
+                              <?php 
+                              elseif($volontaire['etat']==1) :
+                            ?>
+                            <p>Accepté</p>
+                            <?php
+                              if($volontaire['has_portfolio']) : 
+                            ?>
+                            <a href="portfolio.php?id=<?=$volontaire['id']?>">to protfolio</a>
+                            <?php
+                              endif;
+                            ?>
+                            <?php 
+                              elseif($volontaire['etat']==2) :
+                            ?>
+                            <p>Refusé</p>
+                            <?php 
+                            endif
+                            ?>
+                          </td>
+                          <td>
+                            <a class="btn btn-danger" href="?delete=<?=$volontaire['id']?>">Supprimer</a>
+                          </td>
+                      </tr>
+                      <!-- Ajoutez d'autres lignes ici -->
+                  </tbody>
+                  <?php 
+                      endforeach
+                    ?>
+              </table>
+          </div>
+      </div>
+  </main>
+  </main>
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="material-symbols-rounded py-2">settings</i>
+    </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
+        <div class="float-start">
+          <h5 class="mt-3 mb-0">Material UI Configurator</h5>
+          <p>See our dashboard options.</p>
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="material-symbols-rounded">clear</i>
+          </button>
+        </div>
+        <!-- End Toggle Button -->
+      </div>
+      <hr class="horizontal dark my-1">
+      <div class="card-body pt-sm-3 pt-0">
+        <!-- Sidebar Backgrounds -->
+        <div>
+          <h6 class="mb-0">Sidebar Colors</h6>
+        </div>
+        <a href="javascript:void(0)" class="switch-trigger background-color">
+          <div class="badge-colors my-2 text-start">
+            <span class="badge filter bg-gradient-primary" data-color="primary" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-dark active" data-color="dark" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
+            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
+          </div>
+        </a>
+        <!-- Sidenav Type -->
+        <div class="mt-3">
+          <h6 class="mb-0">Sidenav Type</h6>
+          <p class="text-sm">Choose between different sidenav types.</p>
+        </div>
+        <div class="d-flex">
+          <button class="btn bg-gradient-dark px-3 mb-2" data-class="bg-gradient-dark" onclick="sidebarType(this)">Dark</button>
+          <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-transparent" onclick="sidebarType(this)">Transparent</button>
+          <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+        </div>
+        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
+        <!-- Navbar Fixed -->
+        <div class="mt-3 d-flex">
+          <h6 class="mb-0">Navbar Fixed</h6>
+          <div class="form-check form-switch ps-0 ms-auto my-auto">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+          </div>
+        </div>
+        <hr class="horizontal dark my-3">
+        <div class="mt-2 d-flex">
+          <h6 class="mb-0">Light / Dark</h6>
+          <div class="form-check form-switch ps-0 ms-auto my-auto">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
+          </div>
+        </div>
+        <hr class="horizontal dark my-sm-4">
+        <a class="btn bg-gradient-info w-100" href="https://www.creative-tim.com/product/material-dashboard-pro">Free Download</a>
+        <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard">View documentation</a>
+        <div class="w-100 text-center">
+          <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
+          <h6 class="mt-3">Thank you for sharing!</h6>
+          <a href="https://twitter.com/intent/tweet?text=Check%20Material%20UI%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fsoft-ui-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
+            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/material-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
+            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-</script>
-
-
-    <div id="ordersList"></div>
-
-    <script>
-        document.getElementById('createOrderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'create');
-            fetch('tables.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-                fetchOrders();
-            })
-            .catch(error => console.error('Error creating order:', error));
-        });
-
-        function fetchOrders() {
-            fetch('tables.php')
-                .then(response => response.json())
-                .then(data => {
-                    const ordersList = document.getElementById('ordersList');
-                    ordersList.innerHTML = ''; // Clear previous results
-                    data.forEach(order => {
-                        const orderDiv = document.createElement('div');
-                        orderDiv.innerHTML = `
-                            <p><strong>Order ID:</strong> ${order.Id_commande}</p>
-                            <p><strong>Client Address:</strong> ${order.Adresse_client}</p>
-                            <p><strong>Client Phone:</strong> ${order.Tel_client}</p>
-                            <p><strong>Client Name:</strong> ${order.Nom_client} ${order.Prenom_client}</p>
-                        `;
-                        ordersList.appendChild(orderDiv);
-                    });
-                })
-                .catch(error => console.error('Error fetching orders:', error));
-        }
-    </[_{{{CITATION{{{_1{](https://github.com/arimariojesus/Snake-Game/tree/32328aecc81cfb2fcdda136513902273740aeed7/app%2Fconnect.php)[_{{{CITATION{{{_2{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)[_{{{CITATION{{{_3{](https://github.com/muhammadfahrul/php-orm/tree/3de930cac5a0da72b06f477a04ef9465479d46e2/App%2FViews%2Forder%2Findex.php)>
-      </script>
-
-<div id="ordersList"></div>
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
+
 </html>

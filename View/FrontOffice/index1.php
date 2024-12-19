@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>SHOP</title>
+        <title>بصمة</title>
 
         <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         
         <link rel="stylesheet" href="css/tooplate-barista.css">
-        <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
+        <link rel="stylesheet" href="css/style.css"> <!-- Link to your CSS file -->
         <link rel="icon" href="logo.png">
         <style>
         .animated-button {
@@ -358,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">Upholstery fabric kilim orange fabric kilim boho armchair fabric kilim bohemian tribal Persian ethnic rug.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="OIP (3).jpg" class="team-block-image img-fluid" alt="Zarbiya Karwiya">
+                            <img src="images/OIP (3).jpg" class="team-block-image img-fluid" alt="Zarbiya Karwiya">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
@@ -381,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">The Kholkhal is a traditional accessory worn by women in Tunisia for centuries.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="R.jpg" class="team-block-image img-fluid" alt="Kholkhal">
+                            <img src="images/R.jpg" class="team-block-image img-fluid" alt="Kholkhal">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
@@ -404,7 +404,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">The Khamsa is a symbol representing a hand, used as an amulet, talisman, and jewelry in North Africa.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="Khamsa">
+                            <img src="images/mystic-kabbalah-hand-of-khamsa-necklace_1024x1024.webp" class="team-block-image img-fluid" alt="Khamsa">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
@@ -426,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">Hannibal was a Carthaginian general and politician, regarded as one of the greatest military tacticians in history.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="Hannibal's Statue">
+                            <img src="images/Hannibal_Barca_bust_from_Capua_photo (1).jpg" class="team-block-image img-fluid" alt="Hannibal's Statue">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
@@ -449,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">Artisan-made, reflecting regional variations and ceremonial or daily use.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="jebba.jpg" class="team-block-image img-fluid" alt="Jebba">
+                            <img src="images/jebba.jpg" class="team-block-image img-fluid" alt="Jebba">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">

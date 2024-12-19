@@ -190,6 +190,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="logo.png">
     <style>
         :root {
             --white-color:                  #ffffff;

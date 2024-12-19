@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </a>
                 </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="tables.php">
+          <a class="nav-link text-dark" href="table.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
           </a>
@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des reservations</span>
+            <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
@@ -240,6 +240,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
+        <li class="nav-item">
+                    <a class="nav-link text-dark" href="liste.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Liste</span>
+                    </a>
+                </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="admin.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Management</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="jointure.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Tableaux</span>
+                    </a>
+                    </li>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="test.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">credit</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="tables.php">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">volontaires</span>
+                    </a>
+                    </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0">

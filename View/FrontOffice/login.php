@@ -55,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
+<link rel="icon" href="logo.png">
 </head>
 <body>
 	
@@ -96,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 						<span class="txt1">
 							Oubliée
 						</span>
-						<a class="txt2" href="#">
+						<a class="txt2" href="motdepasse_oublie.php">
 							Email / mot de passe?
 						</a>
 					</div>
