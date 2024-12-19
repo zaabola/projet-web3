@@ -1,3 +1,74 @@
+<?php
+session_start();
+require_once('../../FrontOffice/session_check.php');
+verifierSession();
+
+// Débogage des variables de session
+error_log("Contenu de la session : " . print_r($_SESSION, true));
+
+// Vérification de l'ID
+if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
+    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+    header("Location: ../../FrontOffice/logout.php");
+    exit();
+}
+// Database connection settings
+$host = "localhost";
+$username = "root";
+$password = "";
+$dbname = "emprunt";
+
+try {
+    // Establish the database connection
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Handle the delete request
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['Id_commande'])) {
+        $Id_commande = $_POST['Id_commande'];
+
+        try {
+            // Check if the command exists
+            $sqlCheck = "SELECT COUNT(*) FROM commande WHERE Id_commande = :Id_commande";
+            $stmtCheck = $db->prepare($sqlCheck);
+            $stmtCheck->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+            $stmtCheck->execute();
+            $commandExists = $stmtCheck->fetchColumn();
+
+            if ($commandExists) {
+                // Delete related rows from `ligne_commande` (if they exist)
+                $sqlLigne = "DELETE FROM ligne_commande WHERE Id_Commande = :Id_commande";
+                $stmtLigne = $db->prepare($sqlLigne);
+                $stmtLigne->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+                $stmtLigne->execute();
+
+                // Delete the command from the `commande` table
+                $sqlCommande = "DELETE FROM commande WHERE Id_commande = :Id_commande";
+                $stmtCommande = $db->prepare($sqlCommande);
+                $stmtCommande->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+
+                if ($stmtCommande->execute()) {
+                    $message = "Command deleted successfully!";
+                } else {
+                    $message = "Failed to delete command.";
+                }
+            } else {
+                $message = "Invalid Command ID.";
+            }
+        } catch (PDOException $e) {
+            $message = "Error deleting command: " . $e->getMessage();
+        }
+    } else {
+        $message = "Command ID is required.";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -126,75 +197,6 @@
   </aside>
 </body>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-<?php
-session_start();
-require_once('session_check.php');
-verifierSession();
-
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
-
-// Vérification de l'ID
-if (!isset($_SESSION['id'])) {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../FrontOffice/login.php");
-    exit();
-}
-// Database connection settings
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "emprunt";
-
-try {
-    // Establish the database connection
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-// Handle the delete request
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['Id_commande'])) {
-        $Id_commande = $_POST['Id_commande'];
-
-        try {
-            // Check if the command exists
-            $sqlCheck = "SELECT COUNT(*) FROM commande WHERE Id_commande = :Id_commande";
-            $stmtCheck = $db->prepare($sqlCheck);
-            $stmtCheck->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
-            $stmtCheck->execute();
-            $commandExists = $stmtCheck->fetchColumn();
-
-            if ($commandExists) {
-                // Delete related rows from `ligne_commande` (if they exist)
-                $sqlLigne = "DELETE FROM ligne_commande WHERE Id_Commande = :Id_commande";
-                $stmtLigne = $db->prepare($sqlLigne);
-                $stmtLigne->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
-                $stmtLigne->execute();
-
-                // Delete the command from the `commande` table
-                $sqlCommande = "DELETE FROM commande WHERE Id_commande = :Id_commande";
-                $stmtCommande = $db->prepare($sqlCommande);
-                $stmtCommande->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
-
-                if ($stmtCommande->execute()) {
-                    $message = "Command deleted successfully!";
-                } else {
-                    $message = "Failed to delete command.";
-                }
-            } else {
-                $message = "Invalid Command ID.";
-            }
-        } catch (PDOException $e) {
-            $message = "Error deleting command: " . $e->getMessage();
-        }
-    } else {
-        $message = "Command ID is required.";
-    }
-}
-?>
 
 
 <!DOCTYPE html>

@@ -385,13 +385,13 @@ $conn->close();
             <div class="form-group">
                 <label for="Nom_Client">First Name</label>
                 <span id="firstNameError" style="color: red;"></span>
-                <input type="text" class="form-control" id="Nom_Client" name="Nom_Client">
+                <input type="text" class="form-control" id="Nom_Client" name="Nom_Client" readonly value = "<?php echo $_SESSION['nom'] ?>">
             </div>
 
             <div class="form-group">
                 <label for="Prenom_Client">Last Name</label>
                 <span id="lastNameError" style="color: red;"></span>
-                <input type="text" class="form-control" id="Prenom_Client" name="Prenom_Client">
+                <input type="text" class="form-control" id="Prenom_Client" name="Prenom_Client"  readonly value = "<?php echo $_SESSION['prenom'] ?>">
             </div>
 
             <button type="submit" class="btn btn-primary">Submit Payment</button>

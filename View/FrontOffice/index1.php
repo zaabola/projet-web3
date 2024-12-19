@@ -45,7 +45,6 @@ $totalThemes = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
 $totalPages = ceil($totalThemes / $itemsPerPage);
 ?>
 <?php
-session_start();
 
 $host = "localhost";
 $username = "root";

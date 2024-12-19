@@ -1,3 +1,65 @@
+<?php
+   session_start();
+   require_once('../../FrontOffice/session_check.php');
+   verifierSession();
+   
+   // Débogage des variables de session
+   error_log("Contenu de la session : " . print_r($_SESSION, true));
+   
+   // Vérification de l'ID
+   if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
+       // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+       header("Location: ../../FrontOffice/logout.php");
+       exit();
+   }
+    // Database connection settings
+    $host = "localhost";
+    $dbname = "emprunt";
+    $username = "root";
+    $password = "";
+
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die("Database connection failed: " . $e->getMessage());
+    }
+
+    // Fetch all products for the dropdown
+    $products = [];
+    try {
+        $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+    }
+
+    // Check if the form was submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $nom_produit = $_POST['Nom_Produit'] ?? null;
+        $new_quantity = $_POST['Qte'] ?? null;
+
+        // Validate inputs
+        if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
+            echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
+        } else {
+            try {
+                // Update product quantity
+                $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
+                $stmt = $pdo->prepare($update_sql);
+                $stmt->execute([
+                    'new_quantity' => $new_quantity,
+                    'nom_produit' => $nom_produit
+                ]);
+
+                echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
+            } catch (Exception $e) {
+                echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
+            }
+        }
+    }
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -167,67 +229,7 @@
 <body>
     <h1>Update Product Quantity</h1>
     
-    <?php
-    session_start();
-    require_once('session_check.php');
-    verifierSession();
-    
-    // Débogage des variables de session
-    error_log("Contenu de la session : " . print_r($_SESSION, true));
-    
-    // Vérification de l'ID
-    if (!isset($_SESSION['id'])) {
-        // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-        header("Location: ../FrontOffice/login.php");
-        exit();
-    }
-    // Database connection settings
-    $host = "localhost";
-    $dbname = "emprunt";
-    $username = "root";
-    $password = "";
-
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
-    }
-
-    // Fetch all products for the dropdown
-    $products = [];
-    try {
-        $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-        echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
-    }
-
-    // Check if the form was submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nom_produit = $_POST['Nom_Produit'] ?? null;
-        $new_quantity = $_POST['Qte'] ?? null;
-
-        // Validate inputs
-        if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
-            echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
-        } else {
-            try {
-                // Update product quantity
-                $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
-                $stmt = $pdo->prepare($update_sql);
-                $stmt->execute([
-                    'new_quantity' => $new_quantity,
-                    'nom_produit' => $nom_produit
-                ]);
-
-                echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
-            } catch (Exception $e) {
-                echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
-            }
-        }
-    }
-    ?>
+   
 
     <!-- Form to update product quantity -->
     <form method="POST" action="">
