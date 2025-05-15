@@ -12,10 +12,11 @@ if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
     header("Location: ../../FrontOffice/logout.php");
     exit();
 }
-require_once 'C:/xampp/htdocs/reservation/Controller/GestionBus.php';
+require_once '../../../Controller/GestionBus.php';
 
 $gestionBus = new GestionBus();
 $error = $success = "";
+
 
 // Handle form submission using the PRG pattern
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add-bus'])) {

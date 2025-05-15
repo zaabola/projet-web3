@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 require_once('../../FrontOffice/session_check.php');
 verifierSession();
@@ -13,9 +15,9 @@ if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
     exit();
 }
 // Include required files
-include('C:/xampp/htdocs/reservation/Controller/donation_management.php');
-include('C:/xampp/htdocs/reservation/Controller/donation_controller.php');
-include('C:/xampp/htdocs/reservation/vendor/autoload.php') ;
+include('../../../Controller/donation_management.php');
+include('../../../Controller/donation_controller.php');
+include('../../../vendor/autoload.php') ;
 // Database connection
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=emprunt', 'root', '');

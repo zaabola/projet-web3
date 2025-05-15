@@ -12,7 +12,7 @@ if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
     header("Location: ../../FrontOffice/logout.php");
     exit();
 }
-require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
+require_once '../../../Controller/GestionReservation.php';
 
 $gestionReservation = new GestionReservation();
 $success = $error = "";

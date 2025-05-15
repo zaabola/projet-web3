@@ -1,6 +1,6 @@
 <?php
-require_once('C:/xampp/htdocs/reservation/config.php');
-include 'C:/xampp/htdocs/reservation/Model/portfolio.php';
+require_once(__DIR__ . '/../config.php');
+require_once(__DIR__ . '/../Model/portfolio.php');
 
 class PortfolioC
 {

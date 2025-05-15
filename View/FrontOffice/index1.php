@@ -1,8 +1,8 @@
 <?php
+
 session_start();
 require_once('session_check.php');
 verifierSession();
-
 // Débogage des variables de session
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
@@ -98,26 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
 <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <meta name="description" content="">
         <meta name="author" content="">
-
         <title>بصمة</title>
-
         <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
-            
         <link href="css/bootstrap.min.css" rel="stylesheet">
-
         <link href="css/bootstrap-icons.css" rel="stylesheet">
-
         <link href="css/vegas.min.css" rel="stylesheet">
-
-        
         <link rel="stylesheet" href="css/tooplate-barista.css">
         <link rel="stylesheet" href="css/style.css"> <!-- Link to your CSS file -->
         <link rel="icon" href="logo.png">
@@ -232,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
                         <a class="navbar-brand d-flex align-items-center" href="index1.php">
-                            <img src="logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            <img src="./images/logo.png" class="navbar-brand-image img-fluid">
                             بصمة
                         </a>
         
@@ -335,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-white mb-0">The chechia is a traditional headgear worn in Tunisia.</p>
                         </div>
                         <div class="team-block-image-wrap">
-                            <img src="chachia.png" class="team-block-image" alt="Chachia">
+                            <img src="./images/chachia.png" class="team-block-image" alt="Chachia">
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
@@ -493,7 +483,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php foreach ($list as $theme): ?>
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="team-block-wrap">
-                                <img src="<?php echo htmlspecialchars($theme['image']); ?>" class="team-block-image" alt="Image du thème">
+                                <img src="images/<?php echo htmlspecialchars($theme['image']); ?>" class="team-block-image" alt="Image du thème">
                                 <h4 style="color: #b78752;" class="mt-3"><?php echo htmlspecialchars($theme['titre']); ?></h4>
                                 <p><?php echo nl2br(htmlspecialchars($theme['description'])); ?></p>
                                 <a href="affichage.php?theme_id=<?php echo $theme['id']; ?>" class="btn btn-custom mt-3">Consulter les articles</a>

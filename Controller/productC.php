@@ -1,6 +1,6 @@
 <?php
-require_once('c:/xampp/htdocs/projet/config.php');
-require_once('c:/xampp/htdocs/projet/model/commande.php'); // Assuming you meant to include commande.php
+require_once(__DIR__ . '/../config.php');
+require_once(__DIR__ . '/../Model/commande.php');
 
 class productC {
     public function create($productx) {

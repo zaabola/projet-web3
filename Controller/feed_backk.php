@@ -1,8 +1,8 @@
 <?php
 
-include_once __DIR__ . '/../model/feed_back.php'; // Inclure le modèle Feedback
+include_once __DIR__ . '/../Model/feed_back.php'; // Inclure le modèle Feedback
 include_once(__DIR__ . '/../config.php'); // Inclusion de la connexion à la base de données
-include_once(__DIR__ . '/../model/article.php'); // Inclusion du modèle Article
+include_once(__DIR__ . '/../Model/article.php'); // Inclusion du modèle Article
 
 class FeedbackController {
     private $db; // Instance de la base de données

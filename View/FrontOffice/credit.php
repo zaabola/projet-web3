@@ -106,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="../css/tooplate-barista.css" rel="stylesheet">  
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/tooplate-barista.css" rel="stylesheet">  
     <link rel="icon" href="logo.png">
   <style>
     body {
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: url('../images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; 
+      background: url('/images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; 
       background-size: cover;
       color: #fff;
     }

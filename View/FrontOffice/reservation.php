@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 require_once('session_check.php');
 verifierSession();
@@ -12,8 +14,9 @@ if (!isset($_SESSION['id'])) {
     header("Location: ../FrontOffice/login.php");
     exit();
 }
-require_once 'C:/xampp/htdocs/reservation/Controller/GestionReservation.php';
-require 'vendor/autoload.php';
+require_once(__DIR__ . '/../../Controller/GestionReservation.php');
+//require 'vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 

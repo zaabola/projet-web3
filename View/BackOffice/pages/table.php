@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
                     </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active bg-gradient-dark text-white" href="tables.php">
+          <a class="nav-link active bg-gradient-dark text-white" href="table.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Orders</span>
           </a>
@@ -338,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
 
     <!-- Form to create a new order -->
     <div id="createOrderForm">
-    <form method="POST" action="tables.php" onsubmit="return validateOrderForm()">
+    <form method="POST" action="table.php" onsubmit="return validateOrderForm()">
         <input type="hidden" name="action" value="create">
 
         <label for="Nom_Produit">Product Name:</label><br>
@@ -436,11 +436,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
             event.preventDefault();
             const formData = new FormData(this);
             formData.append('action', 'create');
-            fetch('tables.php', {
+            fetch('table.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.text())
+            .then(cursor-pointer => response.text())
             .then(data => {
                 alert(data);
                 fetchOrders();
@@ -449,7 +449,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
         });
 
         function fetchOrders() {
-            fetch('tables.php')
+            fetch('table.php')
                 .then(response => response.json())
                 .then(data => {
                     const ordersList = document.getElementById('ordersList');

@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__ . '/../config.php'); // Including the database connection
-include_once(__DIR__ . '/../model/themem.php'); // Including the Theme model
+include_once(__DIR__ . '/../Model/themem.php'); // Including the Theme model
 
 class ThemeController
 {

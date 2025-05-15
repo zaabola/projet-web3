@@ -1,7 +1,7 @@
 <?php
-require_once('C:/xampp/htdocs/reservation/config.php');
-include 'C:/xampp/htdocs/reservation/Model/volntaire.php';
-include 'C:/xampp/htdocs/reservation/Controller/PortfolioC.php';
+require_once(__DIR__ . '/../config.php');
+require_once(__DIR__ . '/../Model/volntaire.php');
+require_once(__DIR__ . '/../Controller/PortfolioC.php');
 
 class VolontaireC
 {

@@ -48,7 +48,7 @@ if (!isset($_SESSION['id'])) {
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
                         <a class="navbar-brand d-flex align-items-center" href="index1.php">
-                            <img src="images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            <img src="images/logo.png" class="navbar-brand-image img-fluid">
                             بصمة
                         </a>
         
@@ -126,7 +126,7 @@ if (!isset($_SESSION['id'])) {
                             <div class="col-lg-6 col-12">
                                 <div class="ratio ratio-1x1">
                                     <video autoplay="" loop="" muted="" class="custom-video" poster="">
-                                        <source src="videos/abou-video.mp4" type="video/mp4">
+                                        <source src="./videos/abou-video.mp4" type="video/mp4">
 
                                         Your browser does not support the video tag.
                                     </video>
@@ -308,7 +308,7 @@ if (!isset($_SESSION['id'])) {
                         </div>
 
                         <div class="button-container">
-                            <a href="traif.php"><button class="reserve-button">Plus d'informations</button></a>
+                            <a href="tarif.php"><button class="reserve-button">Plus d'informations</button></a>
                         </div>
                     </div>
                 </section>

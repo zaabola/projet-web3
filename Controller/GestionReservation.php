@@ -1,6 +1,6 @@
 <?php
-require_once 'C:/xampp/htdocs/reservation/config.php';
-require_once 'C:/xampp/htdocs/reservation/Model/res.php';
+require_once(__DIR__ . '/../config.php');
+require_once(__DIR__ . '/../Model/res.php');
 
 class GestionReservation
 {

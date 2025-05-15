@@ -12,7 +12,7 @@ if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
     header("Location: ../../FrontOffice/logout.php");
     exit();
 }
-include('C:/xampp/htdocs/reservation/Controller/payement_don.php');
+include('../../../Controller/payement_don.php');
 
 $donationController = new DonationController();
 $success = $error = "";

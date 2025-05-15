@@ -83,16 +83,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/bootstrap-icons.css" rel="stylesheet">
-    <link href="../css/tooplate-barista.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/tooplate-barista.css" rel="stylesheet">
     <link rel="icon" href="logo.png">
  <style>
     body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('../images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; /* Remplacez 'images/image.png' par le chemin de votre image */
+    background: url('./images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed; /* Remplacez 'images/image.png' par le chemin de votre image */
     background-size: cover;
     color: #fff; /* Couleur de texte pour garantir la lisibilité */
 }
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
                         <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="../images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                            <img src="./images/logo.png" class="navbar-brand-image img-fluid">
                             بصمة
                         </a>
         

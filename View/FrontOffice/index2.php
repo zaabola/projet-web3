@@ -12,7 +12,7 @@ if (!isset($_SESSION['id'])) {
     header("Location: ../FrontOffice/login.php");
     exit();
 }
-include 'C:/xampp/htdocs/reservation/Controller/volntaireC.php';
+require_once __DIR__ . '/../../Controller/volntaireC.php';
 
 $volntaireC = new VolontaireC();
 $PortfolioC = new PortfolioC();

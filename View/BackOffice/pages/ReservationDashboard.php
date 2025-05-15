@@ -13,7 +13,7 @@ if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
     exit();
 }
 // Include the database connection file
-require_once 'C:/xampp/htdocs/reservation/config.php';
+require_once '../../../config.php';
 
 try {
     // Get the database connection
