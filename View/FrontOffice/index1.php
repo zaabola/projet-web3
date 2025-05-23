@@ -219,76 +219,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body>
 <main>
-<nav class="navbar navbar-expand-lg">                
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index1.php">
-                            <img src="./images/logo.png" class="navbar-brand-image img-fluid">
-                            بصمة
-                        </a>
-        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-        
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="index.php">Reservation</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="index2.php">Guides</a>
-                                </li>
-                                <li>
-                                    <a href="#section_69" class="nav-link click-scroll">Shop</a>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link click-scroll inactive" href="#section_3">Bibliothèque</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="panier.php">Panier</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="donation.php">Donate</a>
-                                </li>
-                            </ul>
-                            <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
+  <nav class="navbar navbar-expand-lg">                
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index1.php">
+        <img src="./images/logo.png" class="navbar-brand-image img-fluid">
+          بصمة
+      </a> 
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>    
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-lg-auto">
+          <li class="nav-item">
+            <a class="nav-link click-scroll" href="#section_1">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php">Reservation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index2.php">Guides</a>
+          </li>
+          <li>
+            <a href="#section_69" class="nav-link click-scroll">Shop</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link click-scroll inactive" href="#section_3">Bibliothèque</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link click-scroll" href="panier.php">Panier</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link click-scroll" href="donation.php">Donate</a>
+          </li>
+        </ul>
+      <div class="ms-lg-3">
+      <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
+    </div>
+  </nav>
 
-                <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+<section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
 
-<div class="container">
+  <div class="container">
     <div class="row align-items-center">
-
-        <div class="col-lg-6 col-12 mx-auto">
-            <em class="small-text">welcome to Our Web Site بصمة</em>
-            
+      <div class="col-lg-6 col-12 mx-auto">
+          <em class="small-text">welcome to Our Web Site بصمة</em>  
             <h1>بصمة</h1>
-
             <p class="text-white mb-4 pb-lg-2">
                 your <em>favourite</em> web site.
             </p>
-
             <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_2">
                 Our Story
             </a>
-
             <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_69"><strong>Check store</strong></a>
-        </div>
-
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="hero-slides"></div>
+  <div class="hero-slides"></div>
 </section>
 <section class="barista-section section-padding section-bg" id="section_69">
     <div class="container">

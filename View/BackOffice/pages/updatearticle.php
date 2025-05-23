@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_article'])) {
 
     // Si une nouvelle image est téléchargée
     if (!empty($image)) {
-        $targetDir = "../../FrontOffice/";
+        $targetDir = "../../FrontOffice/images/";
         $targetFile = $targetDir . basename($image);
 
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));

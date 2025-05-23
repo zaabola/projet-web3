@@ -45,7 +45,7 @@ Bootstrap 5 HTML CSS Template
             <main>
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.php">
+                        <a class="navbar-brand d-flex align-items-center" href="index1.php">
                             <img src="images/logo.png" class="navbar-brand-image img-fluid">
                             بصمة
                         </a>

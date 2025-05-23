@@ -106,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;700&display=swap" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-icons.css" rel="stylesheet">
-    <link href="/css/tooplate-barista.css" rel="stylesheet">  
+    <link href="../FrontOffice/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../FrontOffice/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="../FrontOffice/css/tooplate-barista.css" rel="stylesheet">  
     <link rel="icon" href="logo.png">
   <style>
     body {
@@ -246,8 +246,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main>
 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="../images/logo.png" class="navbar-brand-image img-fluid" alt="Barista Cafe Template">
+                        <a class="navbar-brand d-flex align-items-center" href="index1.php">
+                            <img src="../FrontOffice/images/logo.png" class="navbar-brand-image img-fluid">
                             بصمة
                         </a>
         

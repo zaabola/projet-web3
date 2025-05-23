@@ -463,7 +463,7 @@ button {
                         <?php foreach ($articles as $article): ?>
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="article-card">
-                                    <img src="<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image de l'article">
+                                    <img src="images/<?php echo htmlspecialchars($article['Image_article']); ?>" alt="Image de l'article">
                                     <div class="card-body">
                                         <h5 class="card-title"><?php echo htmlspecialchars($article['Titre_article']); ?></h5>
                                         <p class="card-text"><?php echo htmlspecialchars($article['Description_article']); ?></p>
