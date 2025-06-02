@@ -3,23 +3,20 @@ include '../../../Controller/volntaireC.php';
 
 $PortfolioC = new PortfolioC();
 
-if(isset($_GET['delete']))
-{
+if (isset($_GET['delete'])) {
   $PortfolioC->delete($_GET['delete']);
-}
-else if(isset($_GET['update']))
-{
-$p = new Portfolio(
-        $_POST['nom'],       // Nom
-        $_POST['prenom'],    // Prénom
-        $_FILES['photo']['name'], // Photo (assumes the file name is used for storage)
-        $_POST['langue'],    // Langue
-        $_POST['specialite'],// Spécialité
-        $_POST['biographie'] // Biographie
-    );
-    $p->setId_portfolio($_GET['update']);
-    $PortfolioC->update($p);
-}else{
+} else if (isset($_GET['update'])) {
+  $p = new Portfolio(
+    $_POST['nom'],       // Nom
+    $_POST['prenom'],    // Prénom
+    $_FILES['photo']['name'], // Photo (assumes the file name is used for storage)
+    $_POST['langue'],    // Langue
+    $_POST['specialite'], // Spécialité
+    $_POST['biographie'] // Biographie
+  );
+  $p->setId_portfolio($_GET['update']);
+  $PortfolioC->update($p);
+} else {
   $ps = $PortfolioC->findone2($_GET['id']);
 }
 ?>
@@ -75,134 +72,134 @@ $p = new Portfolio(
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-  <div class="p-4">
-    <?php
-    foreach ($ps as $p) :
-    ?>
-  <h1>Modifier Portfolio</h1>
-<form action="?update=<?=$p['id_portfolio']?>" method="post" id="portfolioForm" class="custom-form contact-form" role="form" enctype="multipart/form-data">
+    <div class="p-4">
+      <?php
+      foreach ($ps as $p) :
+      ?>
+        <h1>Modifier Portfolio</h1>
+        <form action="?update=<?= $p['id_portfolio'] ?>" method="post" id="portfolioForm" class="custom-form contact-form" role="form" enctype="multipart/form-data">
 
-    <!-- Nom -->
-    <div class="input-group input-group-static mb-4">
-      <p>Nom</p>
-        <input type="text" name="nom" id="nom" class="form-control" value="<?= htmlspecialchars($p['nom']) ?>">
-        <span id="nomError"></span>
-    </div>
+          <!-- Nom -->
+          <div class="input-group input-group-static mb-4">
+            <p>Nom</p>
+            <input type="text" name="nom" id="nom" class="form-control" value="<?= htmlspecialchars($p['nom']) ?>">
+            <span id="nomError"></span>
+          </div>
 
-    <!-- Prenom -->
-    <div class="input-group input-group-static mb-4">
-    <p>Prenom</p>
-        <input type="text" name="prenom" id="prenom" class="form-control" value="<?= htmlspecialchars($p['prenom']) ?>">
-        <span id="prenomError"></span>
-    </div>
+          <!-- Prenom -->
+          <div class="input-group input-group-static mb-4">
+            <p>Prenom</p>
+            <input type="text" name="prenom" id="prenom" class="form-control" value="<?= htmlspecialchars($p['prenom']) ?>">
+            <span id="prenomError"></span>
+          </div>
 
-    <!-- Photo -->
-    <div class="input-group input-group-static mb-4">
-        <p>Photo</p>
-        <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
-        <?php if (!empty($p['photo'])): ?>
-            <img src="images/<?= htmlspecialchars($p['photo']) ?>" alt="Photo of <?= htmlspecialchars($p['nom']) ?>" style="width: 100px; height: 100px; margin-top: 10px;">
-        <?php endif; ?>
-        <span id="photoError"></span>
-    </div>
+          <!-- Photo -->
+          <div class="input-group input-group-static mb-4">
+            <p>Photo</p>
+            <input type="file" name="photo" id="photo" class="form-control" accept="image/*">
+            <?php if (!empty($p['photo'])): ?>
+              <img src="images/<?= htmlspecialchars($p['photo']) ?>" alt="Photo of <?= htmlspecialchars($p['nom']) ?>" style="width: 100px; height: 100px; margin-top: 10px;">
+            <?php endif; ?>
+            <span id="photoError"></span>
+          </div>
 
-    <!-- Langue -->
-    <div class="input-group input-group-static mb-4">
-    <p>langue</p>
-        <input type="text" name="langue" id="langue" class="form-control" value="<?= htmlspecialchars($p['langue']) ?>">
-        <span id="langueError"></span>
-    </div>
+          <!-- Langue -->
+          <div class="input-group input-group-static mb-4">
+            <p>langue</p>
+            <input type="text" name="langue" id="langue" class="form-control" value="<?= htmlspecialchars($p['langue']) ?>">
+            <span id="langueError"></span>
+          </div>
 
-    <!-- Spécialité -->
-    <div class="input-group input-group-static mb-4">
-    <p>Specialite</p>
-        <input type="text" name="specialite" id="specialite" class="form-control" value="<?= htmlspecialchars($p['specialite']) ?>">
-        <span id="specialiteError"></span>
-    </div>    
+          <!-- Spécialité -->
+          <div class="input-group input-group-static mb-4">
+            <p>Specialite</p>
+            <input type="text" name="specialite" id="specialite" class="form-control" value="<?= htmlspecialchars($p['specialite']) ?>">
+            <span id="specialiteError"></span>
+          </div>
 
-    <!-- Biographie -->
-    <div class="input-group input-group-static mb-4">
-    <p>Biographie</p>
-        <textarea name="biographie" id="biographie" rows="4" class="form-control"><?= htmlspecialchars($p['biographie']) ?></textarea>
-        <span id="biographieError"></span>
-    </div>
+          <!-- Biographie -->
+          <div class="input-group input-group-static mb-4">
+            <p>Biographie</p>
+            <textarea name="biographie" id="biographie" rows="4" class="form-control"><?= htmlspecialchars($p['biographie']) ?></textarea>
+            <span id="biographieError"></span>
+          </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-success">Modifier</button>
-    <a href="?delete=<?=$p['id_portfolio']?>" class="btn btn-danger">Supprimer</a>
-    <a href="tables.php?>" class="btn btn-primary">Annuler</a>
-</form>
-<?php
-    endforeach ;
-    ?>
-<script>
-    document.getElementById('portfolioForm').addEventListener('submit', function(e) {
-        let isValid = true;
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-success">Modifier</button>
+          <a href="?delete=<?= $p['id_portfolio'] ?>" class="btn btn-danger">Supprimer</a>
+          <a href="tables.php?>" class="btn btn-primary">Annuler</a>
+        </form>
+      <?php
+      endforeach;
+      ?>
+      <script>
+        document.getElementById('portfolioForm').addEventListener('submit', function(e) {
+          let isValid = true;
 
-        // Regex for text fields
-        const textRegex = /^[a-zA-Z-\s]+$/;
+          // Regex for text fields
+          const textRegex = /^[a-zA-Z-\s]+$/;
 
-        // Get all input values
-        let nom = document.getElementById('nom');
-        let prenom = document.getElementById('prenom');
-        let photo = document.getElementById('photo');
-        let langue = document.getElementById('langue');
-        let specialite = document.getElementById('specialite');
-        let biographie = document.getElementById('biographie');
+          // Get all input values
+          let nom = document.getElementById('nom');
+          let prenom = document.getElementById('prenom');
+          let photo = document.getElementById('photo');
+          let langue = document.getElementById('langue');
+          let specialite = document.getElementById('specialite');
+          let biographie = document.getElementById('biographie');
 
-        // Clear error messages
-        document.querySelectorAll('span').forEach(span => span.innerHTML = "");
+          // Clear error messages
+          document.querySelectorAll('span').forEach(span => span.innerHTML = "");
 
-        // Validate nom
-        if (nom.value.trim() === '') {
+          // Validate nom
+          if (nom.value.trim() === '') {
             document.getElementById('nomError').innerHTML = "Le champ nom est requis.";
             isValid = false;
-        } else if (!textRegex.test(nom.value)) {
+          } else if (!textRegex.test(nom.value)) {
             document.getElementById('nomError').innerHTML = "Le nom doit contenir uniquement des lettres et des tirets.";
             isValid = false;
-        }
+          }
 
-        // Validate prenom
-        if (prenom.value.trim() === '') {
+          // Validate prenom
+          if (prenom.value.trim() === '') {
             document.getElementById('prenomError').innerHTML = "Le champ prénom est requis.";
             isValid = false;
-        } else if (!textRegex.test(prenom.value)) {
+          } else if (!textRegex.test(prenom.value)) {
             document.getElementById('prenomError').innerHTML = "Le prénom doit contenir uniquement des lettres et des tirets.";
             isValid = false;
-        }
+          }
 
-        // Validate photo
-        if (photo.files.length === 0) {
-                    // Only show this error if there's no existing photo
-                    if (!<?= json_encode(!empty($p['photo'])) ?>) {
-                        document.getElementById('photoError').innerHTML = "Veuillez ajouter une photo.";
-                        isValid = false;
-                    }
-                }
-       
-        // Validate langue
-        if (langue.value.trim() === '') {
+          // Validate photo
+          if (photo.files.length === 0) {
+            // Only show this error if there's no existing photo
+            if (!<?= json_encode(!empty($p['photo'])) ?>) {
+              document.getElementById('photoError').innerHTML = "Veuillez ajouter une photo.";
+              isValid = false;
+            }
+          }
+
+          // Validate langue
+          if (langue.value.trim() === '') {
             document.getElementById('langueError').innerHTML = "Le champ langue est requis.";
             isValid = false;
-        }
+          }
 
-        // Validate specialite
-        if (specialite.value.trim() === '') {
+          // Validate specialite
+          if (specialite.value.trim() === '') {
             document.getElementById('specialiteError').innerHTML = "Le champ spécialité est requis.";
             isValid = false;
-        }
+          }
 
-        // Validate biographie
-        if (biographie.value.trim() === '') {
+          // Validate biographie
+          if (biographie.value.trim() === '') {
             document.getElementById('biographieError').innerHTML = "Le champ biographie est requis.";
             isValid = false;
-        }
+          }
 
-        // Prevent form submission if validation fails
-        if (!isValid) e.preventDefault();
-    });
-</script>
-    
+          // Prevent form submission if validation fails
+          if (!isValid) e.preventDefault();
+        });
+      </script>
+
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">

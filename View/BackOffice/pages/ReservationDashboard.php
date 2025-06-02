@@ -7,40 +7,41 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 // Include the database connection file
 require_once '../../../config.php';
 
 try {
-    // Get the database connection
-    $db = Config::getConnexion();
+  // Get the database connection
+  $db = Config::getConnexion();
 
-    // Query to get reservation statistics by destination
-    $reservationQuery = $db->query("
+  // Query to get reservation statistics by destination
+  $reservationQuery = $db->query("
         SELECT destination, COUNT(*) AS total_reservations 
         FROM reservation 
         GROUP BY destination
     ");
-    $reservationsData = $reservationQuery->fetchAll();
+  $reservationsData = $reservationQuery->fetchAll();
 
-    // Query to get bus statistics by destination
-    $busQuery = $db->query("
+  // Query to get bus statistics by destination
+  $busQuery = $db->query("
         SELECT destination, COUNT(*) AS total_buses 
         FROM bus 
         GROUP BY destination
     ");
-    $busesData = $busQuery->fetchAll();
+  $busesData = $busQuery->fetchAll();
 } catch (Exception $e) {
-    die('Error: ' . $e->getMessage());
+  die('Error: ' . $e->getMessage());
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -74,7 +75,7 @@ try {
     <hr class="horizontal dark mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
-      <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
@@ -136,59 +137,59 @@ try {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
   </aside>
@@ -219,7 +220,9 @@ try {
         <div class="row align-items-center justify-content-lg-between">
           <div class="col-lg-6 mb-lg-0 mb-4">
             <div class="copyright text-center text-sm text-muted text-lg-start">
-              © <script>document.write(new Date().getFullYear())</script>, made <i class="fa fa-heart"></i> by <a href="../../FrontOffice/index.php" target="_blank">Emprunt</a>
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>, made <i class="fa fa-heart"></i> by <a href="../../FrontOffice/index.php" target="_blank">Emprunt</a>
             </div>
           </div>
           <div class="col-lg-6">
@@ -296,7 +299,6 @@ try {
         }
       }
     });
-
   </script>
 
   <!-- Core JS Files -->
@@ -306,4 +308,5 @@ try {
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
 </body>
+
 </html>

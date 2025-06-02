@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 // Database connection settings
 $host = "localhost";
@@ -19,52 +19,52 @@ $password = "";
 $dbname = "emprunt";
 
 try {
-    // Establish the database connection
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  // Establish the database connection
+  $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+  die("Database connection failed: " . $e->getMessage());
 }
 
 // Handle the delete request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['Id_commande'])) {
-        $Id_commande = $_POST['Id_commande'];
+  if (!empty($_POST['Id_commande'])) {
+    $Id_commande = $_POST['Id_commande'];
 
-        try {
-            // Check if the command exists
-            $sqlCheck = "SELECT COUNT(*) FROM commande WHERE Id_commande = :Id_commande";
-            $stmtCheck = $db->prepare($sqlCheck);
-            $stmtCheck->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
-            $stmtCheck->execute();
-            $commandExists = $stmtCheck->fetchColumn();
+    try {
+      // Check if the command exists
+      $sqlCheck = "SELECT COUNT(*) FROM commande WHERE Id_commande = :Id_commande";
+      $stmtCheck = $db->prepare($sqlCheck);
+      $stmtCheck->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+      $stmtCheck->execute();
+      $commandExists = $stmtCheck->fetchColumn();
 
-            if ($commandExists) {
-                // Delete related rows from `ligne_commande` (if they exist)
-                $sqlLigne = "DELETE FROM ligne_commande WHERE Id_Commande = :Id_commande";
-                $stmtLigne = $db->prepare($sqlLigne);
-                $stmtLigne->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
-                $stmtLigne->execute();
+      if ($commandExists) {
+        // Delete related rows from `ligne_commande` (if they exist)
+        $sqlLigne = "DELETE FROM ligne_commande WHERE Id_Commande = :Id_commande";
+        $stmtLigne = $db->prepare($sqlLigne);
+        $stmtLigne->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+        $stmtLigne->execute();
 
-                // Delete the command from the `commande` table
-                $sqlCommande = "DELETE FROM commande WHERE Id_commande = :Id_commande";
-                $stmtCommande = $db->prepare($sqlCommande);
-                $stmtCommande->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
+        // Delete the command from the `commande` table
+        $sqlCommande = "DELETE FROM commande WHERE Id_commande = :Id_commande";
+        $stmtCommande = $db->prepare($sqlCommande);
+        $stmtCommande->bindParam(':Id_commande', $Id_commande, PDO::PARAM_INT);
 
-                if ($stmtCommande->execute()) {
-                    $message = "Command deleted successfully!";
-                } else {
-                    $message = "Failed to delete command.";
-                }
-            } else {
-                $message = "Invalid Command ID.";
-            }
-        } catch (PDOException $e) {
-            $message = "Error deleting command: " . $e->getMessage();
+        if ($stmtCommande->execute()) {
+          $message = "Command deleted successfully!";
+        } else {
+          $message = "Failed to delete command.";
         }
-    } else {
-        $message = "Command ID is required.";
+      } else {
+        $message = "Invalid Command ID.";
+      }
+    } catch (PDOException $e) {
+      $message = "Error deleting command: " . $e->getMessage();
     }
+  } else {
+    $message = "Command ID is required.";
+  }
 }
 ?>
 
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -112,10 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -167,138 +167,148 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
 </body>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Command</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        form input, form button {
-            margin: 5px 0;
-            padding: 10px;
-            width: 100%;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .message {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      form {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      form input,
+      form button {
+        margin: 5px 0;
+        padding: 10px;
+        width: 100%;
+      }
+
+      button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
     </style>
-</head>
-<body>
+  </head>
+
+  <body>
     <h1>Delete a Command</h1>
 
     <!-- Show a message if available -->
     <?php if (isset($message)): ?>
-        <div class="message <?= strpos($message, 'successfully') !== false ? 'success' : 'error' ?>">
-            <?= htmlspecialchars($message) ?>
-        </div>
+      <div class="message <?= strpos($message, 'successfully') !== false ? 'success' : 'error' ?>">
+        <?= htmlspecialchars($message) ?>
+      </div>
     <?php endif; ?>
 
     <!-- Form to delete a command -->
     <form method="POST" action="" onsubmit="return validateDeleteForm()">
-    <label for="Id_commande">Command ID:</label>
-    <span id="commandIdError" style="color: red;"></span>
-    <input type="number" id="Id_commande" name="Id_commande" placeholder="Enter Command ID"><br><br>
-    <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Delete Command</button>
-</form>
+      <label for="Id_commande">Command ID:</label>
+      <span id="commandIdError" style="color: red;"></span>
+      <input type="number" id="Id_commande" name="Id_commande" placeholder="Enter Command ID"><br><br>
+      <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Delete Command</button>
+    </form>
 
-<script>
-    function validateDeleteForm() {
+    <script>
+      function validateDeleteForm() {
         var isValid = true;
 
         var commandId = document.getElementById('Id_commande').value;
@@ -308,13 +318,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Validate Command ID
         if (commandId === '') {
-            document.getElementById('commandIdError').innerText = 'Command ID is required.';
-            isValid = false;
+          document.getElementById('commandIdError').innerText = 'Command ID is required.';
+          isValid = false;
         }
 
         return isValid;
-    }
-</script>
+      }
+    </script>
 
-</body>
-</html>
+  </body>
+
+  </html>

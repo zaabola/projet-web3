@@ -2,20 +2,16 @@
 include '../../../Controller/volntaireC.php';
 
 $volntaireC = new VolontaireC();
-if(isset($_GET['search']))
-{
-  $volontaires =$volntaireC->search($_GET['search']);
-}
-else{
+if (isset($_GET['search'])) {
+  $volontaires = $volntaireC->search($_GET['search']);
+} else {
   $volontaires = $volntaireC->read();
 }
-if(isset($_GET['delete']))
-{
+if (isset($_GET['delete'])) {
   $volntaireC->delete($_GET['delete']);
 }
-if(isset($_GET['update']))
-{
-  $volntaireC->update($_GET['id'],$_GET['update'],$_GET['email']);
+if (isset($_GET['update'])) {
+  $volntaireC->update($_GET['id'], $_GET['update'], $_GET['email']);
 }
 
 ?>
@@ -59,7 +55,7 @@ if(isset($_GET['update']))
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -77,10 +73,10 @@ if(isset($_GET['update']))
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -132,63 +128,63 @@ if(isset($_GET['update']))
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active bg-gradient-dark text-white" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active bg-gradient-dark text-white" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -201,76 +197,76 @@ if(isset($_GET['update']))
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
           </ol>
         </nav>
-        </div>
+      </div>
       </div>
     </nav>
     <!-- End Navbar -->
     <main class="main-content position-relative border-radius-lg ">
       <div class="container-fluid py-4">
-          <h2 class="text-center">Liste des Volontaires</h2>
-          <div class="table-responsive">
-              <table class="table align-items-center">
-                  <thead>
-                      <tr>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Prénom</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Numéro</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exp</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">État</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Option</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <?php 
-                        foreach($volontaires as $volontaire) :
+        <h2 class="text-center">Liste des Volontaires</h2>
+        <div class="table-responsive">
+          <table class="table align-items-center">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Prénom</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Numéro</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exp</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">État</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Option</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              foreach ($volontaires as $volontaire) :
+              ?>
+                <tr>
+                  <td><?= $volontaire['id'] ?></td>
+                  <td><?= $volontaire['nom'] ?></td>
+                  <td><?= $volontaire['prenom'] ?></td>
+                  <td><?= $volontaire['numero'] ?></td>
+                  <td><?= $volontaire['exp'] ?></td>
+                  <td><?= $volontaire['email'] ?></td>
+                  <td>
+                    <?php
+                    if ($volontaire['etat'] == 0) :
                     ?>
-                      <tr>
-                          <td><?=$volontaire['id']?></td>
-                          <td><?=$volontaire['nom']?></td>
-                          <td><?=$volontaire['prenom']?></td>
-                          <td><?=$volontaire['numero']?></td>
-                          <td><?=$volontaire['exp']?></td>
-                          <td><?=$volontaire['email']?></td>
-                          <td>
-                            <?php 
-                              if($volontaire['etat']==0) :
-                            ?>
-                              <a href="?update=1&&id=<?=$volontaire['id']?>&&email=<?=$volontaire['email']?>" class="btn btn-success">Accepter</a>
-                              <a href="?update=2&&id=<?=$volontaire['id']?>&&email=<?=$volontaire['email']?>" class="btn btn-danger">Refuser</a>
-                              <?php 
-                              elseif($volontaire['etat']==1) :
-                            ?>
-                            <p>Accepté</p>
-                            <?php
-                              if($volontaire['has_portfolio']) : 
-                            ?>
-                            <a href="portfolio.php?id=<?=$volontaire['id']?>">to protfolio</a>
-                            <?php
-                              endif;
-                            ?>
-                            <?php 
-                              elseif($volontaire['etat']==2) :
-                            ?>
-                            <p>Refusé</p>
-                            <?php 
-                            endif
-                            ?>
-                          </td>
-                          <td>
-                            <a class="btn btn-danger" href="?delete=<?=$volontaire['id']?>">Supprimer</a>
-                          </td>
-                      </tr>
-                      <!-- Ajoutez d'autres lignes ici -->
-                  </tbody>
-                  <?php 
-                      endforeach
+                      <a href="?update=1&&id=<?= $volontaire['id'] ?>&&email=<?= $volontaire['email'] ?>" class="btn btn-success">Accepter</a>
+                      <a href="?update=2&&id=<?= $volontaire['id'] ?>&&email=<?= $volontaire['email'] ?>" class="btn btn-danger">Refuser</a>
+                    <?php
+                    elseif ($volontaire['etat'] == 1) :
                     ?>
-              </table>
-          </div>
+                      <p>Accepté</p>
+                      <?php
+                      if ($volontaire['has_portfolio']) :
+                      ?>
+                        <a href="portfolio.php?id=<?= $volontaire['id'] ?>">to protfolio</a>
+                      <?php
+                      endif;
+                      ?>
+                    <?php
+                    elseif ($volontaire['etat'] == 2) :
+                    ?>
+                      <p>Refusé</p>
+                    <?php
+                    endif
+                    ?>
+                  </td>
+                  <td>
+                    <a class="btn btn-danger" href="?delete=<?= $volontaire['id'] ?>">Supprimer</a>
+                  </td>
+                </tr>
+                <!-- Ajoutez d'autres lignes ici -->
+            </tbody>
+          <?php
+              endforeach
+          ?>
+          </table>
+        </div>
       </div>
-  </main>
+    </main>
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">

@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -22,21 +22,21 @@ $password = "";
 $dbname = "emprunt";
 
 try {
-    // Establish the database connection
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  // Establish the database connection
+  $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+  die("Database connection failed: " . $e->getMessage());
 }
 
 // Determine the total number of commandes
 try {
-    $sql = "SELECT COUNT(*) FROM commande";
-    $stmt = $db->prepare($sql);
-    $stmt->execute();
-    $total_commandes = $stmt->fetchColumn();
+  $sql = "SELECT COUNT(*) FROM commande";
+  $stmt = $db->prepare($sql);
+  $stmt->execute();
+  $total_commandes = $stmt->fetchColumn();
 } catch (PDOException $e) {
-    die("Error fetching total commandes: " . $e->getMessage());
+  die("Error fetching total commandes: " . $e->getMessage());
 }
 
 // Set the number of commandes per page and calculate the total number of pages
@@ -51,20 +51,21 @@ $offset = ($current_page - 1) * $commandes_per_page;
 
 // Fetch commandes for the current page
 try {
-    $sql = "SELECT * FROM commande LIMIT :limit OFFSET :offset";
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':limit', $commandes_per_page, PDO::PARAM_INT);
-    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-    $stmt->execute();
+  $sql = "SELECT * FROM commande LIMIT :limit OFFSET :offset";
+  $stmt = $db->prepare($sql);
+  $stmt->bindParam(':limit', $commandes_per_page, PDO::PARAM_INT);
+  $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+  $stmt->execute();
 
-    // Fetch all rows as an associative array
-    $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  // Fetch all rows as an associative array
+  $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die("Error fetching commandes: " . $e->getMessage());
+  die("Error fetching commandes: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -85,7 +86,7 @@ try {
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -97,16 +98,16 @@ try {
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-dark"href="../pages/dashboard.php">
+          <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -158,63 +159,63 @@ try {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
@@ -259,56 +260,62 @@ try {
                 </table>
               </div>
               <style>
-.pagination {
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-}
+                .pagination {
+                  display: flex;
+                  justify-content: center;
+                  padding: 20px 0;
+                }
 
-.pagination a {
-    margin: 0 5px;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #000; /* Black text color */
-    border: 1px solid #000; /* Black border color */
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+                .pagination a {
+                  margin: 0 5px;
+                  padding: 10px 15px;
+                  text-decoration: none;
+                  color: #000;
+                  /* Black text color */
+                  border: 1px solid #000;
+                  /* Black border color */
+                  border-radius: 5px;
+                  transition: background-color 0.3s ease, color 0.3s ease;
+                }
 
-.pagination a:hover {
-    background-color: #000; /* Black background color on hover */
-    color: #fff; /* White text color on hover */
-}
+                .pagination a:hover {
+                  background-color: #000;
+                  /* Black background color on hover */
+                  color: #fff;
+                  /* White text color on hover */
+                }
 
-.pagination a.active {
-    background-color: #000; /* Black background color for active page */
-    color: #fff; /* White text color for active page */
-    pointer-events: none;
-}
-</style>
+                .pagination a.active {
+                  background-color: #000;
+                  /* Black background color for active page */
+                  color: #fff;
+                  /* White text color for active page */
+                  pointer-events: none;
+                }
+              </style>
 
               <!-- Pagination controls -->
               <div class="pagination">
-    <?php if ($current_page > 1): ?>
-        <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
-    <?php endif; ?>
+                <?php if ($current_page > 1): ?>
+                  <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
+                <?php endif; ?>
 
-    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-        <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
-    <?php endfor; ?>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                  <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
+                <?php endfor; ?>
 
-    <?php if ($current_page < $total_pages): ?>
-        <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
-    <?php endif; ?>
-</div>
-
+                <?php if ($current_page < $total_pages): ?>
+                  <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
+                <?php endif; ?>
               </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
+    </div>
   </main>
 </body>
-</html>
 
+</html>

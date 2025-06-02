@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 // Error reporting to help with debugging
 error_reporting(E_ALL);
@@ -23,98 +23,98 @@ $username = "root"; // Replace with your MySQL username
 $password = ""; // Replace with your MySQL password
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+  die("Database connection failed: " . $e->getMessage());
 }
 
 // Handle form submission for Create, Update, Delete operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Create operation
-    if (isset($_POST['action']) && $_POST['action'] == 'create') {
-        $id_commande = $_POST['Id_commande'];
-        $commentaire = $_POST['Commentaire'];
-        $nom = $_POST['Nom'];
-        $prenom = $_POST['Prenom'];
-        $email = $_POST['Email'];
-        $tel = $_POST['Tel'];
+  // Create operation
+  if (isset($_POST['action']) && $_POST['action'] == 'create') {
+    $id_commande = $_POST['Id_commande'];
+    $commentaire = $_POST['Commentaire'];
+    $nom = $_POST['Nom'];
+    $prenom = $_POST['Prenom'];
+    $email = $_POST['Email'];
+    $tel = $_POST['Tel'];
 
-        // Start transaction
-        $pdo->beginTransaction();
+    // Start transaction
+    $pdo->beginTransaction();
 
-        try {
-            // Insert reclamation
-            $sql = "INSERT INTO reclamation VALUES (NULL, :id_commande, :commentaire, :nom, :prenom, :email, :tel)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                'id_commande' => $id_commande,
-                'commentaire' => $commentaire,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'email' => $email,
-                'tel' => $tel
-            ]);
+    try {
+      // Insert reclamation
+      $sql = "INSERT INTO reclamation VALUES (NULL, :id_commande, :commentaire, :nom, :prenom, :email, :tel)";
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute([
+        'id_commande' => $id_commande,
+        'commentaire' => $commentaire,
+        'nom' => $nom,
+        'prenom' => $prenom,
+        'email' => $email,
+        'tel' => $tel
+      ]);
 
-            // Delete corresponding commande
-            $sql = "DELETE FROM commande WHERE Id_commande = :id_commande";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['id_commande' => $id_commande]);
+      // Delete corresponding commande
+      $sql = "DELETE FROM commande WHERE Id_commande = :id_commande";
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute(['id_commande' => $id_commande]);
 
-            // Commit transaction
-            $pdo->commit();
+      // Commit transaction
+      $pdo->commit();
 
-            $message = "Reclamation created successfully. Corresponding commande deleted successfully.";
-        } catch (PDOException $e) {
-            // Rollback transaction in case of error
-            $pdo->rollBack();
-            $message = "Failed to create reclamation and delete corresponding commande: " . $e->getMessage();
-            error_log($e->getMessage());
-        }
+      $message = "Reclamation created successfully. Corresponding commande deleted successfully.";
+    } catch (PDOException $e) {
+      // Rollback transaction in case of error
+      $pdo->rollBack();
+      $message = "Failed to create reclamation and delete corresponding commande: " . $e->getMessage();
+      error_log($e->getMessage());
     }
+  }
 
-    // Update operation
-    if (isset($_POST['action']) && $_POST['action'] == 'update') {
-        $id_reclamation = $_POST['Id_reclamation'];
-        $id_commande = $_POST['Id_commande'];
-        $commentaire = $_POST['Commentaire'];
-        $nom = $_POST['Nom'];
-        $prenom = $_POST['Prenom'];
-        $email = $_POST['Email'];
-        $tel = $_POST['Tel'];
+  // Update operation
+  if (isset($_POST['action']) && $_POST['action'] == 'update') {
+    $id_reclamation = $_POST['Id_reclamation'];
+    $id_commande = $_POST['Id_commande'];
+    $commentaire = $_POST['Commentaire'];
+    $nom = $_POST['Nom'];
+    $prenom = $_POST['Prenom'];
+    $email = $_POST['Email'];
+    $tel = $_POST['Tel'];
 
-        $sql = "UPDATE reclamation SET Id_commande = :id_commande, Commentaire = :commentaire, Nom = :nom, 
+    $sql = "UPDATE reclamation SET Id_commande = :id_commande, Commentaire = :commentaire, Nom = :nom, 
                 Prenom = :prenom, Email = :email, Tel = :tel WHERE Id_reclamation = :id_reclamation";
-        $stmt = $pdo->prepare($sql);
-        if ($stmt->execute(compact('id_reclamation', 'id_commande', 'commentaire', 'nom', 'prenom', 'email', 'tel'))) {
-            $message = "Reclamation updated successfully.";
-        } else {
-            $message = "Failed to update reclamation.";
-        }
+    $stmt = $pdo->prepare($sql);
+    if ($stmt->execute(compact('id_reclamation', 'id_commande', 'commentaire', 'nom', 'prenom', 'email', 'tel'))) {
+      $message = "Reclamation updated successfully.";
+    } else {
+      $message = "Failed to update reclamation.";
     }
+  }
 
-    // Delete operation
-    if (isset($_POST['action']) && $_POST['action'] == 'delete') {
-        $id_reclamation = $_POST['Id_reclamation'];
+  // Delete operation
+  if (isset($_POST['action']) && $_POST['action'] == 'delete') {
+    $id_reclamation = $_POST['Id_reclamation'];
 
-        $sql = "DELETE FROM reclamation WHERE Id_reclamation = :id_reclamation";
-        $stmt = $pdo->prepare($sql);
-        if ($stmt->execute(['id_reclamation' => $id_reclamation])) {
-            $message = "Reclamation deleted successfully.";
-        } else {
-            $message = "Failed to delete reclamation.";
-        }
+    $sql = "DELETE FROM reclamation WHERE Id_reclamation = :id_reclamation";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt->execute(['id_reclamation' => $id_reclamation])) {
+      $message = "Reclamation deleted successfully.";
+    } else {
+      $message = "Failed to delete reclamation.";
     }
+  }
 }
 
 // Determine the total number of reclamations
 try {
-    $sql = "SELECT COUNT(*) FROM reclamation";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $total_reclamations = $stmt->fetchColumn();
+  $sql = "SELECT COUNT(*) FROM reclamation";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $total_reclamations = $stmt->fetchColumn();
 } catch (PDOException $e) {
-    die("Error fetching total reclamations: " . $e->getMessage());
+  die("Error fetching total reclamations: " . $e->getMessage());
 }
 
 // Set the number of reclamations per page and calculate the total number of pages
@@ -129,16 +129,16 @@ $offset = ($current_page - 1) * $reclamations_per_page;
 
 // Fetch reclamations for the current page
 try {
-    $sql = "SELECT * FROM reclamation LIMIT :limit OFFSET :offset";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':limit', $reclamations_per_page, PDO::PARAM_INT);
-    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-    $stmt->execute();
+  $sql = "SELECT * FROM reclamation LIMIT :limit OFFSET :offset";
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindParam(':limit', $reclamations_per_page, PDO::PARAM_INT);
+  $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+  $stmt->execute();
 
-    // Fetch all rows as an associative array
-    $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  // Fetch all rows as an associative array
+  $reclamations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die("Error fetching reclamations: " . $e->getMessage());
+  die("Error fetching reclamations: " . $e->getMessage());
 }
 ?>
 
@@ -167,7 +167,7 @@ try {
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -185,10 +185,10 @@ try {
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -240,213 +240,230 @@ try {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
 </body>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reclamation CRUD</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        form input, form button {
-            margin: 5px 0;
-            padding: 8px;
-            width: 100%;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .pagination {
-            display: flex;
-            justify-content: center;
-            padding: 20px 0;
-        }
-        .pagination a {
-            margin: 0 5px;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #000; /* Black text color */
-            border: 1px solid #000; /* Black border color */
-            border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .pagination a:hover {
-            background-color: #000; /* Black background color on hover */
-            color: #fff; /* White text color on hover */
-        }
-        .pagination a.active {
-            background-color: #000; /* Black background color for active page */
-            color: #fff; /* White text color for active page */
-            pointer-events: none;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      form {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      form input,
+      form button {
+        margin: 5px 0;
+        padding: 8px;
+        width: 100%;
+      }
+
+      button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+      }
+
+      .pagination a {
+        margin: 0 5px;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #000;
+        /* Black text color */
+        border: 1px solid #000;
+        /* Black border color */
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .pagination a:hover {
+        background-color: #000;
+        /* Black background color on hover */
+        color: #fff;
+        /* White text color on hover */
+      }
+
+      .pagination a.active {
+        background-color: #000;
+        /* Black background color for active page */
+        color: #fff;
+        /* White text color for active page */
+        pointer-events: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+
+  <body>
     <h1>Reclamation CRUD</h1>
-    
+
     <!-- Message output -->
     <?php if (isset($message)): ?>
-        <p><?php echo $message; ?></p>
+      <p><?php echo $message; ?></p>
     <?php endif; ?>
 
     <!-- Form to create a new reclamation -->
     <form method="POST">
-        <h2>Create a New Reclamation</h2>
-        <input type="number" name="Id_commande" placeholder="Commande ID" required>
-        <input type="text" name="Commentaire" placeholder="Commentaire" required>
-        <input type="text" name="Nom" placeholder="Nom" required>
-        <input type="text" name="Prenom" placeholder="Prenom" required>
-        <input type="email" name="Email" placeholder="Email" required>
-        <input type="text" name="Tel" placeholder="Tel" required>
-        <input type="hidden" name="action" value="create">
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Create Reclamation</button>
+      <h2>Create a New Reclamation</h2>
+      <input type="number" name="Id_commande" placeholder="Commande ID" required>
+      <input type="text" name="Commentaire" placeholder="Commentaire" required>
+      <input type="text" name="Nom" placeholder="Nom" required>
+      <input type="text" name="Prenom" placeholder="Prenom" required>
+      <input type="email" name="Email" placeholder="Email" required>
+      <input type="text" name="Tel" placeholder="Tel" required>
+      <input type="hidden" name="action" value="create">
+      <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Create Reclamation</button>
     </form>
 
     <!-- Form to update an existing reclamation -->
     <form method="POST">
-        <h2>Update a Reclamation</h2>
-        <input type="number" name="Id_reclamation" placeholder="Reclamation ID" required>
-        <input type="number" name="Id_commande" placeholder="Commande ID" required>
-        <input type="text" name="Commentaire" placeholder="Commentaire" required>
-        <input type="text" name="Nom" placeholder="Nom" required>
-        <input type="text" name="Prenom" placeholder="Prenom" required>
-        <input type="email" name="Email" placeholder="Email" required>
-        <input type="text" name="Tel" placeholder="Tel" required>
-        <input type="hidden" name="action" value="update">
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Update Reclamation</button>
+      <h2>Update a Reclamation</h2>
+      <input type="number" name="Id_reclamation" placeholder="Reclamation ID" required>
+      <input type="number" name="Id_commande" placeholder="Commande ID" required>
+      <input type="text" name="Commentaire" placeholder="Commentaire" required>
+      <input type="text" name="Nom" placeholder="Nom" required>
+      <input type="text" name="Prenom" placeholder="Prenom" required>
+      <input type="email" name="Email" placeholder="Email" required>
+      <input type="text" name="Tel" placeholder="Tel" required>
+      <input type="hidden" name="action" value="update">
+      <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Update Reclamation</button>
     </form>
 
     <!-- Form to delete a reclamation -->
     <form method="POST">
-        <h2>Delete a Reclamation</h2>
-        <input type="number" name="Id_reclamation" placeholder="Reclamation ID" required>
-        <input type="hidden" name="action" value="delete">
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Delete Reclamation</button>
+      <h2>Delete a Reclamation</h2>
+      <input type="number" name="Id_reclamation" placeholder="Reclamation ID" required>
+      <input type="hidden" name="action" value="delete">
+      <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Delete Reclamation</button>
     </form>
 
     <!-- Display all reclamations -->
     <h2>All Reclamations</h2>
     <div id="reclamationsList">
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Commande ID</th>
-                    <th>Commentaire</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Email</th>
-                    <th>Tel</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($reclamations as $reclamation): ?>
-                    <tr>
-                        <td><?php echo $reclamation['Id_reclamation']; ?></td>
-                        <td><?php echo $reclamation['Id_commande']; ?></td>
-                        <td><?php echo $reclamation['Commentaire']; ?></td>
-                        <td><?php echo $reclamation['Nom']; ?></td>
-                        <td><?php echo $reclamation['Prenom']; ?></td>
-                        <td><?php echo $reclamation['Email']; ?></td>
-                        <td><?php echo $reclamation['Tel']; ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+      <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Commande ID</th>
+            <th>Commentaire</th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Email</th>
+            <th>Tel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($reclamations as $reclamation): ?>
+            <tr>
+              <td><?php echo $reclamation['Id_reclamation']; ?></td>
+              <td><?php echo $reclamation['Id_commande']; ?></td>
+              <td><?php echo $reclamation['Commentaire']; ?></td>
+              <td><?php echo $reclamation['Nom']; ?></td>
+              <td><?php echo $reclamation['Prenom']; ?></td>
+              <td><?php echo $reclamation['Email']; ?></td>
+              <td><?php echo $reclamation['Tel']; ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
     </div>
-    
+
     <!-- Pagination controls -->
     <div class="pagination">
-        <?php if ($current_page > 1): ?>
-            <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
-        <?php endif; ?>
+      <?php if ($current_page > 1): ?>
+        <a href="?page=<?= $current_page - 1 ?>" class="pagination-btn">Previous</a>
+      <?php endif; ?>
 
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
-        <?php endfor; ?>
+      <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+        <a href="?page=<?= $i ?>" class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>"><?= $i ?></a>
+      <?php endfor; ?>
 
-        <?php if ($current_page < $total_pages): ?>
-            <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
-        <?php endif; ?>
+      <?php if ($current_page < $total_pages): ?>
+        <a href="?page=<?= $current_page + 1 ?>" class="pagination-btn">Next</a>
+      <?php endif; ?>
     </div>
-</body>
-</html>
+  </body>
 
+  </html>

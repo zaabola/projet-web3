@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -22,77 +22,77 @@ $password = "";
 $dbname = "emprunt";
 
 try {
-    // Establish the database connection
-    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  // Establish the database connection
+  $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+  die("Database connection failed: " . $e->getMessage());
 }
 
 // Handle the update request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $Id_commande = $_POST['Id_commande'] ?? null;
-    $Adresse_client = $_POST['Adresse_client'] ?? null;
-    $Tel_client = $_POST['Tel_client'] ?? null;
-    $Nom_client = $_POST['Nom_client'] ?? null;
-    $Prenom_client = $_POST['Prenom_client'] ?? null;
-    $Nom_Produit = $_POST['Nom_Produit'] ?? null;
+  $Id_commande = $_POST['Id_commande'] ?? null;
+  $Adresse_client = $_POST['Adresse_client'] ?? null;
+  $Tel_client = $_POST['Tel_client'] ?? null;
+  $Nom_client = $_POST['Nom_client'] ?? null;
+  $Prenom_client = $_POST['Prenom_client'] ?? null;
+  $Nom_Produit = $_POST['Nom_Produit'] ?? null;
 
-    if ($Id_commande) {
-        try {
-            // Build the dynamic SQL query
-            $fieldsToUpdate = [];
-            $params = [':Id_commande' => $Id_commande];
+  if ($Id_commande) {
+    try {
+      // Build the dynamic SQL query
+      $fieldsToUpdate = [];
+      $params = [':Id_commande' => $Id_commande];
 
-            if ($Adresse_client) {
-                $fieldsToUpdate[] = "Adresse_client = :Adresse_client";
-                $params[':Adresse_client'] = $Adresse_client;
-            }
-            if ($Tel_client) {
-                $fieldsToUpdate[] = "Tel_client = :Tel_client";
-                $params[':Tel_client'] = $Tel_client;
-            }
-            if ($Nom_client) {
-                $fieldsToUpdate[] = "Nom_client = :Nom_client";
-                $params[':Nom_client'] = $Nom_client;
-            }
-            if ($Prenom_client) {
-                $fieldsToUpdate[] = "Prenom_client = :Prenom_client";
-                $params[':Prenom_client'] = $Prenom_client;
-            }
-            if ($Nom_Produit) {
-                // Check if the product exists
-                $product_check_sql = "SELECT Id_produit FROM produit WHERE Nom_Produit = :Nom_Produit";
-                $stmt = $db->prepare($product_check_sql);
-                $stmt->execute([':Nom_Produit' => $Nom_Produit]);
-                $product = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($product) {
-                    $product_id = $product['Id_produit'];
-                    $fieldsToUpdate[] = "id_panier = :id_panier";
-                    $params[':id_panier'] = $product_id;
-                } else {
-                    throw new Exception("Product not found.");
-                }
-            }
-
-            if (!empty($fieldsToUpdate)) {
-                // Create the SQL query
-                $sql = "UPDATE commande SET " . implode(', ', $fieldsToUpdate) . " WHERE Id_commande = :Id_commande";
-                $stmt = $db->prepare($sql);
-                $stmt->execute($params);
-
-                echo "Commande updated successfully!";
-            } else {
-                echo "No fields to update.";
-            }
-        } catch (PDOException $e) {
-            echo "Error updating commande: " . $e->getMessage();
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+      if ($Adresse_client) {
+        $fieldsToUpdate[] = "Adresse_client = :Adresse_client";
+        $params[':Adresse_client'] = $Adresse_client;
+      }
+      if ($Tel_client) {
+        $fieldsToUpdate[] = "Tel_client = :Tel_client";
+        $params[':Tel_client'] = $Tel_client;
+      }
+      if ($Nom_client) {
+        $fieldsToUpdate[] = "Nom_client = :Nom_client";
+        $params[':Nom_client'] = $Nom_client;
+      }
+      if ($Prenom_client) {
+        $fieldsToUpdate[] = "Prenom_client = :Prenom_client";
+        $params[':Prenom_client'] = $Prenom_client;
+      }
+      if ($Nom_Produit) {
+        // Check if the product exists
+        $product_check_sql = "SELECT Id_produit FROM produit WHERE Nom_Produit = :Nom_Produit";
+        $stmt = $db->prepare($product_check_sql);
+        $stmt->execute([':Nom_Produit' => $Nom_Produit]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($product) {
+          $product_id = $product['Id_produit'];
+          $fieldsToUpdate[] = "id_panier = :id_panier";
+          $params[':id_panier'] = $product_id;
+        } else {
+          throw new Exception("Product not found.");
         }
-    } else {
-        echo "Id_commande is required.";
+      }
+
+      if (!empty($fieldsToUpdate)) {
+        // Create the SQL query
+        $sql = "UPDATE commande SET " . implode(', ', $fieldsToUpdate) . " WHERE Id_commande = :Id_commande";
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+
+        echo "Commande updated successfully!";
+      } else {
+        echo "No fields to update.";
+      }
+    } catch (PDOException $e) {
+      echo "Error updating commande: " . $e->getMessage();
+    } catch (Exception $e) {
+      echo "Error: " . $e->getMessage();
     }
+  } else {
+    echo "Id_commande is required.";
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -116,31 +116,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <style>
-      body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-      }
-      form {
-          margin-bottom: 20px;
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-      }
-      form input, form button {
-          margin: 5px 0;
-          padding: 8px;
-          width: 100%;
-      }
-      button {
-          background-color: #007BFF;
-          color: white;
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-      }
-      button:hover {
-          background-color: #0056b3;
-      }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    form {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    form input,
+    form button {
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 
@@ -163,11 +168,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
-                </li>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
@@ -218,59 +223,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0">
@@ -281,125 +286,125 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="row">
         <div class="col-12">
           <div class="card">
-          <div class="card-header pb-0">
-    <h6>Update Commande</h6>
-</div>
-<div class="card-body px-0 pt-0 pb-2">
-    <div class="table-responsive p-0">
-    <form method="POST" action="" onsubmit="return validateUpdateForm()">
-    <label for="Id_commande">Commande ID (required):</label><br>
-    <span id="commandIdError" style="color: red;"></span>
-    <input type="number" id="Id_commande" name="Id_commande"><br><br>
+            <div class="card-header pb-0">
+              <h6>Update Commande</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <form method="POST" action="" onsubmit="return validateUpdateForm()">
+                  <label for="Id_commande">Commande ID (required):</label><br>
+                  <span id="commandIdError" style="color: red;"></span>
+                  <input type="number" id="Id_commande" name="Id_commande"><br><br>
 
-    <label for="Adresse_client">Adresse Client:</label><br>
-    <span id="clientAddressError" style="color: red;"></span>
-    <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter new Adresse"><br><br>
+                  <label for="Adresse_client">Adresse Client:</label><br>
+                  <span id="clientAddressError" style="color: red;"></span>
+                  <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter new Adresse"><br><br>
 
-    <label for="Tel_client">Tel Client:</label><br>
-    <span id="clientPhoneError" style="color: red;"></span>
-    <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter new Tel"><br><br>
+                  <label for="Tel_client">Tel Client:</label><br>
+                  <span id="clientPhoneError" style="color: red;"></span>
+                  <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter new Tel"><br><br>
 
-    <label for="Nom_client">Nom Client:</label><br>
-    <span id="clientLastNameError" style="color: red;"></span>
-    <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter new Nom"><br><br>
+                  <label for="Nom_client">Nom Client:</label><br>
+                  <span id="clientLastNameError" style="color: red;"></span>
+                  <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter new Nom"><br><br>
 
-    <label for="Prenom_client">Prenom Client:</label><br>
-    <span id="clientFirstNameError" style="color: red;"></span>
-    <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter new Prenom"><br><br>
+                  <label for="Prenom_client">Prenom Client:</label><br>
+                  <span id="clientFirstNameError" style="color: red;"></span>
+                  <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter new Prenom"><br><br>
 
-    <label for="Nom_Produit">Nom Produit:</label><br>
-    <span id="productNameError" style="color: red;"></span>
-    <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter new Produit Name"><br><br>
+                  <label for="Nom_Produit">Nom Produit:</label><br>
+                  <span id="productNameError" style="color: red;"></span>
+                  <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter new Produit Name"><br><br>
 
-    <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Update Commande</button>
-</form>
+                  <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Update Commande</button>
+                </form>
 
-<script>
-    function validateUpdateForm() {
-        var isValid = true;
+                <script>
+                  function validateUpdateForm() {
+                    var isValid = true;
 
-        var commandId = document.getElementById('Id_commande').value;
-        var clientAddress = document.getElementById('Adresse_client').value;
-        var clientPhone = document.getElementById('Tel_client').value;
-        var clientLastName = document.getElementById('Nom_client').value;
-        var clientFirstName = document.getElementById('Prenom_client').value;
-        var productName = document.getElementById('Nom_Produit').value;
+                    var commandId = document.getElementById('Id_commande').value;
+                    var clientAddress = document.getElementById('Adresse_client').value;
+                    var clientPhone = document.getElementById('Tel_client').value;
+                    var clientLastName = document.getElementById('Nom_client').value;
+                    var clientFirstName = document.getElementById('Prenom_client').value;
+                    var productName = document.getElementById('Nom_Produit').value;
 
-        // Clear previous error messages
-        document.getElementById('commandIdError').innerText = '';
-        document.getElementById('clientAddressError').innerText = '';
-        document.getElementById('clientPhoneError').innerText = '';
-        document.getElementById('clientLastNameError').innerText = '';
-        document.getElementById('clientFirstNameError').innerText = '';
-        document.getElementById('productNameError').innerText = '';
+                    // Clear previous error messages
+                    document.getElementById('commandIdError').innerText = '';
+                    document.getElementById('clientAddressError').innerText = '';
+                    document.getElementById('clientPhoneError').innerText = '';
+                    document.getElementById('clientLastNameError').innerText = '';
+                    document.getElementById('clientFirstNameError').innerText = '';
+                    document.getElementById('productNameError').innerText = '';
 
-        // Validate Command ID
-        if (commandId === '') {
-            document.getElementById('commandIdError').innerText = 'Commande ID is required.';
-            isValid = false;
-        }
+                    // Validate Command ID
+                    if (commandId === '') {
+                      document.getElementById('commandIdError').innerText = 'Commande ID is required.';
+                      isValid = false;
+                    }
 
-        // Validate Adresse Client
-        if (clientAddress === '') {
-            document.getElementById('clientAddressError').innerText = 'Adresse Client is required.';
-            isValid = false;
-        }
+                    // Validate Adresse Client
+                    if (clientAddress === '') {
+                      document.getElementById('clientAddressError').innerText = 'Adresse Client is required.';
+                      isValid = false;
+                    }
 
-        // Validate Tel Client
-        if (clientPhone === '') {
-            document.getElementById('clientPhoneError').innerText = 'Tel Client is required.';
-            isValid = false;
-        }
+                    // Validate Tel Client
+                    if (clientPhone === '') {
+                      document.getElementById('clientPhoneError').innerText = 'Tel Client is required.';
+                      isValid = false;
+                    }
 
-        // Validate Nom Client
-        if (clientLastName === '') {
-            document.getElementById('clientLastNameError').innerText = 'Nom Client is required.';
-            isValid = false;
-        }
+                    // Validate Nom Client
+                    if (clientLastName === '') {
+                      document.getElementById('clientLastNameError').innerText = 'Nom Client is required.';
+                      isValid = false;
+                    }
 
-        // Validate Prenom Client
-        if (clientFirstName === '') {
-            document.getElementById('clientFirstNameError').innerText = 'Prenom Client is required.';
-            isValid = false;
-        }
+                    // Validate Prenom Client
+                    if (clientFirstName === '') {
+                      document.getElementById('clientFirstNameError').innerText = 'Prenom Client is required.';
+                      isValid = false;
+                    }
 
-        // Validate Nom Produit
-        if (productName === '') {
-            document.getElementById('productNameError').innerText = 'Nom Produit is required.';
-            isValid = false;
-        }
+                    // Validate Nom Produit
+                    if (productName === '') {
+                      document.getElementById('productNameError').innerText = 'Nom Produit is required.';
+                      isValid = false;
+                    }
 
-        return isValid;
-    }
-</script>
+                    return isValid;
+                  }
+                </script>
 
-    </div>
-</div>
-<script>
-    function validateUpdateForm() {
-        var isValid = true;
+              </div>
+            </div>
+            <script>
+              function validateUpdateForm() {
+                var isValid = true;
 
-        var commandId = document.getElementById('Id_commande').value;
-        var clientAddress = document.getElementById('Adresse_client').value;
-        var clientPhone = document.getElementById('Tel_client').value;
-        var clientLastName = document.getElementById('Nom_client').value;
-        var clientFirstName = document.getElementById('Prenom_client').value;
-        var productName = document.getElementById('Nom_Produit').value;
+                var commandId = document.getElementById('Id_commande').value;
+                var clientAddress = document.getElementById('Adresse_client').value;
+                var clientPhone = document.getElementById('Tel_client').value;
+                var clientLastName = document.getElementById('Nom_client').value;
+                var clientFirstName = document.getElementById('Prenom_client').value;
+                var productName = document.getElementById('Nom_Produit').value;
 
-        // Clear previous error messages
-        document.getElementById('commandIdError').innerText = '';
-        document.getElementById('clientAddressError').innerText = '';
-        document.getElementById('clientPhoneError').innerText = '';
-        document.getElementById('clientLastNameError').innerText = '';
-        document.getElementById('clientFirstNameError').innerText = '';
-        document.getElementById('productNameError').innerText = '';
+                // Clear previous error messages
+                document.getElementById('commandIdError').innerText = '';
+                document.getElementById('clientAddressError').innerText = '';
+                document.getElementById('clientPhoneError').innerText = '';
+                document.getElementById('clientLastNameError').innerText = '';
+                document.getElementById('clientFirstNameError').innerText = '';
+                document.getElementById('productNameError').innerText = '';
 
-        // Validate Command ID
-        if (commandId === '') {
-            document.getElementById('commandIdError').innerText = 'Commande ID is required.';
-            isValid = false;
-        }
+                // Validate Command ID
+                if (commandId === '') {
+                  document.getElementById('commandIdError').innerText = 'Commande ID is required.';
+                  isValid = false;
+                }
 
-        return isValid;
-    }
-</script>
+                return isValid;
+              }
+            </script>

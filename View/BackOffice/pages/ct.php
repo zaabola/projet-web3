@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 
 require_once '../../../Controller/theme.php';
@@ -20,53 +20,54 @@ $theme = null;
 $themeController = new ThemeController();
 
 if (
-    isset($_POST["titre"]) &&
-    isset($_POST["description"]) &&
-    isset($_FILES["image"]) // Utilisation de $_FILES pour récupérer le fichier
+  isset($_POST["titre"]) &&
+  isset($_POST["description"]) &&
+  isset($_FILES["image"]) // Utilisation de $_FILES pour récupérer le fichier
 ) {
-    if (
-        !empty($_POST["titre"]) &&
-        !empty($_POST["description"]) &&
-        !empty($_FILES["image"]["name"]) // Vérification si le fichier est téléchargé
-    ) {
-        // Récupération du fichier téléchargé
-        $image = $_FILES['image'];
+  if (
+    !empty($_POST["titre"]) &&
+    !empty($_POST["description"]) &&
+    !empty($_FILES["image"]["name"]) // Vérification si le fichier est téléchargé
+  ) {
+    // Récupération du fichier téléchargé
+    $image = $_FILES['image'];
 
-        // Liste des extensions d'images autorisées
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    // Liste des extensions d'images autorisées
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
-        // Récupérer l'extension du fichier téléchargé
-        $fileExtension = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
+    // Récupérer l'extension du fichier téléchargé
+    $fileExtension = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
 
-        // Vérifier si l'extension est valide
-        if (in_array($fileExtension, $allowedExtensions)) {
-            // Si l'extension est valide, on continue avec l'ajout du thème
-            $theme = new theme(
-                null,
-                $_POST['titre'],
-                $_POST['description'],
-                $image['name'] // Vous pouvez aussi déplacer le fichier sur le serveur si nécessaire
-            );
+    // Vérifier si l'extension est valide
+    if (in_array($fileExtension, $allowedExtensions)) {
+      // Si l'extension est valide, on continue avec l'ajout du thème
+      $theme = new theme(
+        null,
+        $_POST['titre'],
+        $_POST['description'],
+        $image['name'] // Vous pouvez aussi déplacer le fichier sur le serveur si nécessaire
+      );
 
-            $themeController->addTheme($theme);
-            header('Location:bib.php');
-            exit;
-        } else {
-            $error = "Le fichier téléchargé n'est pas une image valide. Extensions autorisées : .jpg, .jpeg, .png, .gif.";
-        }
+      $themeController->addTheme($theme);
+      header('Location:bib.php');
+      exit;
     } else {
-        $error = "Informations manquantes.";
+      $error = "Le fichier téléchargé n'est pas une image valide. Extensions autorisées : .jpg, .jpeg, .png, .gif.";
     }
+  } else {
+    $error = "Informations manquantes.";
+  }
 }
 
 ?>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  
+
   <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900">
   <!-- Nucleo Icons -->
@@ -81,7 +82,7 @@ if (
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -99,10 +100,10 @@ if (
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -154,66 +155,66 @@ if (
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link active bg-gradient-dark text-white" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active bg-gradient-dark text-white" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
-  
+
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ps ps--active-y">
     <div class="container-fluid py-2">
       <div class="row">
@@ -255,52 +256,52 @@ if (
   <!-- JavaScript Validation -->
   <script>
     document.getElementById('themeForm').addEventListener('submit', function(e) {
-        var titre = document.querySelector('input[name="titre"]');
-        var description = document.querySelector('input[name="description"]');
-        var image = document.querySelector('input[name="image"]');
-        
-        var titreError = document.getElementById('titre-error');
-        var descriptionError = document.getElementById('description-error');
-        var imageError = document.getElementById('image-error');
-        
-        // Clear previous error messages
-        titreError.textContent = '';
-        descriptionError.textContent = '';
-        imageError.textContent = '';
+      var titre = document.querySelector('input[name="titre"]');
+      var description = document.querySelector('input[name="description"]');
+      var image = document.querySelector('input[name="image"]');
 
-        // Flag to track if there are any validation errors
-        var hasError = false;
+      var titreError = document.getElementById('titre-error');
+      var descriptionError = document.getElementById('description-error');
+      var imageError = document.getElementById('image-error');
 
-        // Validate titre
-        if (titre.value.trim() === '') {
-            titreError.textContent = 'Titre is required.';
-            hasError = true;
+      // Clear previous error messages
+      titreError.textContent = '';
+      descriptionError.textContent = '';
+      imageError.textContent = '';
+
+      // Flag to track if there are any validation errors
+      var hasError = false;
+
+      // Validate titre
+      if (titre.value.trim() === '') {
+        titreError.textContent = 'Titre is required.';
+        hasError = true;
+      }
+
+      // Validate description
+      if (description.value.trim() === '') {
+        descriptionError.textContent = 'Description is required.';
+        hasError = true;
+      }
+
+      // Validate image
+      if (image.value.trim() === '') {
+        imageError.textContent = 'Image is required.';
+        hasError = true;
+      } else {
+        var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        var fileExtension = image.value.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+          imageError.textContent = 'Image must be of type .jpg, .jpeg, .png, or .gif.';
+          hasError = true;
         }
+      }
 
-        // Validate description
-        if (description.value.trim() === '') {
-            descriptionError.textContent = 'Description is required.';
-            hasError = true;
-        }
-
-        // Validate image
-        if (image.value.trim() === '') {
-            imageError.textContent = 'Image is required.';
-            hasError = true;
-        } else {
-            var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-            var fileExtension = image.value.split('.').pop().toLowerCase();
-            
-            if (!allowedExtensions.includes(fileExtension)) {
-                imageError.textContent = 'Image must be of type .jpg, .jpeg, .png, or .gif.';
-                hasError = true;
-            }
-        }
-
-        // If there are validation errors, prevent form submission
-        if (hasError) {
-            e.preventDefault();
-        }
+      // If there are validation errors, prevent form submission
+      if (hasError) {
+        e.preventDefault();
+      }
     });
   </script>
 

@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require_once('../../FrontOffice/session_check.php');
@@ -8,71 +7,71 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
-    // Database connection settings
-    $host = "localhost";
-    $dbname = "emprunt";
-    $username = "root";
-    $password = "";
+// Database connection settings
+$host = "localhost";
+$dbname = "emprunt";
+$username = "root";
+$password = "";
 
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
-    }
+try {
+  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  die("Database connection failed: " . $e->getMessage());
+}
 
-    // Fetch all products for the dropdown and table
-    $products = [];
+// Fetch all products for the dropdown and table
+$products = [];
+try {
+  $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+  $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+  echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+}
+
+// Check if the form was submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $nom_produit = $_POST['Nom_Produit'] ?? null;
+  $new_quantity = $_POST['Qte'] ?? null;
+
+  // Validate inputs
+  if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
+    echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
+  } else {
     try {
-        $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      // Update product quantity
+      $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
+      $stmt = $pdo->prepare($update_sql);
+      $stmt->execute([
+        'new_quantity' => $new_quantity,
+        'nom_produit' => $nom_produit
+      ]);
+
+      echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
+
+      // Refresh the product list
+      $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+      $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+      echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
     }
-
-    // Check if the form was submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nom_produit = $_POST['Nom_Produit'] ?? null;
-        $new_quantity = $_POST['Qte'] ?? null;
-
-        // Validate inputs
-        if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
-            echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
-        } else {
-            try {
-                // Update product quantity
-                $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
-                $stmt = $pdo->prepare($update_sql);
-                $stmt->execute([
-                    'new_quantity' => $new_quantity,
-                    'nom_produit' => $nom_produit
-                ]);
-
-                echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
-
-                // Refresh the product list
-                $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
-                $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } catch (Exception $e) {
-                echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
-            }
-        }
-    }
-    ?>
-<?php    
+  }
+}
+?>
+<?php
 require_once '../commande.php'; // Include the Commande class
 
 // Database connection
 try {
-    $db = new PDO("mysql:host=localhost;dbname=emprunt", "root", "");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $db = new PDO("mysql:host=localhost;dbname=emprunt", "root", "");
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
+  die("Could not connect to the database: " . $e->getMessage());
 }
 
 // Create an instance of the Commande class
@@ -81,68 +80,71 @@ $commande = new Commande($db);
 // Handle form submission
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $Nom_client = $_POST['Nom_client'] ?? '';
-    $Prenom_client = $_POST['Prenom_client'] ?? '';
-    $Tel_client = $_POST['Tel_client'] ?? '';
-    $Adresse_client = $_POST['Adresse_client'] ?? '';
+  $Nom_client = $_POST['Nom_client'] ?? '';
+  $Prenom_client = $_POST['Prenom_client'] ?? '';
+  $Tel_client = $_POST['Tel_client'] ?? '';
+  $Adresse_client = $_POST['Adresse_client'] ?? '';
 
-    if (!empty($Nom_client) && !empty($Prenom_client) && strlen($Tel_client) === 8 && !empty($Adresse_client)) {
-        if ($commande->createCommande($Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
-            $message = "Order created successfully!";
-        } else {
-            $message = "Failed to create order.";
-        }
+  if (!empty($Nom_client) && !empty($Prenom_client) && strlen($Tel_client) === 8 && !empty($Adresse_client)) {
+    if ($commande->createCommande($Adresse_client, $Tel_client, $Nom_client, $Prenom_client)) {
+      $message = "Order created successfully!";
     } else {
-        $message = "Please fill in all fields correctly.";
+      $message = "Failed to create order.";
     }
+  } else {
+    $message = "Please fill in all fields correctly.";
+  }
 }
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <style>
-    body, html {
-    background-color: white;
-    color: black;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-}
+    body,
+    html {
+      background-color: white;
+      color: black;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
 
-.container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-h1, h2, h3, p {
-    margin: 20px;
-    color: black;
-}
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 20px;
+      color: black;
+    }
 
-a {
-    color: blue;
-    text-decoration: none;
-}
+    a {
+      color: blue;
+      text-decoration: none;
+    }
 
-a:hover {
-    text-decoration: underline;
-}
+    a:hover {
+      text-decoration: underline;
+    }
 
-.chart-container {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 20px;
-}
-
+    .chart-container {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      margin: 20px;
+    }
   </style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -164,7 +166,7 @@ a:hover {
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
 </head>
 
-<body >
+<body>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -183,10 +185,10 @@ a:hover {
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -238,63 +240,63 @@ a:hover {
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -427,334 +429,358 @@ a:hover {
           </p>
         </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          
+
         </div>
-        
-      <div class="row "  >
- 
 
-        <div  >
-          <div class="card" >
-            <div class="card-header pb-0" style=' width: 60vw; '>
-              <div class="row">
-               
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: white;
-            color: black;
-        }
-        .dashboard-container {
-            display: flex;
-            flex-direction: column; /* Arrange the main container vertically */
-            align-items: center;
-
-        }
-        .top-charts {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-bottom: 40px; /* Add some space between the rows */
-        }
-        .chart-container {
-            width: 45%; /* Adjusted width to make all charts bigger */
-        }
-        .chart-container-large {
-            width: 80%; /* Adjusted width to make the total cost chart larger */
-        }
-        #pieChart, #barChart, #lineChart {
-            max-width: 100%; /* Ensure the charts do not exceed the container width */
-            height: 500px; /* Adjust height to balance sizes */
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <div class="dashboard-container">
-        <div class="top-charts">
-            <div class="chart-container">
-                <canvas id="pieChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="barChart"></canvas>
-            </div>
-        </div>
-        <div class="chart-container-large">
-            <canvas id="lineChart"></canvas>
-        </div>
-        <div class="col-md-6"> <div class="card"> <div class="card-body"> <h5 class="card-title">Total Benefits</h5> <p class="card-text" id="totalCostSummary"></p> </div> </div> </div>
-    </div>
-
-    <script>
-      async function fetchTotalCostData() {
-    try {
-        const response = await fetch('fetch_total_cost.php'); // Ensure this path is correct based on your server setup
-        const data = await response.json();
-        console.log("Fetched Total Costs: ", data); // Debugging: log the fetched data
-
-        // Parse and return the costs
-        return data.map(item => parseFloat(item.total_cost));
-    } catch (error) {
-        console.error('Error fetching total cost data:', error);
-        return [];
-    }
-}
-
-function calculateTotalSum(totalCosts) {
-    // Calculate the total sum of all benefits
-    const sum = totalCosts.reduce((acc, curr) => acc + curr, 0);
-    console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
-    return sum;
-}
-
-async function displayTotalCost() {
-    const totalCosts = await fetchTotalCostData();
-    const totalSum = calculateTotalSum(totalCosts);
-
-    // Display total sum in the summary section
-    document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
-}
-
-displayTotalCost();
+        <div class="row ">
 
 
-function calculateTotalSum(totalCosts) {
-    // Ensure all values are parsed correctly
-    const sum = totalCosts.reduce((acc, curr) => {
-        const parsedValue = isNaN(curr) ? 0 : curr; // Handle potential NaN values
-        return acc + parsedValue;
-    }, 0);
+          <div>
+            <div class="card">
+              <div class="card-header pb-0" style=' width: 60vw; '>
+                <div class="row">
 
-    console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
-    return sum;
-}
+                  <!DOCTYPE html>
+                  <html lang="en">
 
-async function displayTotalCost() {
-    const totalCosts = await fetchTotalCostData();
-    const totalSum = calculateTotalSum(totalCosts);
+                  <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Dashboard</title>
+                    <style>
+                      body {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                        background-color: white;
+                        color: black;
+                      }
 
-    // Display total sum in the summary section
-    document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
-}
+                      .dashboard-container {
+                        display: flex;
+                        flex-direction: column;
+                        /* Arrange the main container vertically */
+                        align-items: center;
 
-displayTotalCost();
+                      }
 
-        async function fetchPieChartData() {
-            try {
-                const response = await fetch('product_stock.php');
-                const data = await response.json();
-                console.log('Fetched Pie Chart Data:', data);
-                return data;
-            } catch (error) {
-                console.error('Error fetching pie chart data:', error);
-                return [];
-            }
-        }
+                      .top-charts {
+                        display: flex;
+                        justify-content: space-around;
+                        width: 100%;
+                        margin-bottom: 40px;
+                        /* Add some space between the rows */
+                      }
 
-        async function fetchBarChartData() {
-            try {
-                const response = await fetch('data.php');
-                const data = await response.json();
-                console.log('Fetched Bar Chart Data:', data);
-                return data;
-            } catch (error) {
-                console.error('Error fetching bar chart data:', error);
-                return {};
-            }
-        }
+                      .chart-container {
+                        width: 45%;
+                        /* Adjusted width to make all charts bigger */
+                      }
 
-        async function fetchLineChartData() {
-            try {
-                const response = await fetch('total_cost_by_panier.php');
-                const data = await response.json();
-                console.log('Fetched Line Chart Data:', data);
-                return data;
-            } catch (error) {
-                console.error('Error fetching line chart data:', error);
-                return [];
-            }
-        }
+                      .chart-container-large {
+                        width: 80%;
+                        /* Adjusted width to make the total cost chart larger */
+                      }
 
-        function createPieChart(data) {
-            const ctx = document.getElementById('pieChart').getContext('2d');
-            const labels = data.map(item => item.Nom_Produit);
-            const values = data.map(item => item.Qte);
+                      #pieChart,
+                      #barChart,
+                      #lineChart {
+                        max-width: 100%;
+                        /* Ensure the charts do not exceed the container width */
+                        height: 500px;
+                        /* Adjust height to balance sizes */
+                      }
+                    </style>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                  </head>
 
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(199, 199, 199, 0.2)',
-                            'rgba(83, 102, 255, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(199, 199, 199, 1)',
-                            'rgba(83, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
+                  <body>
+                    <h1>Dashboard</h1>
+                    <div class="dashboard-container">
+                      <div class="top-charts">
+                        <div class="chart-container">
+                          <canvas id="pieChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                          <canvas id="barChart"></canvas>
+                        </div>
+                      </div>
+                      <div class="chart-container-large">
+                        <canvas id="lineChart"></canvas>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card">
+                          <div class="card-body">
+                            <h5 class="card-title">Total Benefits</h5>
+                            <p class="card-text" id="totalCostSummary"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <script>
+                      async function fetchTotalCostData() {
+                        try {
+                          const response = await fetch('fetch_total_cost.php'); // Ensure this path is correct based on your server setup
+                          const data = await response.json();
+                          console.log("Fetched Total Costs: ", data); // Debugging: log the fetched data
+
+                          // Parse and return the costs
+                          return data.map(item => parseFloat(item.total_cost));
+                        } catch (error) {
+                          console.error('Error fetching total cost data:', error);
+                          return [];
                         }
-                    }
-                }
-            });
-        }
+                      }
 
-        function createBarChart(data) {
-            const ctx = document.getElementById('barChart').getContext('2d');
-            const labels = ['Commands', 'Reclamations'];
-            const values = [data.command_count, data.reclamation_count];
+                      function calculateTotalSum(totalCosts) {
+                        // Calculate the total sum of all benefits
+                        const sum = totalCosts.reduce((acc, curr) => acc + curr, 0);
+                        console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
+                        return sum;
+                      }
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Count',
-                        data: values,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 99, 132, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 99, 132, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Count'
+                      async function displayTotalCost() {
+                        const totalCosts = await fetchTotalCostData();
+                        const totalSum = calculateTotalSum(totalCosts);
+
+                        // Display total sum in the summary section
+                        document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
+                      }
+
+                      displayTotalCost();
+
+
+                      function calculateTotalSum(totalCosts) {
+                        // Ensure all values are parsed correctly
+                        const sum = totalCosts.reduce((acc, curr) => {
+                          const parsedValue = isNaN(curr) ? 0 : curr; // Handle potential NaN values
+                          return acc + parsedValue;
+                        }, 0);
+
+                        console.log("Calculated Total Sum: ", sum); // Debugging: log the total sum
+                        return sum;
+                      }
+
+                      async function displayTotalCost() {
+                        const totalCosts = await fetchTotalCostData();
+                        const totalSum = calculateTotalSum(totalCosts);
+
+                        // Display total sum in the summary section
+                        document.getElementById('totalCostSummary').textContent = `Total Sum of All Benefits: ${totalSum.toFixed(2)} DT`;
+                      }
+
+                      displayTotalCost();
+
+                      async function fetchPieChartData() {
+                        try {
+                          const response = await fetch('product_stock.php');
+                          const data = await response.json();
+                          console.log('Fetched Pie Chart Data:', data);
+                          return data;
+                        } catch (error) {
+                          console.error('Error fetching pie chart data:', error);
+                          return [];
+                        }
+                      }
+
+                      async function fetchBarChartData() {
+                        try {
+                          const response = await fetch('data.php');
+                          const data = await response.json();
+                          console.log('Fetched Bar Chart Data:', data);
+                          return data;
+                        } catch (error) {
+                          console.error('Error fetching bar chart data:', error);
+                          return {};
+                        }
+                      }
+
+                      async function fetchLineChartData() {
+                        try {
+                          const response = await fetch('total_cost_by_panier.php');
+                          const data = await response.json();
+                          console.log('Fetched Line Chart Data:', data);
+                          return data;
+                        } catch (error) {
+                          console.error('Error fetching line chart data:', error);
+                          return [];
+                        }
+                      }
+
+                      function createPieChart(data) {
+                        const ctx = document.getElementById('pieChart').getContext('2d');
+                        const labels = data.map(item => item.Nom_Produit);
+                        const values = data.map(item => item.Qte);
+
+                        new Chart(ctx, {
+                          type: 'pie',
+                          data: {
+                            labels: labels,
+                            datasets: [{
+                              data: values,
+                              backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(199, 199, 199, 0.2)',
+                                'rgba(83, 102, 255, 0.2)'
+                              ],
+                              borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(199, 199, 199, 1)',
+                                'rgba(83, 102, 255, 1)'
+                              ],
+                              borderWidth: 1
+                            }]
+                          },
+                          options: {
+                            responsive: true,
+                            plugins: {
+                              legend: {
+                                position: 'top',
+                              }
                             }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        }
+                          }
+                        });
+                      }
 
-        function createLineChart(data) {
-            const ctx = document.getElementById('lineChart').getContext('2d');
-            const labels = data.map(item => `Panier ${item.id_panier}`);
-            const values = data.map(item => item.total_cost_sum);
+                      function createBarChart(data) {
+                        const ctx = document.getElementById('barChart').getContext('2d');
+                        const labels = ['Commands', 'Reclamations'];
+                        const values = [data.command_count, data.reclamation_count];
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Benifits',
-                        data: values,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Panier ID'
+                        new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                            labels: labels,
+                            datasets: [{
+                              label: 'Count',
+                              data: values,
+                              backgroundColor: [
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 99, 132, 0.5)'
+                              ],
+                              borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)'
+                              ],
+                              borderWidth: 1
+                            }]
+                          },
+                          options: {
+                            responsive: true,
+                            scales: {
+                              y: {
+                                beginAtZero: true,
+                                title: {
+                                  display: true,
+                                  text: 'Count'
+                                }
+                              }
+                            },
+                            plugins: {
+                              legend: {
+                                display: false
+                              }
                             }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
+                          }
+                        });
+                      }
+
+                      function createLineChart(data) {
+                        const ctx = document.getElementById('lineChart').getContext('2d');
+                        const labels = data.map(item => `Panier ${item.id_panier}`);
+                        const values = data.map(item => item.total_cost_sum);
+
+                        new Chart(ctx, {
+                          type: 'line',
+                          data: {
+                            labels: labels,
+                            datasets: [{
+                              label: 'Benifits',
+                              data: values,
+                              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                              borderColor: 'rgba(75, 192, 192, 1)',
+                              borderWidth: 1,
+                              fill: false,
+                            }]
+                          },
+                          options: {
+                            responsive: true,
+                            scales: {
+                              x: {
+                                title: {
+                                  display: true,
+                                  text: 'Panier ID'
+                                }
+                              },
+                              y: {
+                                beginAtZero: true,
+                                title: {
+                                  display: true,
+                                  text: 'Benifits (DT)'
+                                }
+                              }
+                            },
+                            plugins: {
+                              legend: {
                                 display: true,
-                                text: 'Benifits (DT)'
+                                position: 'top',
+                              }
                             }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        }
-                    }
-                }
-            });
-        }
+                          }
+                        });
+                      }
 
-        async function init() {
-            const pieChartData = await fetchPieChartData();
-            const barChartData = await fetchBarChartData();
-            const lineChartData = await fetchLineChartData();
-            createPieChart(pieChartData);
-            createBarChart(barChartData);
-            createLineChart(lineChartData);
-        }
+                      async function init() {
+                        const pieChartData = await fetchPieChartData();
+                        const barChartData = await fetchBarChartData();
+                        const lineChartData = await fetchLineChartData();
+                        createPieChart(pieChartData);
+                        createBarChart(barChartData);
+                        createLineChart(lineChartData);
+                      }
 
-        init();
-    </script>
-</body>
-</html>
+                      init();
+                    </script>
+                  </body>
+
+                  </html>
 
 
 
 
-                <div class="col-lg-6 col-5 my-auto text-end">
-                  
-                  <div class="dropdown float-lg-end pe-4">
-                    
-                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-ellipsis-v text-secondary"></i>
-                    </a>
-                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                    </ul>
+                  <div class="col-lg-6 col-5 my-auto text-end">
+
+                    <div class="dropdown float-lg-end pe-4">
+
+                      <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v text-secondary"></i>
+                      </a>
+                      <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
+                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
+                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+        <!-- Github buttons -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+        <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+        <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
+
 </html>

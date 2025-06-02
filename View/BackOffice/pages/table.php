@@ -1,17 +1,3 @@
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <?php
 session_start();
 require_once('../../FrontOffice/session_check.php');
@@ -21,16 +7,16 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Include the Commande class
-require_once '../commande.php'; 
+require_once '../commande.php';
 
 // Database connection settings
 $host = "localhost";
@@ -39,100 +25,100 @@ $username = "root";
 $password = "";
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+  die("Database connection failed: " . $e->getMessage());
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'];
+  $action = $_POST['action'];
 
-    if ($action === 'create') {
-        // Retrieve form data
-        $nom_produit = $_POST['Nom_Produit'] ?? null;
-        $quantite_commande = $_POST['Qte'] ?? null;
-        $adresse_client = $_POST['Adresse_client'] ?? null;
-        $tel_client = $_POST['Tel_client'] ?? null;
-        $nom_client = $_POST['Nom_client'] ?? null;
-        $prenom_client = $_POST['Prenom_client'] ?? null;
+  if ($action === 'create') {
+    // Retrieve form data
+    $nom_produit = $_POST['Nom_Produit'] ?? null;
+    $quantite_commande = $_POST['Qte'] ?? null;
+    $adresse_client = $_POST['Adresse_client'] ?? null;
+    $tel_client = $_POST['Tel_client'] ?? null;
+    $nom_client = $_POST['Nom_client'] ?? null;
+    $prenom_client = $_POST['Prenom_client'] ?? null;
 
-        // Validate inputs
-        if (!$nom_produit || !$quantite_commande || $quantite_commande <= 0 || !$adresse_client || !$tel_client || !$nom_client || !$prenom_client) {
-            die("<p style='color: red;'>Invalid input data. Ensure all fields are filled correctly.</p>");
-        }
-
-        try {
-            // Begin a transaction
-            $pdo->beginTransaction();
-
-            // Check product availability
-            $check_sql = "SELECT Id_produit, Qte FROM produit WHERE Nom_Produit = :nom_produit";
-            $stmt = $pdo->prepare($check_sql);
-            $stmt->execute(['nom_produit' => $nom_produit]);
-            $produit = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$produit) {
-                throw new Exception("Product not found.");
-            }
-
-            if ($produit['Qte'] < $quantite_commande) {
-                throw new Exception("Insufficient stock.");
-            }
-
-            // Insert into the panier_items table to create a new panier
-            $panier_sql = "INSERT INTO panier_items (total_cost) VALUES (0)";
-            $stmt = $pdo->prepare($panier_sql);
-            $stmt->execute();
-            $id_panier = $pdo->lastInsertId(); // Get the newly created panier ID
-
-            // Insert into the commande table
-            $commande_sql = "INSERT INTO commande (Adresse_client, Tel_client, Nom_client, Prenom_client, id_panier) 
-                            VALUES (:adresse_client, :tel_client, :nom_client, :prenom_client, :id_panier)";
-            $stmt = $pdo->prepare($commande_sql);
-            $stmt->execute([
-                'adresse_client' => $adresse_client,
-                'tel_client' => $tel_client,
-                'nom_client' => $nom_client,
-                'prenom_client' => $prenom_client,
-                'id_panier' => $id_panier // Use the newly created panier ID
-            ]);
-            $id_commande = $pdo->lastInsertId(); // Get the newly created commande ID
-
-            // Update product quantity
-            $update_sql = "UPDATE produit SET Qte = Qte - :quantite WHERE Id_produit = :id_produit";
-            $stmt = $pdo->prepare($update_sql);
-            $stmt->execute([
-                'quantite' => $quantite_commande,
-                'id_produit' => $produit['Id_produit']
-            ]);
-
-            // Insert into ligne_commande table
-            $ligne_commande_sql = "INSERT INTO ligne_commande (Id_Commande, id_panier, Quantite) 
-                                VALUES (:id_commande, :id_panier, :quantite)";
-            $stmt = $pdo->prepare($ligne_commande_sql);
-            $stmt->execute([
-                'id_commande' => $id_commande,
-                'id_panier' => $id_panier, // Use the newly created panier ID
-                'quantite' => $quantite_commande
-            ]);
-
-            // Commit the transaction
-            $pdo->commit();
-
-            // Redirect to avoid form re-submission (PRG Pattern)
-            header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&commande_id=" . $id_commande);
-            exit; // Ensure no further code is executed after the redirect
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $pdo->rollBack();
-            echo "<p style='color: red;'>Error: " . $e->getMessage() . "</p>";
-        }
+    // Validate inputs
+    if (!$nom_produit || !$quantite_commande || $quantite_commande <= 0 || !$adresse_client || !$tel_client || !$nom_client || !$prenom_client) {
+      die("<p style='color: red;'>Invalid input data. Ensure all fields are filled correctly.</p>");
     }
+
+    try {
+      // Begin a transaction
+      $pdo->beginTransaction();
+
+      // Check product availability
+      $check_sql = "SELECT Id_produit, Qte FROM produit WHERE Nom_Produit = :nom_produit";
+      $stmt = $pdo->prepare($check_sql);
+      $stmt->execute(['nom_produit' => $nom_produit]);
+      $produit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$produit) {
+        throw new Exception("Product not found.");
+      }
+
+      if ($produit['Qte'] < $quantite_commande) {
+        throw new Exception("Insufficient stock.");
+      }
+
+      // Insert into the panier_items table to create a new panier
+      $panier_sql = "INSERT INTO panier_items (total_cost) VALUES (0)";
+      $stmt = $pdo->prepare($panier_sql);
+      $stmt->execute();
+      $id_panier = $pdo->lastInsertId(); // Get the newly created panier ID
+
+      // Insert into the commande table
+      $commande_sql = "INSERT INTO commande (Adresse_client, Tel_client, Nom_client, Prenom_client, id_panier) 
+                            VALUES (:adresse_client, :tel_client, :nom_client, :prenom_client, :id_panier)";
+      $stmt = $pdo->prepare($commande_sql);
+      $stmt->execute([
+        'adresse_client' => $adresse_client,
+        'tel_client' => $tel_client,
+        'nom_client' => $nom_client,
+        'prenom_client' => $prenom_client,
+        'id_panier' => $id_panier // Use the newly created panier ID
+      ]);
+      $id_commande = $pdo->lastInsertId(); // Get the newly created commande ID
+
+      // Update product quantity
+      $update_sql = "UPDATE produit SET Qte = Qte - :quantite WHERE Id_produit = :id_produit";
+      $stmt = $pdo->prepare($update_sql);
+      $stmt->execute([
+        'quantite' => $quantite_commande,
+        'id_produit' => $produit['Id_produit']
+      ]);
+
+      // Insert into ligne_commande table
+      $ligne_commande_sql = "INSERT INTO ligne_commande (Id_Commande, id_panier, Quantite) 
+                                VALUES (:id_commande, :id_panier, :quantite)";
+      $stmt = $pdo->prepare($ligne_commande_sql);
+      $stmt->execute([
+        'id_commande' => $id_commande,
+        'id_panier' => $id_panier, // Use the newly created panier ID
+        'quantite' => $quantite_commande
+      ]);
+
+      // Commit the transaction
+      $pdo->commit();
+
+      // Redirect to avoid form re-submission (PRG Pattern)
+      header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&commande_id=" . $id_commande);
+      exit; // Ensure no further code is executed after the redirect
+    } catch (Exception $e) {
+      // Rollback transaction on error
+      $pdo->rollBack();
+      echo "<p style='color: red;'>Error: " . $e->getMessage() . "</p>";
+    }
+  }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['success'] == 1) {
-    echo "<p style='color: green;'>Commande placed successfully! Commande ID: " . htmlspecialchars($_GET['commande_id']) . "</p>";
+  echo "<p style='color: green;'>Commande placed successfully! Commande ID: " . htmlspecialchars($_GET['commande_id']) . "</p>";
 }
 ?>
 <!DOCTYPE html>
@@ -160,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -178,10 +164,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="table.php">
@@ -233,243 +219,255 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['success']) && $_GET['su
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management</title>
-    <style>
+    <html lang="en">
+
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Order Management</title>
+      <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+          font-family: Arial, sans-serif;
+          margin: 20px;
         }
+
         form {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+          margin-bottom: 20px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
         }
-        form input, form button {
-            margin: 5px 0;
-            padding: 8px;
-            width: 100%;
+
+        form input,
+        form button {
+          margin: 5px 0;
+          padding: 8px;
+          width: 100%;
         }
+
         button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
         }
+
         button:hover {
-            background-color: #0056b3;
+          background-color: #0056b3;
         }
+
         #ordersList div {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+          margin-bottom: 10px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
         }
-    </style>
-</head>
-<body>
-    <h1>Order Management System</h1>
+      </style>
+    </head>
 
-    <!-- Form to create a new order -->
-    <div id="createOrderForm">
-    <form method="POST" action="table.php" onsubmit="return validateOrderForm()">
-        <input type="hidden" name="action" value="create">
+    <body>
+      <h1>Order Management System</h1>
 
-        <label for="Nom_Produit">Product Name:</label><br>
-        <span id="productNameError" style="color: red;"></span>
-        <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter Product Name"><br><br>
+      <!-- Form to create a new order -->
+      <div id="createOrderForm">
+        <form method="POST" action="table.php" onsubmit="return validateOrderForm()">
+          <input type="hidden" name="action" value="create">
 
-        <label for="Qte">Quantity:</label><br>
-        <span id="quantityError" style="color: red;"></span>
-        <input type="number" id="Qte" name="Qte" placeholder="Enter Quantity"><br><br>
+          <label for="Nom_Produit">Product Name:</label><br>
+          <span id="productNameError" style="color: red;"></span>
+          <input type="text" id="Nom_Produit" name="Nom_Produit" placeholder="Enter Product Name"><br><br>
 
-        <label for="Adresse_client">Client Address:</label><br>
-        <span id="clientAddressError" style="color: red;"></span>
-        <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter Client Address"><br><br>
+          <label for="Qte">Quantity:</label><br>
+          <span id="quantityError" style="color: red;"></span>
+          <input type="number" id="Qte" name="Qte" placeholder="Enter Quantity"><br><br>
 
-        <label for="Tel_client">Client Phone:</label><br>
-        <span id="clientPhoneError" style="color: red;"></span>
-        <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter Client Phone"><br><br>
+          <label for="Adresse_client">Client Address:</label><br>
+          <span id="clientAddressError" style="color: red;"></span>
+          <input type="text" id="Adresse_client" name="Adresse_client" placeholder="Enter Client Address"><br><br>
 
-        <label for="Nom_client">Client Last Name:</label><br>
-        <span id="clientLastNameError" style="color: red;"></span>
-        <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter Client Last Name"><br><br>
+          <label for="Tel_client">Client Phone:</label><br>
+          <span id="clientPhoneError" style="color: red;"></span>
+          <input type="text" id="Tel_client" name="Tel_client" placeholder="Enter Client Phone"><br><br>
 
-        <label for="Prenom_client">Client First Name:</label><br>
-        <span id="clientFirstNameError" style="color: red;"></span>
-        <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter Client First Name"><br><br>
+          <label for="Nom_client">Client Last Name:</label><br>
+          <span id="clientLastNameError" style="color: red;"></span>
+          <input type="text" id="Nom_client" name="Nom_client" placeholder="Enter Client Last Name"><br><br>
 
-        <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Place Commande</button>
-    </form>
-</div>
+          <label for="Prenom_client">Client First Name:</label><br>
+          <span id="clientFirstNameError" style="color: red;"></span>
+          <input type="text" id="Prenom_client" name="Prenom_client" placeholder="Enter Client First Name"><br><br>
 
-<script>
-    function validateOrderForm() {
-        var isValid = true;
+          <button type="submit" class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white">Place Commande</button>
+        </form>
+      </div>
 
-        var productName = document.getElementById('Nom_Produit').value;
-        var quantity = document.getElementById('Qte').value;
-        var clientAddress = document.getElementById('Adresse_client').value;
-        var clientPhone = document.getElementById('Tel_client').value;
-        var clientLastName = document.getElementById('Nom_client').value;
-        var clientFirstName = document.getElementById('Prenom_client').value;
+      <script>
+        function validateOrderForm() {
+          var isValid = true;
 
-        // Clear previous error messages
-        document.getElementById('productNameError').innerText = '';
-        document.getElementById('quantityError').innerText = '';
-        document.getElementById('clientAddressError').innerText = '';
-        document.getElementById('clientPhoneError').innerText = '';
-        document.getElementById('clientLastNameError').innerText = '';
-        document.getElementById('clientFirstNameError').innerText = '';
+          var productName = document.getElementById('Nom_Produit').value;
+          var quantity = document.getElementById('Qte').value;
+          var clientAddress = document.getElementById('Adresse_client').value;
+          var clientPhone = document.getElementById('Tel_client').value;
+          var clientLastName = document.getElementById('Nom_client').value;
+          var clientFirstName = document.getElementById('Prenom_client').value;
 
-        // Validate Product Name
-        if (productName === '') {
+          // Clear previous error messages
+          document.getElementById('productNameError').innerText = '';
+          document.getElementById('quantityError').innerText = '';
+          document.getElementById('clientAddressError').innerText = '';
+          document.getElementById('clientPhoneError').innerText = '';
+          document.getElementById('clientLastNameError').innerText = '';
+          document.getElementById('clientFirstNameError').innerText = '';
+
+          // Validate Product Name
+          if (productName === '') {
             document.getElementById('productNameError').innerText = 'Product Name is required.';
             isValid = false;
-        }
+          }
 
-        // Validate Quantity
-        if (quantity === '') {
+          // Validate Quantity
+          if (quantity === '') {
             document.getElementById('quantityError').innerText = 'Quantity is required.';
             isValid = false;
-        }
+          }
 
-        // Validate Client Address
-        if (clientAddress === '') {
+          // Validate Client Address
+          if (clientAddress === '') {
             document.getElementById('clientAddressError').innerText = 'Client Address is required.';
             isValid = false;
-        }
+          }
 
-        // Validate Client Phone
-        if (clientPhone === '') {
+          // Validate Client Phone
+          if (clientPhone === '') {
             document.getElementById('clientPhoneError').innerText = 'Client Phone is required.';
             isValid = false;
-        }
+          }
 
-        // Validate Client Last Name
-        if (clientLastName === '') {
+          // Validate Client Last Name
+          if (clientLastName === '') {
             document.getElementById('clientLastNameError').innerText = 'Client Last Name is required.';
             isValid = false;
-        }
+          }
 
-        // Validate Client First Name
-        if (clientFirstName === '') {
+          // Validate Client First Name
+          if (clientFirstName === '') {
             document.getElementById('clientFirstNameError').innerText = 'Client First Name is required.';
             isValid = false;
+          }
+
+          return isValid;
         }
-
-        return isValid;
-    }
-</script>
+      </script>
 
 
-    <div id="ordersList"></div>
+      <div id="ordersList"></div>
 
-    <script>
+      <script>
         document.getElementById('createOrderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'create');
-            fetch('table.php', {
-                method: 'POST',
-                body: formData
+          event.preventDefault();
+          const formData = new FormData(this);
+          formData.append('action', 'create');
+
+          fetch('table.php', {
+              method: 'POST',
+              body: formData
             })
-            .then(cursor-pointer => response.text())
+            .then(response => response.text())
             .then(data => {
-                alert(data);
-                fetchOrders();
+              alert(data);
+              fetchOrders();
             })
             .catch(error => console.error('Error creating order:', error));
         });
 
         function fetchOrders() {
-            fetch('table.php')
-                .then(response => response.json())
-                .then(data => {
-                    const ordersList = document.getElementById('ordersList');
-                    ordersList.innerHTML = ''; // Clear previous results
-                    data.forEach(order => {
-                        const orderDiv = document.createElement('div');
-                        orderDiv.innerHTML = `
-                            <p><strong>Order ID:</strong> ${order.Id_commande}</p>
-                            <p><strong>Client Address:</strong> ${order.Adresse_client}</p>
-                            <p><strong>Client Phone:</strong> ${order.Tel_client}</p>
-                            <p><strong>Client Name:</strong> ${order.Nom_client} ${order.Prenom_client}</p>
-                        `;
-                        ordersList.appendChild(orderDiv);
-                    });
-                })
-                .catch(error => console.error('Error fetching orders:', error));
-        }
-    </[_{{{CITATION{{{_1{](https://github.com/arimariojesus/Snake-Game/tree/32328aecc81cfb2fcdda136513902273740aeed7/app%2Fconnect.php)[_{{{CITATION{{{_2{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)[_{{{CITATION{{{_3{](https://github.com/muhammadfahrul/php-orm/tree/3de930cac5a0da72b06f477a04ef9465479d46e2/App%2FViews%2Forder%2Findex.php)>
-      </script>
+          fetch('table.php')
+            .then(response => response.json())
+            .then(data => {
+              const ordersList = document.getElementById('ordersList');
+              ordersList.innerHTML = ''; // Clear previous results
 
-<div id="ordersList"></div>
-</body>
-</html>
+              data.forEach(order => {
+                const orderDiv = document.createElement('div');
+                orderDiv.innerHTML = `
+            <p><strong>Order ID:</strong> ${order.Id_commande}</p>
+            <p><strong>Client Address:</strong> ${order.Adresse_client}</p>
+            <p><strong>Client Phone:</strong> ${order.Tel_client}</p>
+            <p><strong>Client Name:</strong> ${order.Nom_client} ${order.Prenom_client}</p>
+          `;
+                ordersList.appendChild(orderDiv);
+              });
+            })
+            .catch(error => console.error('Error fetching orders:', error));
+        }
+
+        // Optionally call this once to load initial orders on page load
+        window.addEventListener('DOMContentLoaded', fetchOrders);
+      </script>
+      <div id="ordersList"></div>
+    </body>
+
+    </html>

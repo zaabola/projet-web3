@@ -7,10 +7,10 @@ verifierSession();
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
 // Vérification de l'ID
-if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-    // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-    header("Location: ../../FrontOffice/logout.php");
-    exit();
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
 }
 include_once '../../../Controller/theme.php';
 
@@ -22,36 +22,37 @@ $offer = null;
 $offerController = new ThemeController();
 
 if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES["image"])) {
-    if (!empty($_POST["titre"]) && !empty($_POST["description"]) && !empty($_FILES["image"]["name"])) {
-        
-        // Vérification de l'extension de l'image
-        $imageName = $_FILES["image"]["name"];
-        $imageExtension = pathinfo($imageName, PATHINFO_EXTENSION);
-        $allowedExtensions = ["jpg", "jpeg", "png", "gif"];
-        
-        // Vérifie si l'extension du fichier est valide
-        if (!in_array(strtolower($imageExtension), $allowedExtensions)) {
-            $imageError = "Le fichier doit être une image avec une extension valide (jpg, jpeg, png, gif).";
-        } else {
-            // Si l'extension est valide, poursuivre la mise à jour du thème
-            $disponible = isset($_POST['disponible']) ? true : false;
-            $offer = new theme(
-                null,
-                $_POST['titre'],
-                $_POST['description'],
-                $_FILES['image']['name'] // Nom du fichier image
-            );
-            $offerController->updateTheme($offer, $_GET['id']);
-            header('Location:bib.php');
-            exit;
-        }
+  if (!empty($_POST["titre"]) && !empty($_POST["description"]) && !empty($_FILES["image"]["name"])) {
+
+    // Vérification de l'extension de l'image
+    $imageName = $_FILES["image"]["name"];
+    $imageExtension = pathinfo($imageName, PATHINFO_EXTENSION);
+    $allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+
+    // Vérifie si l'extension du fichier est valide
+    if (!in_array(strtolower($imageExtension), $allowedExtensions)) {
+      $imageError = "Le fichier doit être une image avec une extension valide (jpg, jpeg, png, gif).";
     } else {
-        $error = "Il manque des informations.";
+      // Si l'extension est valide, poursuivre la mise à jour du thème
+      $disponible = isset($_POST['disponible']) ? true : false;
+      $offer = new theme(
+        null,
+        $_POST['titre'],
+        $_POST['description'],
+        $_FILES['image']['name'] // Nom du fichier image
+      );
+      $offerController->updateTheme($offer, $_GET['id']);
+      header('Location:bib.php');
+      exit;
     }
+  } else {
+    $error = "Il manque des informations.";
+  }
 }
 ?>
 
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -103,108 +104,108 @@ if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES["ima
     </div>
 
     <ul class="navbar-nav">
-    <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/dashboard.php">
-            <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
-                </li>
       <li class="nav-item">
-          <a class="nav-link text-dark" href="table.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Orders</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="deletecommande.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="updatecommande.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="fetchcommande.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/reclamation.php">
-            <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/produit.php">
-            <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Products</span>
-          </a>
-        </li>
+        <a class="nav-link text-dark" href="../pages/dashboard.php">
+          <i class="material-symbols-rounded opacity-5">dashboard</i>
+          <span class="nav-link-text ms-1">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+          <i class="material-symbols-rounded opacity-5">dashboard</i>
+          <span class="nav-link-text ms-1">ReservationDashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="table.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">Orders</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="deletecommande.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">DeleteOrder</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="updatecommande.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">UpdateOrder</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="fetchcommande.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">fetchOrders</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/reclamation.php">
+          <i class="material-symbols-rounded opacity-5">receipt_long</i>
+          <span class="nav-link-text ms-1">Complaints</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/produit.php">
+          <i class="material-symbols-rounded opacity-5">dashboard</i>
+          <span class="nav-link-text ms-1">Products</span>
+        </a>
+      </li>
 
-        <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link active bg-gradient-dark text-white" href="bib.php">
-            <i class="material-symbols-rounded opacity-5"></i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/reservation_tables.php">
-            <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/edit_reservation.php">
+          <i class="material-symbols-rounded opacity-5"></i>
+          <span class="nav-link-text ms-1">Gestion theme</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/reservation_tables.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modifdes reservations</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/ajoutbus.php">
+          <span class="nav-link-text ms-1">Reservation</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/edit_reservation.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/bus_tables.php">
+          <span class="nav-link-text ms-1">Modifdes reservations</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/ajoutbus.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="../pages/edit_bus.php">
+          <span class="nav-link-text ms-1">Ajouter un bus</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/bus_tables.php">
           <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
-          </a>
-        </li>
-        </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
-        
-        
-        
-      </ul>
+          <span class="nav-link-text ms-1">Bus</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="../pages/edit_bus.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">Modification des bus</span>
+        </a>
+      </li>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="test.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">credit</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="tables.php">
+          <i class="material-symbols-rounded opacity-5">table_view</i>
+          <span class="nav-link-text ms-1">volontaires</span>
+        </a>
+      </li>
+
+
+
+    </ul>
 
   </aside>
 
@@ -221,28 +222,28 @@ if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES["ima
                 <div class="row no-gutters align-items-center">
                   <?php
                   if (isset($_GET['id'])) {
-                      $offer = $offerController->getThemeById($_GET['id']);
+                    $offer = $offerController->getThemeById($_GET['id']);
                   ?>
-                  <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-                    <div class="mb-3">
-                      <label for="titre">Titre</label>
-                      <input type="text" name="titre" id="titre" class="form-control" value="<?php echo $offer['titre']; ?>">
-                    </div>
-                    <div class="mb-3">
-                      <label for="description">Description</label>
-                      <input type="text" name="description" id="description" class="form-control" value="<?php echo $offer['description']; ?>">
-                    </div>
-                    <div class="mb-3">
-                      <label for="image">Image</label>
-                      <input type="file" name="image" id="image" class="form-control" value="<?php echo $offer['image']; ?>">
-                      <?php
-                      if ($imageError) {
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                      <div class="mb-3">
+                        <label for="titre">Titre</label>
+                        <input type="text" name="titre" id="titre" class="form-control" value="<?php echo $offer['titre']; ?>">
+                      </div>
+                      <div class="mb-3">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" id="description" class="form-control" value="<?php echo $offer['description']; ?>">
+                      </div>
+                      <div class="mb-3">
+                        <label for="image">Image</label>
+                        <input type="file" name="image" id="image" class="form-control" value="<?php echo $offer['image']; ?>">
+                        <?php
+                        if ($imageError) {
                           echo "<p style='color:red;'>$imageError</p>";
-                      }
-                      ?>
-                    </div>
-                    <button type="submit" name="add-donation" class="btn btn-primary">Edit</button>
-                  </form>
+                        }
+                        ?>
+                      </div>
+                      <button type="submit" name="add-donation" class="btn btn-primary">Edit</button>
+                    </form>
                   <?php
                   }
                   ?>
@@ -270,4 +271,5 @@ if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES["ima
   </script>
   <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
 </body>
+
 </html>

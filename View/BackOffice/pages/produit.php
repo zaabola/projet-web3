@@ -1,64 +1,64 @@
 <?php
-   session_start();
-   require_once('../../FrontOffice/session_check.php');
-   verifierSession();
-   
-   // Débogage des variables de session
-   error_log("Contenu de la session : " . print_r($_SESSION, true));
-   
-   // Vérification de l'ID
-   if (!isset($_SESSION['id']) || $_SESSION['type']=='user') {
-       // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
-       header("Location: ../../FrontOffice/logout.php");
-       exit();
-   }
-    // Database connection settings
-    $host = "localhost";
-    $dbname = "emprunt";
-    $username = "root";
-    $password = "";
+session_start();
+require_once('../../FrontOffice/session_check.php');
+verifierSession();
 
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
-    }
+// Débogage des variables de session
+error_log("Contenu de la session : " . print_r($_SESSION, true));
 
-    // Fetch all products for the dropdown
-    $products = [];
+// Vérification de l'ID
+if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
+  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  header("Location: ../../FrontOffice/logout.php");
+  exit();
+}
+// Database connection settings
+$host = "localhost";
+$dbname = "emprunt";
+$username = "root";
+$password = "";
+
+try {
+  $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+  die("Database connection failed: " . $e->getMessage());
+}
+
+// Fetch all products for the dropdown
+$products = [];
+try {
+  $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
+  $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+  echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+}
+
+// Check if the form was submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $nom_produit = $_POST['Nom_Produit'] ?? null;
+  $new_quantity = $_POST['Qte'] ?? null;
+
+  // Validate inputs
+  if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
+    echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
+  } else {
     try {
-        $stmt = $pdo->query("SELECT id_produit, Nom_Produit, Qte FROM produit");
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      // Update product quantity
+      $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
+      $stmt = $pdo->prepare($update_sql);
+      $stmt->execute([
+        'new_quantity' => $new_quantity,
+        'nom_produit' => $nom_produit
+      ]);
+
+      echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
     } catch (Exception $e) {
-        echo "<p style='color: red;'>Error fetching products: " . $e->getMessage() . "</p>";
+      echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
     }
-
-    // Check if the form was submitted
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nom_produit = $_POST['Nom_Produit'] ?? null;
-        $new_quantity = $_POST['Qte'] ?? null;
-
-        // Validate inputs
-        if (!$nom_produit || $new_quantity === null || $new_quantity < 0) {
-            echo "<p style='color: red;'>Invalid input. Please provide a valid product name and quantity.</p>";
-        } else {
-            try {
-                // Update product quantity
-                $update_sql = "UPDATE produit SET Qte = :new_quantity WHERE Nom_Produit = :nom_produit";
-                $stmt = $pdo->prepare($update_sql);
-                $stmt->execute([
-                    'new_quantity' => $new_quantity,
-                    'nom_produit' => $nom_produit
-                ]);
-
-                echo "<p style='color: green;'>Quantity updated successfully for product: " . htmlspecialchars($nom_produit) . "</p>";
-            } catch (Exception $e) {
-                echo "<p style='color: red;'>Error updating product: " . $e->getMessage() . "</p>";
-            }
-        }
-    }
-    ?>
+  }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -103,10 +103,10 @@
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
-                    <i class="material-symbols-rounded opacity-5">dashboard</i>
-                        <span class="nav-link-text ms-1">ReservationDashboard</span>
-                    </a>
+          <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">ReservationDashboard</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="table.php">
@@ -158,127 +158,136 @@
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modif des reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Ajouter un bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
-          <i class="material-symbols-rounded opacity-5">table_view</i>
+            <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Modification des bus</span>
           </a>
         </li>
         <li class="nav-item">
-                    <a class="nav-link text-dark" href="liste.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Liste</span>
-                    </a>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="admin.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Management</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="jointure.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">Tableaux</span>
-                    </a>
-                    </li>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="test.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">credit</span>
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="tables.php">
-                        <i class="material-symbols-rounded opacity-5">table_view</i>
-                        <span class="nav-link-text ms-1">volontaires</span>
-                    </a>
-                    </li>
+          <a class="nav-link text-dark" href="liste.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Liste</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="admin.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="jointure.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Tableaux</span>
+          </a>
+        </li>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="test.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">credit</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="tables.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">volontaires</span>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-      
+
     </div>
   </aside>
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Update Product Quantity</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        form input, form button {
-            margin: 5px 0;
-            padding: 8px;
-            width: 100%;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #ordersList div {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Update Product Quantity</h1>
-    
-   
+    <html lang="en">
 
-    <!-- Form to update product quantity -->
-    <form method="POST" action="">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Admin - Update Product Quantity</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+        }
+
+        form {
+          margin-bottom: 20px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+        }
+
+        form input,
+        form button {
+          margin: 5px 0;
+          padding: 8px;
+          width: 100%;
+        }
+
+        button {
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+        }
+
+        button:hover {
+          background-color: #0056b3;
+        }
+
+        #ordersList div {
+          margin-bottom: 10px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+      </style>
+    </head>
+
+    <body>
+      <h1>Update Product Quantity</h1>
+
+
+
+      <!-- Form to update product quantity -->
+      <form method="POST" action="">
         <label for="Nom_Produit">Select Product:</label><br>
         <select id="Nom_Produit" name="Nom_Produit" required>
-            <option value="" disabled selected>-- Select a Product --</option>
-            <?php foreach ($products as $product): ?>
-                <option value="<?php echo htmlspecialchars($product['Nom_Produit']); ?>">
-                    <?php echo htmlspecialchars($product['Nom_Produit']) . " (Current Quantity: " . $product['Qte'] . ")"; ?>
-                </option>
-            <?php endforeach; ?>
+          <option value="" disabled selected>-- Select a Product --</option>
+          <?php foreach ($products as $product): ?>
+            <option value="<?php echo htmlspecialchars($product['Nom_Produit']); ?>">
+              <?php echo htmlspecialchars($product['Nom_Produit']) . " (Current Quantity: " . $product['Qte'] . ")"; ?>
+            </option>
+          <?php endforeach; ?>
         </select><br><br>
 
         <label for="Qte">New Quantity:</label><br>
         <input type="number" id="Qte" name="Qte" placeholder="Enter new quantity" required><br><br>
 
         <button type="submit" class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white">Update Quantity</button>
-    </form>
-</body>
-</html>
+      </form>
+    </body>
+
+    </html>
