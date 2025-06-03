@@ -263,23 +263,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <a class="nav-link" href="index2.php">Guides</a>
             </li>
             <li>
-              <a href="#section_69" class="nav-link click-scroll">Shop</a>
+              <a class="nav-link click-scroll" href="#section_69">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll inactive" href="#section_3">Bibliothèque</a>
+              <a class="nav-link click-scroll inactive" href="#section_3">Library</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="panier.php">Panier</a>
+              <a class="nav-link" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="#section_5">Reclamation</a>
+              <a class="nav-link click-scroll" href="#section_5">Complaint</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="donation.php">Donate</a>
+              <a class="nav-link" href="donation.php">Donate</a>
             </li>
           </ul>
           <div class="ms-lg-3">
-            <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
     </nav>
 
@@ -604,33 +604,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       });
     </script>
 
-    <section class="contact-section section-padding" id="section_5">
+    <section class="contact-section section-padding section-bg" id="section_5">
       <div class="container">
         <div class="row">
 
-
+          <div class="col-lg-12 col-12">
+            <h2 class="text-white mb-4 pb-lg-2">Contact</h2>
+          </div>
 
           <div class="col-lg-6 col-12">
-            <form class="custom-form booking-form" method="post" role="form" onsubmit="return verifyInputs()">
-              <div class="text-center mb-4 pb-lg-2">
+            <form action="#" method="post" class="custom-form contact-form" role="form">
 
+              <div class="row">
 
-                <h2 class="text-white">Reclamation</h2>
-                <em class="text-white">if you want to make a complaint contact us at 99888777</em>
-                <br>
-                <em class="text-white">or you can visit our shop</em>
+                <div class="col-lg-6 col-12">
+                  <label for="name" class="form-label">Nom <sup class="text-danger">*</sup></label>
+
+                  <input type="text" name="name" id="name" class="form-control" placeholder="Jackson">
+                </div>
+
+                <div class="col-lg-6 col-12">
+                  <label for="email" class="form-label">Email</label>
+
+                  <input type="text" name="email" id="email" class="form-control" placeholder="Jack@gmail.com">
+                </div>
+
+                <div class="col-12">
+                  <label for="message" class="form-label">Comment s'est passé ton excursion</label>
+
+                  <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message"></textarea>
+
+                </div>
               </div>
 
+              <div class="col-lg-5 col-12 mx-auto mt-3">
+                <button type="submit" class="form-control">Envoyer votre avis</button>
+              </div>
+            </form>
           </div>
-          <div class="col-lg-6 col-12 mx-auto mt-5 mt-lg-0 ps-lg-5">
-            <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5039.668141741662!2d72.81814769288509!3d19.043340656729775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c994f34a7355%3A0x2680d63a6f7e33c2!2sLover%20Point!5e1!3m2!1sen!2sth!4v1692722771770!5m2!1sen!2sth" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </div>
+
         </div>
-
       </div>
-
-
-
     </section>
 
 

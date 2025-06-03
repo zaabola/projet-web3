@@ -200,15 +200,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="image-section"></div>
     <div class="form-section">
       <h1>Réinitialisation du mot de passe</h1>
-      <p>Fournissez l'adresse e-mail associée à votre compte pour récupérer votre mot de passe.</p>
+      <p>Please provide the email address associated with your account to recover your password</p>
       <form name="resetForm" action="" method="post" onsubmit="return validateForm()">
         <input type="email" name="email" placeholder="Email">
-        <div id="error-message" class="error-message">Entrez votre email.</div>
+        <div id="error-message" class="error-message">Your email ?</div>
         <div class="g-recaptcha" data-sitekey="6LdgqZgqAAAAAJocQDFvnG2Fr_xFewU2MnJ37Eks"></div>
-        <button type="submit" class="btn">Réinitialiser le mot de passe</button>
+        <button type="submit" class="btn">Reset Password</button>
       </form>
       <div class="links">
-        <a href="login.php">page d'acceuil</a>
+        <a href="login.php">login</a>
       </div>
     </div>
   </div>

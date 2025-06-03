@@ -69,7 +69,7 @@ $guides = $PortfolioC->read();
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-lg-auto">
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index1.php">Home</a>
+              <a class="nav-link" href="index1.php">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="index.php">Reservation</a>
@@ -81,20 +81,20 @@ $guides = $PortfolioC->read();
               <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll inactive" href="index1.php#section_3">Bibliothèque</a>
+              <a class="nav-link click-scroll" href="index1.php#section_3">Library</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="panier.php">Panier</a>
+              <a class="nav-link" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index1.php#section_5">Reclamation</a>
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="donation.php">Donate</a>
+              <a class="nav-link" href="donation.php">Donate</a>
             </li>
           </ul>
           <div class="ms-lg-3">
-            <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
     </nav>
 
@@ -169,7 +169,7 @@ $guides = $PortfolioC->read();
       </div>
     </section>
 
-    <section class="contact-section section-padding" id="section_5">
+    <section class="contact-section section-padding section-bg" id="section_5">
       <div class="container">
         <div class="row">
 
@@ -183,28 +183,33 @@ $guides = $PortfolioC->read();
               <div class="row">
 
                 <div class="col-lg-6 col-12">
-                  <label for="nom" class="form-label">Nom <sup class="text-danger">*</sup></label>
-                  <input type="text" name="nom" id="nom" class="form-control" placeholder=" ferchichi">
+                  <label for="nom" class="form-label">Last Name <sup class="text-danger">*</sup></label>
+                  <input type="text" name="nom" id="nom" class="form-control" placeholder="ferchichi">
                   <span id="nomr"></span>
                 </div>
 
                 <div class="col-lg-6 col-12">
-                  <label for="Prenom" class="form-label">Prenom</label>
+                  <label for="Prenom" class="form-label">First Name</label>
                   <input type="text" name="prenom" id="prenom" class="form-control" placeholder="mariem">
                   <span id="prenomr"></span>
                 </div>
+
                 <hr>
+
                 <div class="col-12">
-                  <label for="message" class="form-label">experience&motivation</label>
+                  <label for="message" class="form-label">Experience & Motivation</label>
                   <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message"></textarea>
                   <span id="expr"></span>
                 </div>
+
                 <div class="col-lg-6 col-12">
-                  <label for="numero" class="form-label">Numero tel <sup class="text-danger">*</sup></label>
+                  <label for="numero" class="form-label">Phone Number <sup class="text-danger">*</sup></label>
                   <input type="text" name="numero" id="numero" class="form-control" placeholder="+216*******">
                   <span id="numeror"></span>
                 </div>
+
                 <hr>
+
                 <div class="col-lg-6 col-12">
                   <label for="email" class="form-label">Email Address</label>
                   <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Mariem@gmail.com">
@@ -216,8 +221,8 @@ $guides = $PortfolioC->read();
               <div class="col-lg-5 col-12 mx-auto mt-3">
                 <button type="submit" class="form-control">Send Form</button>
               </div>
-
             </form>
+
             <script>
               let myform = document.getElementById('formr');
               myform.addEventListener('submit', function(e) {

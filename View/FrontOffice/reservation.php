@@ -130,7 +130,7 @@ if (isset($_SESSION['error'])) {
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index1.php">
-          <img src="images/logo.png" class="navbar-brand-image img-fluid" alt="Logo">
+          <img src="./images/logo.png" class="navbar-brand-image img-fluid">
           بصمة
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,18 +138,34 @@ if (isset($_SESSION['error'])) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-lg-auto">
-            <li class="nav-item"><a class="nav-link" href="index1.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php#section_1">About us</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php#section_2">Excursion</a></li>
-            <li><a href="index1.php#section_69" class="nav-link click-scroll">Shop</a></li>
-            <li><a href="index1.php#section_3" class="nav-link click-scroll">Bibliothèque</a></li>
-            <li class="nav-item"><a class="nav-link click-scroll" href="index2.php">Volontairiat</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php#section_3">Reviews</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php#section_4">Contact</a></li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="index1.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">Reservation</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index2.php">Guides</a>
+            </li>
+            <li>
+              <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll inactive" href="index1.php#section_3">Library</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="panier.php">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="donation.php">Donate</a>
+            </li>
           </ul>
-        </div>
-        <a class="btn custom-btn custom-border-btn" href="index.php">Go Back<i class="bi-arrow-up-right ms-2"></i></a>
-      </div>
+          <div class="ms-lg-3">
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
+          </div>
     </nav>
 
     <!-- Reservation Form -->

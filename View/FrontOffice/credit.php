@@ -113,155 +113,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="icon" href="logo.png">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: url('/images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-    }
+      background: url('./images/vue_mosqué_tunis-1-scaled.jpg');
 
-    .form-container-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      /* Space between the form and image */
-    }
+      .card-input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-    .form-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 400px;
-    }
+      .card-input-group input {
+        flex: 1;
+      }
 
-    .form-container h2 {
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: #333;
-      text-align: center;
-    }
+      .card-logo {
+        height: 48px;
+        /* Increase size */
+        width: auto;
+      }
 
-    .form-container p {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #666;
-    }
+      @media (max-width: 576px) {
+        .card-input-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
 
-    .form-row {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    input,
-    select,
-    button {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .error-message {
-      color: red;
-      font-size: 12px;
-      margin-top: -10px;
-      margin-bottom: 10px;
-    }
-
-    .card-number-container {
-      position: relative;
-      margin-bottom: 15px;
-    }
-
-    .card-number-container input {
-      padding-right: 50px;
-      /* Leave space for the logo */
-    }
-
-    .card-logo {
-      width: 40px;
-      height: auto;
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: top 0.2s ease-in-out;
-      /* Smooth adjustment */
-    }
-
-    .card-number-container .error-message {
-      position: absolute;
-      top: 100%;
-      /* Place the error message below the input field */
-      left: 0;
-      color: red;
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    .form-container-wrapper {
-      display: flex;
-      align-items: stretch;
-      /* Ensures the form and image have the same height */
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .form-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      /* Ensures the form content is spaced out */
-    }
-
-    .image-container {
-      flex-shrink: 0;
-      height: 100%;
-      /* Ensures the image fills the height of its container */
-    }
-
-    .side-image {
-      width: 550px;
-      height: 100%;
-      /* Set to 100% height to match the form container */
-      object-fit: cover;
-      /* Ensures the image fits proportionally within the container */
-      border-radius: 5px;
+        .card-logo {
+          align-self: flex-end;
+          margin-top: 5px;
+        }
+      }
     }
   </style>
 </head>
@@ -271,312 +151,332 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index1.php">
-          <img src="../FrontOffice/images/logo.png" class="navbar-brand-image img-fluid">
+          <img src="./images/logo.png" class="navbar-brand-image img-fluid">
           بصمة
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-lg-auto">
             <li class="nav-item">
               <a class="nav-link click-scroll" href="index1.php">Home</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">Reservation</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index2.php">Guides</a>
+            </li>
             <li>
-              <a href="index1.php#section_69" class="nav-link click-scroll">Shop</a>
-            </li>
-            <li>
-              <a href="index1.php#section_3" class="nav-link click-scroll">Bibliothèque</a>
+              <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index2.php">Volontairiat</a>
+              <a class="nav-link click-scroll inactive" href="index1.php#section_3">Library</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="reservation.php">Reservation</a>
+              <a class="nav-link click-scroll" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="donation.php">donation</a>
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="donation.php">Donate</a>
             </li>
           </ul>
-        </div>
-      </div>
-      </div>
-      </div>
+          <div class="ms-lg-3">
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
+          </div>
     </nav>
 
     <section>
-      <div class="form-container-wrapper">
-        <!-- Form Container -->
+      <div class="container">
         <div class="form-container">
-          <h2>Make a Donation</h2>
-          <p>Your contribution will make a big difference.</p>
-          <form method="POST" action="">
-            <div class="form-row">
-              <input type="text" name="firstName" placeholder="First Name" value="<?php echo htmlspecialchars($_POST['firstName'] ?? ''); ?>">
-              <span class="error-message"><?php echo $errors["firstName"] ?? ""; ?></span>
-              <input type="text" name="lastName" placeholder="Last Name" value="<?php echo htmlspecialchars($_POST['lastName'] ?? ''); ?>">
-              <span class="error-message"><?php echo $errors["lastName"] ?? ""; ?></span>
-            </div>
-            <div class="form-row card-number-container">
-              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 1234 1234 1234"
-                value="<?php echo htmlspecialchars($_POST['cardNumber'] ?? ''); ?>" oninput="updateCardLogo(); updateCardLogoPosition();">
-              <img id="cardLogo" src=" ../FrontOffice/images/other.jpeg" alt="Card Logo" class="card-logo">
-              <span class="error-message"><?php echo $errors["cardNumber"] ?? ""; ?></span>
-            </div>
+          <div class="col-lg-10 col-12 mx-auto">
+            <div class="booking-form-wrap">
+              <form class="custom-form booking-form" method="POST" action="">
+                <div class="text-center mb-4 pb-lg-2">
+                  <em class="text-white">Fill in the card information to complete your donation</em>
+                  <h2 class="text-white">Payment</h2>
+                  <?php if (!empty($successMessage)): ?>
+                    <p class="text-success"><?= htmlspecialchars($successMessage); ?></p>
+                  <?php elseif (!empty($errors)): ?>
+                    <p class="text-danger">Please correct the errors below.</p>
+                  <?php endif; ?>
+                </div>
 
-            <div class="form-row">
-              <select name="expirationMonth">
-                <option value="">Month</option>
-                <?php for ($i = 1; $i <= 12; $i++): ?>
-                  <option value="<?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>" <?php echo ($_POST['expirationMonth'] ?? '') === str_pad($i, 2, "0", STR_PAD_LEFT) ? "selected" : ""; ?>>
-                    <?php echo str_pad($i, 2, "0", STR_PAD_LEFT); ?>
-                  </option>
-                <?php endfor; ?>
-              </select>
-              <select name="expirationYear">
-                <option value="">Year</option>
-                <?php for ($i = date("Y"); $i <= date("Y") + 20; $i++): ?>
-                  <option value="<?php echo $i; ?>" <?php echo ($_POST['expirationYear'] ?? '') == $i ? "selected" : ""; ?>>
-                    <?php echo $i; ?>
-                  </option>
-                <?php endfor; ?>
-              </select>
-              <span class="error-message"><?php echo $errors["expiration"] ?? ""; ?></span>
-            </div>
-            <div class="form-row">
-              <input type="text" name="cvc" placeholder="CVC" value="<?php echo htmlspecialchars($_POST['cvc'] ?? ''); ?>">
-              <span class="error-message"><?php echo $errors["cvc"] ?? ""; ?></span>
-            </div>
-            <div class="form-row">
-              <select name="country">
-                <option value="">Select Country</option>
-                <?php
-                $countries = [
-                  "Afghanistan",
-                  "Albania",
-                  "Algeria",
-                  "Andorra",
-                  "Angola",
-                  "Antigua and Barbuda",
-                  "Argentina",
-                  "Armenia",
-                  "Australia",
-                  "Austria",
-                  "Azerbaijan",
-                  "Bahamas",
-                  "Bahrain",
-                  "Bangladesh",
-                  "Barbados",
-                  "Belarus",
-                  "Belgium",
-                  "Belize",
-                  "Benin",
-                  "Bhutan",
-                  "Bolivia",
-                  "Bosnia and Herzegovina",
-                  "Botswana",
-                  "Brazil",
-                  "Brunei",
-                  "Bulgaria",
-                  "Burkina Faso",
-                  "Burundi",
-                  "Cabo Verde",
-                  "Cambodia",
-                  "Cameroon",
-                  "Canada",
-                  "Central African Republic",
-                  "Chad",
-                  "Chile",
-                  "China",
-                  "Colombia",
-                  "Comoros",
-                  "Congo (Congo-Brazzaville)",
-                  "Costa Rica",
-                  "Croatia",
-                  "Cuba",
-                  "Cyprus",
-                  "Czechia (Czech Republic)",
-                  "Denmark",
-                  "Djibouti",
-                  "Dominica",
-                  "Dominican Republic",
-                  "Ecuador",
-                  "Egypt",
-                  "El Salvador",
-                  "Equatorial Guinea",
-                  "Eritrea",
-                  "Estonia",
-                  "Eswatini",
-                  "Ethiopia",
-                  "Fiji",
-                  "Finland",
-                  "France",
-                  "Gabon",
-                  "Gambia",
-                  "Georgia",
-                  "Germany",
-                  "Ghana",
-                  "Greece",
-                  "Grenada",
-                  "Guatemala",
-                  "Guinea",
-                  "Guinea-Bissau",
-                  "Guyana",
-                  "Haiti",
-                  "Holy See",
-                  "Honduras",
-                  "Hungary",
-                  "Iceland",
-                  "India",
-                  "Indonesia",
-                  "Iran",
-                  "Iraq",
-                  "Ireland",
-                  "Italy",
-                  "Jamaica",
-                  "Japan",
-                  "Jordan",
-                  "Kazakhstan",
-                  "Kenya",
-                  "Kiribati",
-                  "Korea (North)",
-                  "Korea (South)",
-                  "Kosovo",
-                  "Kuwait",
-                  "Kyrgyzstan",
-                  "Laos",
-                  "Latvia",
-                  "Lebanon",
-                  "Lesotho",
-                  "Liberia",
-                  "Libya",
-                  "Liechtenstein",
-                  "Lithuania",
-                  "Luxembourg",
-                  "Madagascar",
-                  "Malawi",
-                  "Malaysia",
-                  "Maldives",
-                  "Mali",
-                  "Malta",
-                  "Marshall Islands",
-                  "Mauritania",
-                  "Mauritius",
-                  "Mexico",
-                  "Micronesia",
-                  "Moldova",
-                  "Monaco",
-                  "Mongolia",
-                  "Montenegro",
-                  "Morocco",
-                  "Mozambique",
-                  "Myanmar (Burma)",
-                  "Namibia",
-                  "Nauru",
-                  "Nepal",
-                  "Netherlands",
-                  "New Zealand",
-                  "Nicaragua",
-                  "Niger",
-                  "Nigeria",
-                  "North Macedonia",
-                  "Norway",
-                  "Oman",
-                  "Pakistan",
-                  "Palau",
-                  "Palestine State",
-                  "Panama",
-                  "Papua New Guinea",
-                  "Paraguay",
-                  "Peru",
-                  "Philippines",
-                  "Poland",
-                  "Portugal",
-                  "Qatar",
-                  "Romania",
-                  "Russia",
-                  "Rwanda",
-                  "Saint Kitts and Nevis",
-                  "Saint Lucia",
-                  "Saint Vincent and the Grenadines",
-                  "Samoa",
-                  "San Marino",
-                  "Sao Tome and Principe",
-                  "Saudi Arabia",
-                  "Senegal",
-                  "Serbia",
-                  "Seychelles",
-                  "Sierra Leone",
-                  "Singapore",
-                  "Slovakia",
-                  "Slovenia",
-                  "Solomon Islands",
-                  "Somalia",
-                  "South Africa",
-                  "South Sudan",
-                  "Spain",
-                  "Sri Lanka",
-                  "Sudan",
-                  "Suriname",
-                  "Sweden",
-                  "Switzerland",
-                  "Syria",
-                  "Taiwan",
-                  "Tajikistan",
-                  "Tanzania",
-                  "Thailand",
-                  "Timor-Leste",
-                  "Togo",
-                  "Tonga",
-                  "Trinidad and Tobago",
-                  "Tunisia",
-                  "Turkey",
-                  "Turkmenistan",
-                  "Tuvalu",
-                  "Uganda",
-                  "Ukraine",
-                  "United Arab Emirates",
-                  "United Kingdom",
-                  "United States of America",
-                  "Uruguay",
-                  "Uzbekistan",
-                  "Vanuatu",
-                  "Vatican City",
-                  "Venezuela",
-                  "Vietnam",
-                  "Yemen",
-                  "Zambia",
-                  "Zimbabwe"
-                ];
+                <div class="booking-form-body">
+                  <div class="row">
+                    <div class="col-md-6 col-12 mb-3">
+                      <input type="text" name="firstName" class="form-control" placeholder="First Name" value="<?= htmlspecialchars($_POST['firstName'] ?? '') ?>">
+                      <span class="text-danger small"><?= $errors["firstName"] ?? "" ?></span>
+                    </div>
+                    <div class="col-md-6 col-12 mb-3">
+                      <input type="text" name="lastName" class="form-control" placeholder="Last Name" value="<?= htmlspecialchars($_POST['lastName'] ?? '') ?>">
+                      <span class="text-danger small"><?= $errors["lastName"] ?? "" ?></span>
+                    </div>
 
-                foreach ($countries as $countryOption) {
-                  $selected = (isset($_POST["country"]) && $_POST["country"] === $countryOption) ? "selected" : "";
-                  echo "<option value=\"$countryOption\" $selected>$countryOption</option>";
-                }
-                ?>
-              </select>
-              <span class="error-message"><?php echo $errors["country"] ?? ""; ?></span>
-            </div>
-            <!-- Read-only donation amount field -->
-            <div class="form-row">
-              <input type="text" name="donationAmount" class="readonly-input" value="<?php echo htmlspecialchars($_POST['amount'] ?? ''); ?>" readonly>
-              <span class="error-message"><?php echo $errors["amount"] ?? ""; ?></span>
-            </div>
-            <button type="submit">Donate Now</button>
-          </form>
-          <?php if ($successMessage): ?>
-            <div class="success-message"><?php echo $successMessage; ?></div>
-          <?php endif; ?>
-        </div>
+                    <div class="col-12 mb-3">
+                      <div class="card-input-group">
+                        <input type="text" id="cardNumber" name="cardNumber" class="form-control" placeholder="Card Number"
+                          value="<?= htmlspecialchars($_POST['cardNumber'] ?? '') ?>"
+                          oninput="updateCardLogo();">
+                        <img id="cardLogo" src="../FrontOffice/images/other.jpeg" alt="Card Logo" class="card-logo">
+                      </div>
+                      <span class="text-danger small"><?= $errors["cardNumber"] ?? "" ?></span>
+                    </div>
 
-        <!-- Image Container -->
-        <div class="image-container">
-          <img src="images/don.webp" alt="Image Description" class="side-image">
+                    <div class="col-md-6 col-12 mb-3">
+                      <select name="expirationMonth" class="form-control">
+                        <option value="">Month</option>
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                          <option value="<?= str_pad($i, 2, "0", STR_PAD_LEFT) ?>" <?= ($_POST['expirationMonth'] ?? '') === str_pad($i, 2, "0", STR_PAD_LEFT) ? "selected" : "" ?>>
+                            <?= str_pad($i, 2, "0", STR_PAD_LEFT) ?>
+                          </option>
+                        <?php endfor; ?>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 col-12 mb-3">
+                      <select name="expirationYear" class="form-control">
+                        <option value="">Year</option>
+                        <?php for ($i = date("Y"); $i <= date("Y") + 20; $i++): ?>
+                          <option value="<?= $i ?>" <?= ($_POST['expirationYear'] ?? '') == $i ? "selected" : "" ?>>
+                            <?= $i ?>
+                          </option>
+                        <?php endfor; ?>
+                      </select>
+                      <span class="text-danger small"><?= $errors["expiration"] ?? "" ?></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                      <input type="text" name="cvc" class="form-control" placeholder="CVC" value="<?= htmlspecialchars($_POST['cvc'] ?? '') ?>">
+                      <span class="text-danger small"><?= $errors["cvc"] ?? "" ?></span>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                      <select name="country" class="form-control">
+                        <option value="">Select your country</option>
+                        <?php
+                        $countries = [
+                          "Afghanistan",
+                          "Albania",
+                          "Algeria",
+                          "Andorra",
+                          "Angola",
+                          "Antigua and Barbuda",
+                          "Argentina",
+                          "Armenia",
+                          "Australia",
+                          "Austria",
+                          "Azerbaijan",
+                          "Bahamas",
+                          "Bahrain",
+                          "Bangladesh",
+                          "Barbados",
+                          "Belarus",
+                          "Belgium",
+                          "Belize",
+                          "Benin",
+                          "Bhutan",
+                          "Bolivia",
+                          "Bosnia and Herzegovina",
+                          "Botswana",
+                          "Brazil",
+                          "Brunei",
+                          "Bulgaria",
+                          "Burkina Faso",
+                          "Burundi",
+                          "Cabo Verde",
+                          "Cambodia",
+                          "Cameroon",
+                          "Canada",
+                          "Central African Republic",
+                          "Chad",
+                          "Chile",
+                          "China",
+                          "Colombia",
+                          "Comoros",
+                          "Congo (Brazzaville)",
+                          "Congo (Kinshasa)",
+                          "Costa Rica",
+                          "Croatia",
+                          "Cuba",
+                          "Cyprus",
+                          "Czech Republic",
+                          "Denmark",
+                          "Djibouti",
+                          "Dominica",
+                          "Dominican Republic",
+                          "Ecuador",
+                          "Egypt",
+                          "El Salvador",
+                          "Equatorial Guinea",
+                          "Eritrea",
+                          "Estonia",
+                          "Eswatini",
+                          "Ethiopia",
+                          "Fiji",
+                          "Finland",
+                          "France",
+                          "Gabon",
+                          "Gambia",
+                          "Georgia",
+                          "Germany",
+                          "Ghana",
+                          "Greece",
+                          "Grenada",
+                          "Guatemala",
+                          "Guinea",
+                          "Guinea-Bissau",
+                          "Guyana",
+                          "Haiti",
+                          "Honduras",
+                          "Hungary",
+                          "Iceland",
+                          "India",
+                          "Indonesia",
+                          "Iran",
+                          "Iraq",
+                          "Ireland",
+                          "Israel",
+                          "Italy",
+                          "Jamaica",
+                          "Japan",
+                          "Jordan",
+                          "Kazakhstan",
+                          "Kenya",
+                          "Kiribati",
+                          "Kuwait",
+                          "Kyrgyzstan",
+                          "Laos",
+                          "Latvia",
+                          "Lebanon",
+                          "Lesotho",
+                          "Liberia",
+                          "Libya",
+                          "Liechtenstein",
+                          "Lithuania",
+                          "Luxembourg",
+                          "Madagascar",
+                          "Malawi",
+                          "Malaysia",
+                          "Maldives",
+                          "Mali",
+                          "Malta",
+                          "Marshall Islands",
+                          "Mauritania",
+                          "Mauritius",
+                          "Mexico",
+                          "Micronesia",
+                          "Moldova",
+                          "Monaco",
+                          "Mongolia",
+                          "Montenegro",
+                          "Morocco",
+                          "Mozambique",
+                          "Myanmar",
+                          "Namibia",
+                          "Nauru",
+                          "Nepal",
+                          "Netherlands",
+                          "New Zealand",
+                          "Nicaragua",
+                          "Niger",
+                          "Nigeria",
+                          "North Korea",
+                          "North Macedonia",
+                          "Norway",
+                          "Oman",
+                          "Pakistan",
+                          "Palau",
+                          "Palestine",
+                          "Panama",
+                          "Papua New Guinea",
+                          "Paraguay",
+                          "Peru",
+                          "Philippines",
+                          "Poland",
+                          "Portugal",
+                          "Qatar",
+                          "Romania",
+                          "Russia",
+                          "Rwanda",
+                          "Saint Kitts and Nevis",
+                          "Saint Lucia",
+                          "Saint Vincent and the Grenadines",
+                          "Samoa",
+                          "San Marino",
+                          "Sao Tome and Principe",
+                          "Saudi Arabia",
+                          "Senegal",
+                          "Serbia",
+                          "Seychelles",
+                          "Sierra Leone",
+                          "Singapore",
+                          "Slovakia",
+                          "Slovenia",
+                          "Solomon Islands",
+                          "Somalia",
+                          "South Africa",
+                          "South Korea",
+                          "South Sudan",
+                          "Spain",
+                          "Sri Lanka",
+                          "Sudan",
+                          "Suriname",
+                          "Sweden",
+                          "Switzerland",
+                          "Syria",
+                          "Taiwan",
+                          "Tajikistan",
+                          "Tanzania",
+                          "Thailand",
+                          "Timor-Leste",
+                          "Togo",
+                          "Tonga",
+                          "Trinidad and Tobago",
+                          "Tunisia",
+                          "Turkey",
+                          "Turkmenistan",
+                          "Tuvalu",
+                          "Uganda",
+                          "Ukraine",
+                          "United Arab Emirates",
+                          "United Kingdom",
+                          "United States",
+                          "Uruguay",
+                          "Uzbekistan",
+                          "Vanuatu",
+                          "Vatican City",
+                          "Venezuela",
+                          "Vietnam",
+                          "Yemen",
+                          "Zambia",
+                          "Zimbabwe"
+                        ];
+                        foreach ($countries as $countryOption) {
+                          $selected = ($_POST["country"] ?? "") === $countryOption ? "selected" : "";
+                          echo "<option value=\"$countryOption\" $selected>$countryOption</option>";
+                        }
+                        ?>
+                      </select>
+                      <span class="text-danger small"><?= $errors["country"] ?? "" ?></span>
+                    </div>
+
+                    <div class="col-12 text-center mt-4">
+                      <button type="submit" class="form-control btn btn-primary">Donate Now</button>
+                    </div>
+
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
   </main>
   <script>
     function updateCardLogo() {
@@ -586,16 +486,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       var defaultLogo = 'other.jpeg';
 
       if (cardNumber === '') {
-        cardLogo.src = '/view/FrontOffice/images/' + defaultLogo;
+        cardLogo.src = '../FrontOffice/images/' + defaultLogo;
         return;
       }
 
       var logo = getCardLogo(cardNumber);
 
       if (logo) {
-        cardLogo.src = '/view/FrontOffice/images/' + logo;
+        cardLogo.src = '../FrontOffice/images/' + logo;
       } else {
-        cardLogo.src = '/view/FrontOffice/images/' + defaultLogo;
+        cardLogo.src = '../FrontOffice/images/' + defaultLogo;
       }
     }
 
@@ -612,21 +512,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       return null;
     }
-
-    function updateCardLogoPosition() {
-      const cardNumberInput = document.querySelector('#cardNumber');
-      const cardLogo = document.querySelector('#cardLogo');
-      const errorMessage = cardNumberInput.nextElementSibling; // Assuming the error message is the next element
-
-      if (errorMessage && errorMessage.textContent.trim() !== "") {
-        cardLogo.style.top = '30%'; // Move up if the error is shown
-      } else {
-        cardLogo.style.top = '50%'; // Reset to center if no error
-      }
-    }
-
-    document.querySelector('#cardNumber').addEventListener('input', updateCardLogo);
-    document.querySelector('#cardNumber').addEventListener('input', updateCardLogoPosition);
   </script>
 </body>
 

@@ -89,7 +89,7 @@ Bootstrap 5 HTML CSS Template
               <a class="nav-link click-scroll" href="#section_9">Kairouan</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="#section_10">Ain drahem et tbarka</a>
+              <a class="nav-link click-scroll" href="#section_10">Ain drahem and tbarka</a>
             </li>
           </ul>
 
@@ -109,12 +109,12 @@ Bootstrap 5 HTML CSS Template
         <div class="row align-items-center">
 
           <div class="col-lg-6 col-12 mx-auto">
-            <em class="small-text">Bienvenue A</em>
+            <em class="small-text">Welcome to</em>
 
             <h1>بصمة</h1>
 
             <p class="text-white mb-4 pb-lg-2">
-              votre site <em>favorie</em>
+              your favorite <em>website</em>
             </p>
           </div>
 
@@ -132,16 +132,16 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Tozeur</h4>
+                <h4 class="text-white">Tozeur Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Déambulez dans les ruelles de la vieille ville. Admirez l’architecture traditionnelle en briques de sable et visitez les boutiques artisanales</h6>
+                  <h6>Wander through the alleys of the old town. Admire the traditional sand brick architecture and visit artisanal shops.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -152,13 +152,13 @@ Bootstrap 5 HTML CSS Template
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Visite Musée Dar Cheraït et Marché local pour découvrir les dattes Deglet Nour.
-                    après excursion en 4x4 vers l’Oasis de Chebika
+                    Visit the Dar Cheraït Museum and local market to discover Deglet Nour dates.
+                    Afterwards, a 4x4 excursion to the Chebika Oasis.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 2h</strong>
+                  <strong class="ms-2">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -168,11 +168,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Dejeuner : Couscous, tajine, ou brick à l'œuf, accompagné de dattes fraîches.</h6>
+                  <h6>Lunch: Couscous, tajine, or egg brick, served with fresh dates.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -182,11 +182,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Exploration du site de Ong Jmel : Découvrez cet étrange rocher en forme de cou de chameau, célèbre pour avoir servi de décor au tournage de films comme Star Wars et Le Patient anglais</h6>
+                  <h6>Exploration of the Ong Jmel site: Discover this strange rock shaped like a camel’s neck, famous as a filming location for movies like Star Wars and The English Patient.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -196,7 +196,7 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 270 DT</h6>
+                  <h6>Price per person: 270 DT</h6>
 
                   <span class="underline"></span>
                 </div>
@@ -208,15 +208,15 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 17/11/2024</h6>
+                  <h6>Date: 11/17/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 6h</strong>
+                  <strong class="ms-auto">Departure time: 6am</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>ATTENTION: We do not accept delays of more than 10 minutes.</small>
                 </div>
               </div>
             </div>
@@ -241,16 +241,16 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Djerba</h4>
+                <h4 class="text-white">Djerba Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Promenade dans la capitale de l'île pour découvrir son ambiance typique et ses souks animés.</h6>
+                  <h6>Stroll through the island’s capital to experience its typical atmosphere and lively souks.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -261,12 +261,12 @@ Bootstrap 5 HTML CSS Template
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Visitez l'une des plus anciennes synagogues au monde, située dans le village juif de Hara Sghira
+                    Visit one of the oldest synagogues in the world, located in the Jewish village of Hara Sghira.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h</strong>
+                  <strong class="ms-2">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -276,11 +276,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Dejeuner : Plat de poissons ou de fruits de mer, spécialités locales comme la "mloukhia" ou le couscous.</h6>
+                  <h6>Lunch: Fish or seafood dish, with local specialties like "mloukhia" or couscous.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -290,11 +290,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Visitez les ateliers traditionnels de poterie et découvrez le processus de fabrication. Explorez le Musée de Guellala, qui offre une vue panoramique et des expositions sur les coutumes djerbiennes.</h6>
+                  <h6>Visit traditional pottery workshops and discover the making process. Explore the Guellala Museum, which offers a panoramic view and exhibits on Djerbian customs.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -304,7 +304,7 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 300 DT</h6>
+                  <h6>Price per person: 300 DT</h6>
 
                   <span class="underline"></span>
                 </div>
@@ -316,15 +316,15 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 20/11/2024</h6>
+                  <h6>Date: 11/20/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 6h</strong>
+                  <strong class="ms-auto">Departure time: 6am</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>ATTENTION: We do not accept delays of more than 10 minutes.</small>
                 </div>
               </div>
             </div>
@@ -349,16 +349,16 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Jem</h4>
+                <h4 class="text-white">Jem Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Explorez cet impressionnant amphithéâtre, inscrit au patrimoine mondial de l’UNESCO. Construit au 3ᵉ siècle, il pouvait accueillir jusqu'à 35 000 spectateurs. Promenez-vous dans les gradins, les couloirs et les sous-sols où se préparaient les gladiateurs.</h6>
+                  <h6>Explore this impressive amphitheater, a UNESCO World Heritage Site. Built in the 3rd century, it could accommodate up to 35,000 spectators. Walk through the stands, corridors, and underground areas where the gladiators prepared.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -369,12 +369,12 @@ Bootstrap 5 HTML CSS Template
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Visitez ce musée abritant des mosaïques romaines magnifiquement préservées, ainsi que des vestiges de villas romaines.
+                    Visit this museum housing beautifully preserved Roman mosaics and remnants of Roman villas.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h30</strong>
+                  <strong class="ms-2">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -384,11 +384,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Dejeuner : Dégustez des spécialités tunisiennes comme le couscous, la ojja ou un plat à base de poissons locaux.</h6>
+                  <h6>Lunch: Enjoy Tunisian specialties such as couscous, ojja, or a dish made with local fish.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -398,11 +398,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Visitez les ateliers de tissage ou de poterie pour découvrir l’artisanat local,après vous allez Profitez d’une promenade tranquille et apprenez-en plus sur la production d’huile d’olive traditionnelle.</h6>
+                  <h6>Visit weaving or pottery workshops to discover local crafts. Afterwards, enjoy a peaceful walk and learn more about traditional olive oil production.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -412,7 +412,7 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 150 DT</h6>
+                  <h6>Price per person: 150 DT</h6>
 
                   <span class="underline"></span>
                 </div>
@@ -424,15 +424,15 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 25/11/2024</h6>
+                  <h6>Date: 11/25/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9am</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>ATTENTION: We do not accept delays of more than 10 minutes.</small>
                 </div>
               </div>
             </div>
@@ -457,16 +457,16 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Sidi bou said</h4>
+                <h4 class="text-white">Sidi Bou Said Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Commencez par explorer le village à pied. Promenez-vous dans ses petites ruelles sinueuses, bordées de maisons blanchies à la chaux avec des volets et des portes bleus. Chaque coin de rue offre une vue magnifique sur la mer et un cadre idyllique pour prendre des photos.</h6>
+                  <h6>Start by exploring the village on foot. Stroll through its narrow, winding streets lined with whitewashed houses with blue shutters and doors. Every street corner offers a magnificent sea view and an idyllic setting for photos.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -477,12 +477,12 @@ Bootstrap 5 HTML CSS Template
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Visite de la Maison d'Artisanat : Un excellent endroit pour découvrir l'artisanat local. Vous pouvez y acheter des souvenirs typiques, comme des poteries, des bijoux, des tapis et des objets en cuivre.
+                    Visit to the Handicraft House: A great place to discover local crafts. You can buy typical souvenirs such as pottery, jewelry, carpets, and copper items.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h</strong>
+                  <strong class="ms-2">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -493,19 +493,18 @@ Bootstrap 5 HTML CSS Template
               <div class="menu-block">
                 <div class="d-flex">
                   <ul>
-                    <h6>Pour le dejeuner vous avez le choix entre :</h6>
+                    <h6>For lunch, you can choose between:</h6>
                     <li>
-                      <h6> Le Café des Délices : pour un déjeuner avec vue.</h6>
+                      <h6>Le Café des Délices: for a lunch with a view.</h6>
                     </li>
                     <li>
-                      <h6> Dar Zarrouk : un restaurant traditionnel avec une terrasse agréable et des plats locaux.</h6>
+                      <h6>Dar Zarrouk: a traditional restaurant with a pleasant terrace and local dishes.</h6>
                     </li>
                   </ul>
 
-
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -515,11 +514,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Visite de la Grande Mosquée de Sidi Bou Saïd cette mosquée, bien que relativement simple, est un lieu paisible et d'une grande importance pour la communauté locale</h6>
+                  <h6>Visit the Great Mosque of Sidi Bou Saïd. This mosque, though relatively simple, is a peaceful place of great importance to the local community.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -529,7 +528,7 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 120 DT</h6>
+                  <h6>Price per person: 120 DT</h6>
 
                   <span class="underline"></span>
                 </div>
@@ -541,15 +540,15 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 30/11/2024</h6>
+                  <h6>Date: 11/30/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9am</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>ATTENTION: We do not accept delays of more than 10 minutes.</small>
                 </div>
               </div>
             </div>
@@ -574,16 +573,16 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Carthage</h4>
+                <h4 class="text-white">Carthage Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Visite du Musée national de Carthage : Ce musée, situé sur la colline de Byrsa, offre une excellente introduction à l’histoire de Carthage, avec des collections de sculptures, de mosaïques et d'objets antiques. Il vous permettra de mieux comprendre la grandeur de la civilisation carthaginoise, avant de commencer votre visite des ruines.</h6>
+                  <h6>Visit to the National Museum of Carthage: Located on Byrsa Hill, this museum offers an excellent introduction to Carthage’s history, with collections of sculptures, mosaics, and ancient artifacts. It helps you better understand the grandeur of the Carthaginian civilization before beginning your tour of the ruins.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -593,13 +592,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>
-                    Visite des Ruines de Byrsa : Après le musée, vous pouvez explorer les ruines de Byrsa, l’acropole de Carthage, qui abrite des vestiges impressionnants, notamment une grande maison romaine et des vestiges de temples punique et romain
-                  </h6>
+                  <h6>Visit to the Byrsa Ruins: After the museum, explore the ruins of Byrsa, the acropolis of Carthage, which features impressive remains including a large Roman house and remnants of Punic and Roman temples.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h</strong>
+                  <strong class="ms-2">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -609,12 +606,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-
-                  <h6>Visite du Théâtre de Carthage a proximité de Byrsa se trouve le théâtre romain de Carthage, un magnifique site datant du 2e siècle après J.-C. Ce théâtre pouvait accueillir jusqu’à 5000 spectateurs.</h6>
+                  <h6>Visit to the Carthage Theater: Near Byrsa is the Roman theater of Carthage, a magnificent site dating from the 2nd century AD. This theater could hold up to 5,000 spectators.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 30min</strong>
+                  <strong class="ms-auto">Duration: 30min</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -624,11 +620,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Dejeuner : avourer des plats traditionnels tunisiens tels que le couscous ou le brik.</h6>
+                  <h6>Lunch: Enjoy traditional Tunisian dishes such as couscous or brik.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -638,11 +634,11 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Promenade dans le quartier résidentiel moderne de Carthage : Après une journée bien remplie, vous pouvez terminer votre excursion par une petite promenade dans les quartiers modernes de Carthage.</h6>
+                  <h6>Walk through the modern residential district of Carthage: After a full day, end your excursion with a relaxing stroll through the modern neighborhoods of Carthage.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
@@ -652,7 +648,7 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 150 DT</h6>
+                  <h6>Price per person: 150 DT</h6>
 
                   <span class="underline"></span>
                 </div>
@@ -664,15 +660,15 @@ Bootstrap 5 HTML CSS Template
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 28/11/2024</h6>
+                  <h6>Date: 11/28/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9am</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>ATTENTION: Delays over 10 minutes will not be accepted.</small>
                 </div>
               </div>
             </div>
@@ -681,15 +677,12 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
                 <img src="images/carthage.jpg" class="tozeur-image">
               </div>
             </div>
-
           </div>
         </div>
     </section>
-
     <!--info tunis-->
     <section class="menu-section section-padding" id="section_6">
       <div class="container">
@@ -698,106 +691,100 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Tunis</h4>
+                <h4 class="text-white">Tunis Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Visite de la Médina de Tunis: La médina de Tunis est un labyrinthe de ruelles étroites, de marchés (souks), de mosquées et de monuments historiques. Promenez-vous dans les ruelles animées pour découvrir des artisans locaux et l’architecture islamique.</h6>
+                  <h6>Visit of the Medina of Tunis: The medina is a maze of narrow alleys, markets (souks), mosques, and historical monuments. Wander through the lively streets to discover local artisans and Islamic architecture.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Visite Le Musée du Bardo : À quelques minutes de la médina, le Musée du Bardo est l’un des plus beaux musées d’Afrique. Il abrite une vaste collection de mosaïques romaines, d'artefacts antiques et de pièces historiques, notamment liées à l'ancienne Carthage. C'est un site incontournable pour comprendre l'histoire de la Tunisie
+                    Visit the Bardo Museum: Just a few minutes from the medina, the Bardo Museum is one of the most beautiful museums in Africa. It houses a vast collection of Roman mosaics, ancient artifacts, and historical pieces, especially related to ancient Carthage. A must-see to understand the history of Tunisia.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h30</strong>
+                  <strong class="ms-2">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
                   <ul>
-                    <h6>A Tunis, vous pouvez déguster une variété de plats traditionnels. Quelques suggestions de plats typiques</h6>
+                    <h6>In Tunis, you can enjoy a variety of traditional dishes. Here are some typical suggestions:</h6>
                     <li>
-                      <h6> Le couscous : généralement servi avec de l'agneau, du poulet, ou du poisson, accompagné de légumes et d'une sauce épicée.</h6>
+                      <h6>Couscous: usually served with lamb, chicken, or fish, accompanied by vegetables and a spicy sauce.</h6>
                     </li>
                     <li>
-                      <h6>Le mechoui : un agneau rôti à la broche, délicatement épicé et souvent servi avec du pain maison.</h6>
+                      <h6>Mechoui: spit-roasted lamb, delicately spiced and often served with homemade bread.</h6>
                     </li>
                     <li>
-                      <h6>Le fricassé : un sandwich frit traditionnel, garni de thon, d’œufs durs, de pommes de terre et de harissa</h6>
+                      <h6>Fricassé: a traditional fried sandwich filled with tuna, hard-boiled eggs, potatoes, and harissa.</h6>
                     </li>
                   </ul>
 
-
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Visite de la Cathédrale Saint-Vincent-de-Paul : Si vous êtes intéressé par l’architecture religieuse, faites une halte à la Cathédrale Saint-Vincent-de-Paul, un bel exemple de l’architecture néo-gothique construite sous le protectorat français. Elle se situe sur l'avenue Bourguiba, dans le quartier du centre-ville</h6>
+                  <h6>Visit to Saint Vincent de Paul Cathedral: If you're interested in religious architecture, stop by this cathedral—a fine example of neo-Gothic style built under the French protectorate. It’s located on Bourguiba Avenue in the city center.</h6>
 
                   <span class="underline"></span>
 
                   <h6>
-                    Apres vous pouvez faire une promenade sur l'Avenue Habib Bourguiba qui est la rue la plus animée de Tunis, bordée de magasins, de cafés, et de bâtiments coloniaux.
+                    Afterwards, you can take a walk on Avenue Habib Bourguiba, the liveliest street in Tunis, lined with shops, cafes, and colonial buildings.
                   </h6>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 150 DT</h6>
+                  <h6>Price per person: 150 DT</h6>
 
                   <span class="underline"></span>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 2/12/2024</h6>
+                  <h6>Date: 12/2/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9 a.m.</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>WARNING: We do not accept lateness of more than 10 minutes</small>
                 </div>
               </div>
             </div>
@@ -806,11 +793,9 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
                 <img src="images/tunis.jpg" class="tozeur-image">
               </div>
             </div>
-
           </div>
         </div>
     </section>
@@ -823,19 +808,18 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Douz</h4>
+                <h4 class="text-white">Douz Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Visite du marché de Douz : Découvrez le marché local animé, où vous trouverez des produits artisanaux, des dattes Deglet Nour et des vêtements traditionnels comme la jebba.</h6>
+                  <h6>Visit to the Douz market: Discover the lively local market, where you’ll find handicrafts, Deglet Nour dates, and traditional clothing like the jebba.</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
@@ -844,74 +828,69 @@ Bootstrap 5 HTML CSS Template
 
                   <ul>
                     <li>
-                      <h6>Balade à dos de dromadaire dans le désert : Montez à dos de dromadaire et partez pour une traversée des dunes dorées. Profitez du silence et de l'immensité du désert.</h6>
+                      <h6>Camel ride in the desert: Climb onto a camel and journey across golden dunes. Enjoy the silence and vastness of the desert.</h6>
                     </li>
                     <li>
-                      <h6>Option alternative : Randonnée en quad ou en buggy pour les amateurs de sensations fortes.</h6>
+                      <h6>Alternative option: Quad or buggy ride for thrill-seekers.</h6>
                     </li>
                   </ul>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 2h</strong>
+                  <strong class="ms-2">Duration: 2h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-
-                  <h6>Méchoui (agneau grillé), pain cuit dans le sable, accompagné de thé à la menthe et de dattes fraîches.</h6>
+                  <h6>Mechoui (grilled lamb), bread baked in the sand, served with mint tea and fresh dates.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Découvrez cette oasis pittoresque située à quelques kilomètres de Douz. Promenade parmi les palmiers dattiers et possibilité de rencontrer les habitants qui vivent encore selon les traditions bédouines</h6>
+                  <h6>Discover this picturesque oasis located a few kilometers from Douz. Stroll among the date palms and meet locals who still live according to Bedouin traditions.</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 200 DT</h6>
+                  <h6>Price per person: 200 DT</h6>
 
                   <span class="underline"></span>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 6/12/2024</h6>
+                  <h6>Date: 12/6/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 7h</strong>
+                  <strong class="ms-auto">Departure time: 7 a.m.</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>WARNING: We do not accept lateness of more than 10 minutes</small>
                 </div>
               </div>
             </div>
@@ -920,11 +899,9 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
                 <img src="images/Douz.jpg" class="tozeur-image">
               </div>
             </div>
-
           </div>
         </div>
     </section>
@@ -937,94 +914,89 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Dougga</h4>
+                <h4 class="text-white">Dougga Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
                   <ul>
-                    <h6>Visite guidée du site archéologique : Explorez les ruines de cette ancienne cité romaine. Dougga offre un aperçu fascinant de la vie quotidienne à l'époque romaine.</h6>
-                    <h6>Points d'intérêt :</h6>
+                    <h6>Guided tour of the archaeological site: Explore the ruins of this ancient Roman city. Dougga offers a fascinating glimpse into daily life during the Roman era.</h6>
+                    <h6>Points of interest:</h6>
                     <li>
-                      <h6>Le Capitole : Temple majestueux dédié à Jupiter, Junon et Minerve.</h6>
+                      <h6>The Capitol: A majestic temple dedicated to Jupiter, Juno, and Minerva.</h6>
                     </li>
                     <li>
-                      <h6>Le Théâtre : Pouvant accueillir environ 3 500 spectateurs, encore utilisé pour des spectacles</h6>
+                      <h6>The Theater: Seating around 3,500 spectators, still used today for performances.</h6>
                     </li>
                     <li>
-                      <h6>Les Thermes : Ancien lieu de détente des citoyens romains.</h6>
+                      <h6>The Baths: A former relaxation spot for Roman citizens.</h6>
                     </li>
                     <li>
-                      <h6>Le Mausolée Libyco-Punique : Structure funéraire unique dans le monde romain.</h6>
+                      <h6>The Libyco-Punic Mausoleum: A unique funerary structure in the Roman world.</h6>
                     </li>
                     <li>
-                      <h6>Le Forum et les places publiques : Centres de la vie politique et sociale.</h6>
+                      <h6>The Forum and public squares: Centers of political and social life.</h6>
                     </li>
                   </ul>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 3h</strong>
+                  <strong class="ms-auto">Duration: 3h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-
-                  <h6>Dejeuner : Cuisine tunisienne traditionnelle, avec des plats comme le couscous, le tajine ou la chorba.</h6>
+                  <h6>Lunch: Traditional Tunisian cuisine, with dishes like couscous, tajine, or chorba.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Randonnée dans la campagne environnante : Promenez-vous autour du site pour admirer les paysages bucoliques de la région.
+                    Hike through the surrounding countryside: Stroll around the site to admire the pastoral landscapes of the region.
                   </h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h</strong>
+                  <strong class="ms-2">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 160 DT</h6>
+                  <h6>Price per person: 160 DT</h6>
 
                   <span class="underline"></span>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 11/12/2024</h6>
+                  <h6>Date: 12/11/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9 a.m.</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>WARNING: We do not accept lateness of more than 10 minutes</small>
                 </div>
               </div>
             </div>
@@ -1033,11 +1005,9 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
                 <img src="images/dougga.jpg" class="tozeur-image">
               </div>
             </div>
-
           </div>
         </div>
     </section>
@@ -1050,97 +1020,91 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Kairouan</h4>
+                <h4 class="text-white">Kairouan Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Visite de la Grande Mosquée de Kairouan (Mosquée Oqba Ibn Nafi) : Explorez l’une des plus anciennes mosquées du Maghreb, construite au 7ᵉ siècle. Admirez son architecture imposante, ses vastes cours, et son minaret emblématique</h6>
+                  <h6>Visit of the Great Mosque of Kairouan (Mosque of Oqba Ibn Nafi): Explore one of the oldest mosques in the Maghreb, built in the 7th century. Admire its impressive architecture, vast courtyards, and iconic minaret.</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <ul>
-                    <h6>Visite du Bassin des Aghlabides : Découvrez ces impressionnants réservoirs d’eau construits au 9ᵉ siècle pour approvisionner la ville.</h6>
-                    <h6>Visite de la Médina de Kairouan : Promenez-vous dans les ruelles de la médina, un labyrinthe coloré de boutiques d’artisanat, de pâtisseries locales et d’ateliers de tissage</h6>
-                    <h6>A ne pas manquer :</h6>
+                    <h6>Visit of the Aghlabid Basins: Discover these impressive water reservoirs built in the 9th century to supply the city.</h6>
+                    <h6>Visit of the Medina of Kairouan: Stroll through the alleys of the medina, a colorful maze of craft shops, local pastry stores, and weaving workshops.</h6>
+                    <h6>Must-sees:</h6>
                     <li>
-                      <h6>Les tapis traditionnels de Kairouan.</h6>
+                      <h6>The traditional carpets of Kairouan.</h6>
                     </li>
                     <li>
-                      <h6>Dégustation de la fameuse pâtisserie locale, le makroud (gâteau de semoule aux dattes)</h6>
+                      <h6>Tasting of the famous local pastry, makroud (semolina cake with dates).</h6>
                     </li>
                   </ul>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h30</strong>
+                  <strong class="ms-2">Duration: 1h30</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-
-                  <h6>Savourez des plats locaux comme le couscous à l’agneau, la ojja, ou le méchoui</h6>
+                  <h6>Enjoy local dishes such as lamb couscous, ojja, or méchoui.</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Visite du Mausolée de Sidi Sahbi (Mosquée du Barbier) : Explorez ce mausolée dédié à l’un des compagnons du prophète Mohammed. Le site est célèbre pour ses magnifiques décorations en céramique et ses cours ornées.</h6>
+                  <h6>Visit of the Mausoleum of Sidi Sahbi (Barber’s Mosque): Explore this mausoleum dedicated to one of the Prophet Muhammad’s companions. The site is renowned for its magnificent ceramic decorations and ornate courtyards.</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 200 DT</h6>
+                  <h6>Price per person: 200 DT</h6>
 
                   <span class="underline"></span>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-
                 </div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 15/12/2024</h6>
+                  <h6>Date: 12/15/2024</h6>
 
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9 a.m.</strong>
                 </div>
 
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>WARNING: We do not accept lateness of more than 10 minutes</small>
                 </div>
               </div>
             </div>
@@ -1149,11 +1113,9 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
                 <img src="images/kairouan.png" class="tozeur-image">
               </div>
             </div>
-
           </div>
         </div>
     </section>
@@ -1166,95 +1128,74 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12 mb-4 mb-lg-0">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-                <h4 class="text-white">Programme Ain drahem et tbarka</h4>
+                <h4 class="text-white">Ain Drahem and Tabarka Program</h4>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <ul>
-                    <h6>Ain drahem</h6>
-                    <h6>Randonnée en forêt : Partez pour une randonnée dans les forêts environnantes. Découvrez la faune et la flore locales, y compris les chênes-lièges et les fougères géantes.</h6>
-                  </ul>
+                  <div>
+                    <h6>Ain Drahem</h6>
+                    <p>Forest hike: Go for a hike in the surrounding forests. Discover local fauna and flora, including cork oaks and giant ferns.</p>
+                  </div>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 2h</strong>
+                  <strong class="ms-auto">Duration: 2h</strong>
                 </div>
-
-                <div class="border-top mt-2 pt-2">
-
-                </div>
+                <div class="border-top mt-2 pt-2"></div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
                   <h6>
-                    Dejeuner : Spécialités de la région, notamment du gibier, du miel local, et des plats mijotés comme le couscous au sanglier ou le lablabi
+                    Lunch: Regional specialties, including game meat, local honey, and stewed dishes like wild boar couscous or lablabi.
                   </h6>
-
                   <span class="underline"></span>
 
-                  <strong class="ms-2">Durée : 1h</strong>
+                  <strong class="ms-2">Duration: 1h</strong>
                 </div>
-
-                <div class="border-top mt-2 pt-2">
-
-                </div>
+                <div class="border-top mt-2 pt-2"></div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <ul>
-                    <h6>tbarka</h6>
-                    <h6>Visite du Fort Génois et des Aiguilles de Tabarka : Découvrez le Fort Génois, perché sur une colline offrant une vue imprenable sur la ville et la mer. Ensuite, admirez les Aiguilles, formations rocheuses spectaculaires qui se dressent au bord de l’eau.</h6>
-                  </ul>
-
-
+                  <div>
+                    <h6>Tabarka</h6>
+                    <p>Visit of the Genoese Fort and the Tabarka Needles: Discover the Genoese Fort, perched on a hill offering stunning views of the city and sea. Then admire the Needles, spectacular rock formations rising at the water's edge.</p>
+                  </div>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h30</strong>
+                  <strong class="ms-auto">Duration: 1h30</strong>
                 </div>
-
-                <div class="border-top mt-2 pt-2">
-
-                </div>
+                <div class="border-top mt-2 pt-2"></div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Plongée ou Snorkeling : Si le temps le permet, explorez les fonds marins de Tabarka, réputés pour leur biodiversité et leurs récifs coralliens</h6>
+                  <h6>Diving or Snorkeling: If weather permits, explore the marine life of Tabarka, famous for its biodiversity and coral reefs.</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Durée : 1h</strong>
+                  <strong class="ms-auto">Duration: 1h</strong>
                 </div>
-
-                <div class="border-top mt-2 pt-2">
-
-                </div>
+                <div class="border-top mt-2 pt-2"></div>
               </div>
 
               <div class="menu-block my-4">
                 <div class="d-flex">
-                  <h6>Prix par personne : 160 DT</h6>
-
+                  <h6>Price per person: 160 DT</h6>
                   <span class="underline"></span>
                 </div>
-
-                <div class="border-top mt-2 pt-2">
-
-                </div>
+                <div class="border-top mt-2 pt-2"></div>
               </div>
 
               <div class="menu-block">
                 <div class="d-flex">
-                  <h6>Date : 21/12/2024</h6>
-
+                  <h6>Date: 12/21/2024</h6>
                   <span class="underline"></span>
 
-                  <strong class="ms-auto">Heure depart : 9h</strong>
+                  <strong class="ms-auto">Departure time: 9 a.m.</strong>
                 </div>
-
                 <div class="border-top mt-2 pt-2">
-                  <small>ATTETION : on n'accepte pas retrad plus que 10 min</small>
+                  <small>WARNING: We do not accept lateness of more than 10 minutes</small>
                 </div>
               </div>
             </div>
@@ -1263,11 +1204,9 @@ Bootstrap 5 HTML CSS Template
           <div class="col-lg-6 col-12">
             <div class="menu-block-wrap">
               <div class="text-center mb-4 pb-lg-2">
-
-                <img src="images/tbarka.jpeg" class="tozeur-image">
+                <img src="images/tbarka.jpeg" class="tozeur-image" alt="Tabarka landscape">
               </div>
             </div>
-
           </div>
         </div>
     </section>
@@ -1277,7 +1216,7 @@ Bootstrap 5 HTML CSS Template
         <div class="row">
 
           <div class="col-lg-4 col-12 me-auto">
-            <em class="text-white d-block mb-4">Où nous trouver ?</em>
+            <em class="text-white d-block mb-4">Where to find us ?</em>
 
             <strong class="text-white">
               <i class="bi-geo-alt me-2"></i>
@@ -1322,30 +1261,29 @@ Bootstrap 5 HTML CSS Template
             </p>
           </div>
 
-
           <div class="col-lg-5 col-12">
-            <em class="text-white d-block mb-4">Horaire de travail.</em>
+            <em class="text-white d-block mb-4">Working Hours</em>
 
             <ul class="opening-hours-list">
               <li class="d-flex">
-                Lundi - Vendredi
+                Monday - Friday
                 <span class="underline"></span>
 
-                <strong>9:00 - 18:00</strong>
+                <strong>9:00 AM - 6:00 PM</strong>
               </li>
 
               <li class="d-flex">
-                Samedi
+                Saturday
                 <span class="underline"></span>
 
-                <strong>9:00 - 13:00</strong>
+                <strong>9:00 AM - 1:00 PM</strong>
               </li>
 
               <li class="d-flex">
-                Dimanche
+                Sunday
                 <span class="underline"></span>
 
-                <strong>Ferme</strong>
+                <strong>Closed</strong>
               </li>
             </ul>
           </div>

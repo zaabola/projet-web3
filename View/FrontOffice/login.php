@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form class="login100-form validate-form" method="post">
           <span class="login100-form-title">
-            se connecter
+            login
           </span>
 
           <div class="wrap-input100">
@@ -96,16 +96,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
           <div class="container-login100-form-btn">
             <button class="login100-form-btn">
-              se connecter
+              login
             </button>
           </div>
 
           <div class="text-center p-t-12">
             <span class="txt1">
-              Oubliée
+              Forgot
             </span>
             <a class="txt2" href="motdepasse_oublie.php">
-              Email / mot de passe?
+              Email / password?
             </a>
           </div>
         </form>

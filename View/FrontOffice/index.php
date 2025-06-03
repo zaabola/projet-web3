@@ -49,47 +49,43 @@ if (!isset($_SESSION['id'])) {
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index1.php">
-          <img src="images/logo.png" class="navbar-brand-image img-fluid">
+          <img src="./images/logo.png" class="navbar-brand-image img-fluid">
           بصمة
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-lg-auto">
             <li class="nav-item">
-              <a class="nav-link " href="index1.php">Home</a>
+              <a class="nav-link" href="index1.php">Home</a>
             </li>
-
             <li class="nav-item">
-              <a class="nav-link" href="#section_1">About</a>
+              <a class="nav-link" href="index.php">Reservation</a>
             </li>
-
             <li class="nav-item">
-              <a class="nav-link" href="#section_2">Excursion</a>
+              <a class="nav-link" href="index2.php">Guides</a>
             </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="#section_3">Reviews</a>
+            <li>
+              <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
             </li>
-
             <li class="nav-item">
-              <a class="nav-link" href="#section_4">Contact</a>
+              <a class="nav-link click-scroll" href="index1.php#section_3">Library</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="panier.php">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="donation.php">Donate</a>
             </li>
           </ul>
-
           <div class="ms-lg-3">
-            <a class="btn custom-btn custom-border-btn" href="reservation.php">
-              Reservation
-              <i class="bi-arrow-up-right ms-2"></i>
-            </a>
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
-        </div>
-      </div>
     </nav>
-
 
     <section class="hero-section d-flex justify-content-center align-items-center">
 
@@ -109,7 +105,7 @@ if (!isset($_SESSION['id'])) {
               A propos
             </a>
 
-            <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_3"><strong>Excursion</strong></a>
+            <a class="btn custom-btn smoothscroll me-2 mb-2" href="reservation.php"><strong>Reserve</strong></a>
           </div>
 
         </div>
@@ -423,7 +419,7 @@ if (!isset($_SESSION['id'])) {
       </div>
     </section>
 
-    <section class="contact-section section-padding" id="section_4">
+    <section class="contact-section section-padding section-bg" id="section_4">
       <div class="container">
         <div class="row">
 

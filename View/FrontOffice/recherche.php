@@ -155,7 +155,7 @@ if (!empty($searchTerm)) {
           <form action="recherche.php" method="GET">
             <div class="input-group">
               <input type="text" name="q" class="form-control" value="<?php echo htmlspecialchars($searchTerm); ?>" required>
-              <button type="submit" class="btn btn-custom">Rechercher</button>
+              <button type="submit" class="btn btn-custom">Search</button>
             </div>
           </form>
         </div>
@@ -169,7 +169,7 @@ if (!empty($searchTerm)) {
               <div class="col-md-6 mb-4">
                 <div class="search-result">
                   <h3><?php echo htmlspecialchars($result['Titre_article']); ?></h3>
-                  <p><strong>Thème :</strong> <?php echo htmlspecialchars($result['theme_titre']); ?></p>
+                  <p><strong>Theme :</strong> <?php echo htmlspecialchars($result['theme_titre']); ?></p>
                   <p><?php echo htmlspecialchars($result['Description_article']); ?></p>
                   <?php if (!empty($result['Image_article'])): ?>
                     <img src="<?php echo htmlspecialchars($result['Image_article']); ?>"
@@ -179,13 +179,13 @@ if (!empty($searchTerm)) {
                   <?php endif; ?>
                   <p><strong>Bibliographie :</strong> <?php echo htmlspecialchars($result['bibliographie']); ?></p>
                   <a href="affichage.php?theme_id=<?php echo $result['theme_id']; ?>"
-                    class="btn btn-custom">Voir le thème complet</a>
+                    class="btn btn-custom">View all themes</a>
                 </div>
               </div>
             <?php endforeach; ?>
           <?php else: ?>
             <div class="col-12">
-              <p class="text-center">Aucun résultat trouvé pour votre recherche.</p>
+              <p class="text-center">Nothing found</p>
             </div>
           <?php endif; ?>
         <?php endif; ?>
@@ -193,7 +193,7 @@ if (!empty($searchTerm)) {
 
       <!-- Bouton retour -->
       <div class="text-center mt-4">
-        <a href="index1.php" class="btn btn-custom">Retour à l'accueil</a>
+        <a href="index1.php" class="btn btn-custom">Go back home</a>
       </div>
     </div>
 

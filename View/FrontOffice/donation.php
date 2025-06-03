@@ -133,20 +133,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll inactive" href="index1.php#section_3">Bibliothèque</a>
+              <a class="nav-link click-scroll inactive" href="index1.php#section_3">Library</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="panier.php">Panier</a>
+              <a class="nav-link click-scroll" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index1.php#section_5">Reclamation</a>
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
             </li>
             <li class="nav-item">
               <a class="nav-link click-scroll" href="donation.php">Donate</a>
             </li>
           </ul>
           <div class="ms-lg-3">
-            <a class="btn custom-btn custom-border-btn" href="logout.php">se deconnecter<i class="bi-arrow-up-right ms-2"></i></a>
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
     </nav>
     <section>
