@@ -1,26 +1,24 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 require_once('session_check.php');
 verifierSession();
 
-// Débogage des variables de session
 error_log("Contenu de la session : " . print_r($_SESSION, true));
 
-// Vérification de l'ID
 if (!isset($_SESSION['id'])) {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
   header("Location: ../FrontOffice/login.php");
   exit();
 }
-// Inclure les fichiers nécessaires
-include_once(__DIR__ . '../../../Controller/Articlee.php');
-include_once(__DIR__ . '../../../Controller/theme.php');
+include_once('../../Controller/Articlee.php');
+include_once('../../Controller/theme.php');
 
-// Instancier les contrôleurs
 $articlesController = new ArticlesController();
 $themeController = new ThemeController();
 
-// Connexion à la base de données pour les feedbacks
 $host = 'localhost';
 $dbname = 'emprunt';
 $username = 'root';
@@ -41,12 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id']) && isse
 
     // Validation du commentaire
     if (empty($commentaire)) {
-      throw new Exception("Le commentaire ne peut pas être vide.");
+      throw new Exception("Fill comment.");
     }
 
     // Vérification de la longueur
     if (strlen($commentaire) > 500) {
-      throw new Exception("Le commentaire ne doit pas dépasser 500 caractères.");
+      throw new Exception("comment limit 500 caracteres.");
     }
 
     // Nettoyer et valider le commentaire
@@ -55,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['article_id']) && isse
 
     // Vérification plus permissive des caractères autorisés
     if (!preg_match("/^[a-zA-ZÀ-ÿ0-9\s\.,!?'\-\"]+$/u", $commentaire)) {
-      throw new Exception("Le commentaire contient des caractères non autorisés. Utilisez uniquement des lettres, chiffres et la ponctuation basique.");
+      throw new Exception("comment have invalid caracteres.");
     }
 
     $query = "INSERT INTO feed_back (Id_article, commentaire) VALUES (:article_id, :commentaire)";
@@ -78,7 +76,7 @@ if (isset($_GET['theme_id'])) {
   $theme = $themeController->getThemeById($theme_id);
   $articles = $articlesController->getArticlessByTheme($theme_id);
 } else {
-  echo "Aucun thème sélectionné.";
+  echo "No theme selected.";
   exit;
 }
 ?>
@@ -474,21 +472,61 @@ if (isset($_GET['theme_id'])) {
 </head>
 
 <body>
-  <!-- Ajouter la div pour l'alerte au début du body -->
   <div id="alertPopup" class="alert-popup"></div>
 
   <main>
+    <nav class="navbar navbar-expand-lg section-bg">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index1.php">
+          <img src="./images/logo.png" class="navbar-brand-image img-fluid">
+          بصمة
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-lg-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index1.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">Reservation</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index2.php">Guides</a>
+            </li>
+            <li>
+              <a class="nav-link click-scroll" href="index1.php#section_69">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="index1.php#section_3">Library</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="panier.php">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="donation.php">Donate</a>
+            </li>
+          </ul>
+          <div class="ms-lg-3">
+            <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
+          </div>
+    </nav>
+
     <section class="section-bg">
       <div class="container">
         <div class="row justify-content-center text-center mb-4">
           <div class="col-lg-8">
-            <h2>Articles du thème : <?php echo htmlspecialchars($theme['titre']); ?></h2>
+            <h2>Articles from theme : <?php echo htmlspecialchars($theme['titre']); ?></h2>
           </div>
         </div>
         <div class="row">
           <?php if (empty($articles)): ?>
             <div class="col-12 text-center">
-              <p class="empty-message">Aucun article actif n'est disponible pour ce thème.</p>
+              <p class="empty-message">No article available for this theme.</p>
             </div>
           <?php else: ?>
             <?php foreach ($articles as $article): ?>
@@ -500,25 +538,25 @@ if (isset($_GET['theme_id'])) {
                     <p class="card-text"><?php echo htmlspecialchars($article['Description_article']); ?></p>
 
                     <!-- Bibliographie -->
-                    <p class="bibliography">Bibliographie : <?php echo htmlspecialchars($article['bibliographie']); ?></p>
+                    <p class="bibliography">bibliography : <?php echo htmlspecialchars($article['bibliographie']); ?></p>
 
                     <!-- Formulaire de feedback -->
                     <div class="feedback-form">
                       <form method="POST" action="" onsubmit="return validateFeedback(this, <?php echo $article['Id_article']; ?>)">
                         <input type="hidden" name="article_id" value="<?php echo $article['Id_article']; ?>">
-                        <label for="feedback-<?php echo $article['Id_article']; ?>">Votre feedback :</label>
+                        <label for="feedback-<?php echo $article['Id_article']; ?>">Your feedback :</label>
                         <textarea id="feedback-<?php echo $article['Id_article']; ?>"
                           name="commentaire"
                           class="feedback-input"
-                          placeholder="Écrivez votre retour..."></textarea>
+                          placeholder="Share your thoughts "></textarea>
                         <button type="button" onclick="startVoiceRecognition(<?php echo $article['Id_article']; ?>)">
-                          🎤 <span class="box">Enregistrer</span>
+                          🎤 <span class="box">Vocal</span>
                         </button>
 
 
                         <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
                           <button type="submit" data-translate="envoyer">
-                            <i class="bi bi-send"></i> <span class="box">Envoyer</span>
+                            <i class="bi bi-send"></i> <span class="box">Send</span>
                           </button>
                           <button type="button" onclick="window.open('generate_pdf.php?Id_article=<?php echo htmlspecialchars($article['Id_article']); ?>', '_blank')">
                             <i class="bi bi-download"></i> <span class="box">PDF</span>
@@ -530,10 +568,10 @@ if (isset($_GET['theme_id'])) {
                             data-title="<?php echo htmlspecialchars($article['Titre_article']); ?>"
                             data-description="<?php echo htmlspecialchars($article['Description_article']); ?>"
                             data-bibliography="<?php echo htmlspecialchars($article['bibliographie']); ?>">
-                            <i class="bi bi-volume-up"></i> <span class="read-text box">Lire</span>
+                            <i class="bi bi-volume-up"></i> <span class="read-text box">Read</span>
                           </button>
                           <button type="button" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>', '_blank')">
-                            <i class="bi bi-facebook"></i> <span class="box">Partager</span>
+                            <i class="bi bi-facebook"></i> <span class="box">Share</span>
                           </button>
                           <button type="button" onclick="window.open('https://twitter.com/intent/tweet?url=<?php echo urlencode('http://votre-site.com/article.php?id=' . $article['Id_article']); ?>&text=<?php echo urlencode($article['Titre_article']); ?>', '_blank')">
                             <i class="bi bi-twitter"></i> <span class="box">Tweeter</span>
@@ -561,31 +599,31 @@ if (isset($_GET['theme_id'])) {
 
       // Vérification si le commentaire est vide
       if (commentaire === '') {
-        alert('Le commentaire ne peut pas être vide.');
+        alert('Fill the comment.');
         return false;
       }
 
       // Vérification de la longueur
       if (commentaire.length > 500) {
-        alert('Le commentaire ne doit pas dépasser 500 caractères.');
+        alert('Comment limit 500 caracteres.');
         return false;
       }
 
       // Vérification des caractères autorisés
       const regexCaracteresAutorises = /^[a-zA-ZÀ-ÿ0-9\s\.,!?]+$/;
       if (!regexCaracteresAutorises.test(commentaire)) {
-        alert('Caractères non autorisés. Utilisez uniquement des lettres, chiffres, espaces et ponctuation simple (.,!?)');
+        alert('comment have invalid caracteres.');
         return false;
       }
 
       // Vérification des bad words
       if (containsBadWords(commentaire)) {
-        alert('Votre commentaire contient des mots inappropriés.');
+        alert('Comment have inappropriate words.');
         return false;
       }
 
       // Si toutes les validations sont passées, afficher le message de succès
-      alert('Votre feedback a été ajouté avec succès !');
+      alert('Thank you for your feedback  !');
       return true;
     }
 
@@ -606,20 +644,19 @@ if (isset($_GET['theme_id'])) {
       // Vérifiez si le navigateur prend en charge la reconnaissance vocale
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("La reconnaissance vocale n'est pas prise en charge dans ce navigateur.");
+        alert("Your browser does not support voice to text");
         return;
       }
 
       const recognition = new SpeechRecognition();
-      recognition.lang = 'fr-FR'; // Définit la langue à français
-      recognition.interimResults = false; // Désactive les résultats intermédiaires
-      recognition.maxAlternatives = 1; // Limite à une seule alternative
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-      // Démarre la reconnaissance
       recognition.start();
 
       recognition.onstart = () => {
-        alert('Parlez maintenant, la reconnaissance vocale est activée.');
+        alert(' Voice to text is active.');
       };
 
       recognition.onspeechend = () => {
@@ -633,7 +670,7 @@ if (isset($_GET['theme_id'])) {
       };
 
       recognition.onerror = (event) => {
-        alert('Erreur lors de la reconnaissance vocale : ' + event.error);
+        alert('Error while saving : ' + event.error);
       };
     }
   </script>
@@ -649,7 +686,7 @@ if (isset($_GET['theme_id'])) {
         .then(response => response.json())
         .then(data => {
           if (data.length === 0) {
-            feedbacksList.innerHTML = '<p class="text-center">Aucun feedback pour cet article.</p>';
+            feedbacksList.innerHTML = '<p class="text-center">No feedback for this article.</p>';
           } else {
             feedbacksList.innerHTML = data.map(feedback => `
                     <div class="feedback-item">
@@ -660,7 +697,7 @@ if (isset($_GET['theme_id'])) {
           }
         })
         .catch(error => {
-          feedbacksList.innerHTML = '<p class="text-center text-danger">Erreur lors du chargement des feedbacks.</p>';
+          feedbacksList.innerHTML = '<p class="text-center text-danger">Error while loading feedbacks.</p>';
           console.error('Erreur:', error);
         });
 

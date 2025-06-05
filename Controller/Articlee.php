@@ -1,7 +1,11 @@
 <?php
-include_once(__DIR__ . '/../config.php'); // Inclusion de la connexion à la base de données
-include_once(__DIR__ . '/../Model/article.php'); // Inclusion du modèle Article
-include_once(__DIR__ . '/../Model/themem.php'); // Inclusion du modèle Theme
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once(__DIR__ . '/../config.php');
+require_once(__DIR__ . '/../Model/article.php');
+require_once(__DIR__ . '/../Model/themem.php');
 
 class ArticlesController
 {
@@ -10,7 +14,6 @@ class ArticlesController
   public function __construct()
   {
     try {
-      // Utiliser la classe config pour la connexion
       $this->db = config::getConnexion();
     } catch (Exception $e) {
       die('Erreur: ' . $e->getMessage());
@@ -90,16 +93,31 @@ class ArticlesController
     }
   }
 
-  // Obtenir des Articles par thème
   public function getArticlessByTheme($id)
   {
-    $sql = "SELECT * FROM articles WHERE id = :id        AND archivage = 1";;
+    $id = (int)$id;
+
+    $sql = "SELECT * FROM articles WHERE id = :id";
     $db = config::getConnexion();
     $query = $db->prepare($sql);
     $query->bindValue(':id', $id, PDO::PARAM_INT);
     try {
       $query->execute();
       return $query->fetchAll();
+    } catch (Exception $e) {
+      die('Error: ' . $e->getMessage());
+    }
+  }
+
+  public function getArticleById($id)
+  {
+    $sql = "SELECT * FROM articles WHERE Id_article = :id";
+    $db = config::getConnexion();
+    $query = $db->prepare($sql);
+    $query->bindValue(':id', $id, PDO::PARAM_INT);
+    try {
+      $query->execute();
+      return $query->fetch();
     } catch (Exception $e) {
       die('Error: ' . $e->getMessage());
     }

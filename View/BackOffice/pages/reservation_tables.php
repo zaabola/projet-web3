@@ -3,12 +3,12 @@ session_start();
 require_once('../../FrontOffice/session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Log session contents for debugging
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Verify admin access
 if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in the session, redirect to the logout page
   header("Location: ../../FrontOffice/logout.php");
   exit();
 }
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_reservation = intval($_POST['reservation-id'] ?? 0);
     try {
       $gestionReservation->deleteReservation($id_reservation);
-      $success = "Réservation supprimée avec succès.";
+      $success = "Reservation deleted successfully.";
     } catch (Exception $e) {
       $error = $e->getMessage();
     }
@@ -39,19 +39,19 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Gestion des Réservations</title>
+  <title>Reservation Management</title>
   <link href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
     Material Dashboard 3 by Creative Tim
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -119,15 +119,21 @@ try {
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add User</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -139,25 +145,25 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">Fetch Orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -169,68 +175,67 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations Manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
-        </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">Volunteers</span>
           </a>
         </li>
       </ul>
@@ -243,7 +248,7 @@ try {
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header">
-              <h6>Gestion des Réservations</h6>
+              <h6>Reservation Management</h6>
             </div>
             <div class="card-body">
               <?php if ($success): ?>
@@ -256,14 +261,14 @@ try {
                 <table id="reservationTable" class="table">
                   <thead>
                     <tr>
-                      <th>Nom</th>
-                      <th>Prénom</th>
+                      <th>Last Name</th>
+                      <th>First Name</th>
                       <th>Email</th>
-                      <th>Téléphone</th>
-                      <th>Destination <button type="button" class="sort-button" onclick="sortTable()">Trier</button></th>
-                      <th>Commentaire</th>
+                      <th>Phone</th>
+                      <th>Destination <button type="button" class="sort-button" onclick="sortTable()">Sort</button></th>
+                      <th>Comment</th>
                       <th>Date</th>
-                      <th>Matricule</th>
+                      <th>License Plate</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -281,11 +286,11 @@ try {
                         <td>
                           <form method="GET" action="edit_reservation.php" style="display:inline-block;">
                             <input type="hidden" name="id" value="<?= $reservation['id_reservation'] ?>">
-                            <button type="submit" class="btn btn-sm btn-primary">Modifier</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Edit</button>
                           </form>
                           <form method="POST" style="display:inline-block;">
                             <input type="hidden" name="reservation-id" value="<?= $reservation['id_reservation'] ?>">
-                            <button type="submit" name="delete-reservation" class="btn btn-sm btn-danger">Supprimer</button>
+                            <button type="submit" name="delete-reservation" class="btn btn-sm btn-danger">Delete</button>
                           </form>
                         </td>
                       </tr>

@@ -3,12 +3,12 @@ session_start();
 require_once('../../FrontOffice/session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Log session contents for debugging
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Verify admin access
 if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in the session, redirect to the logout page
   header("Location: ../../FrontOffice/logout.php");
   exit();
 }
@@ -17,7 +17,7 @@ include('../../../Controller/donation_controller.php');
 $donationController = new DonationController();
 $success = $error = "";
 
-// Gestion des actions POST
+// Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (isset($_POST['add-donation'])) {
     $name = htmlspecialchars($_POST['booking-form-name'] ?? '');
@@ -27,16 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($name) && !empty($email) && is_numeric($amount) && $amount > 0) {
       $donationController->addDonation($name, $email, $amount, $message);
-      $success = "Donation ajoutée avec succès !";
+      $success = "Donation added successfully!";
     } else {
-      $error = "Veuillez remplir correctement tous les champs.";
+      $error = "Please fill in all fields correctly.";
     }
   }
 
   if (isset($_POST['delete-donation'])) {
     $id = intval($_POST['id_donation']);
     $donationController->deleteDonation($id);
-    $success = "Donation supprimée avec succès.";
+    $success = "Donation deleted successfully.";
   }
 
   if (isset($_POST['edit-donation'])) {
@@ -53,9 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($name) && !empty($email) && is_numeric($amount) && $amount > 0) {
       $donationController->updateDonation($id, $name, $email, $amount, $message);
-      $success = "Donation mise à jour avec succès.";
+      $success = "Donation updated successfully.";
     } else {
-      $error = "Veuillez remplir correctement tous les champs.";
+      $error = "Please fill in all fields correctly.";
     }
   }
 }
@@ -64,7 +64,7 @@ $donations = $donationController->listDonations();
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
@@ -82,27 +82,33 @@ $donations = $donationController->listDonations();
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Emprunt</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add User</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -114,25 +120,25 @@ $donations = $donationController->listDonations();
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">Fetch Orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -144,78 +150,75 @@ $donations = $donationController->listDonations();
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations Manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
-        </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">Volunteers</span>
           </a>
         </li>
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-
-    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
 
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
@@ -327,7 +330,6 @@ $donations = $donationController->listDonations();
       </div>
     </div>
   </main>
-
 </body>
 
 </html>

@@ -3,9 +3,9 @@ include '../../../Controller/volntaireC.php';
 
 $volntaireC = new VolontaireC();
 if (isset($_GET['search'])) {
-  $volontaires = $volntaireC->search($_GET['search']);
+  $volunteers = $volntaireC->search($_GET['search']);
 } else {
-  $volontaires = $volntaireC->read();
+  $volunteers = $volntaireC->read();
 }
 if (isset($_GET['delete'])) {
   $volntaireC->delete($_GET['delete']);
@@ -16,21 +16,6 @@ if (isset($_GET['update'])) {
 
 ?>
 
-<!--
-=========================================================
-* Material Dashboard 3 - v3.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -41,7 +26,7 @@ if (isset($_GET['update'])) {
   <title>
     Material Dashboard 3 by Creative Tim
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -54,28 +39,34 @@ if (isset($_GET['update'])) {
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
-        <span class="ms-1 text-sm text-dark">Emprunt</span>
+        <span class="ms-1 text-sm text-dark">Loan</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add User</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -87,25 +78,25 @@ if (isset($_GET['update'])) {
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">Fetch Orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -117,77 +108,75 @@ if (isset($_GET['update'])) {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations Manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
-        </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">Volunteers</span>
           </a>
         </li>
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-
+    <div class="sidenav-footer position-absolute w-100 bottom-0">
     </div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -198,67 +187,66 @@ if (isset($_GET['update'])) {
           </ol>
         </nav>
       </div>
-      </div>
     </nav>
     <!-- End Navbar -->
-    <main class="main-content position-relative border-radius-lg ">
+    <main class="main-content position-relative border-radius-lg">
       <div class="container-fluid py-4">
-        <h2 class="text-center">Liste des Volontaires</h2>
+        <h2 class="text-center">List of Volunteers</h2>
         <div class="table-responsive">
           <table class="table align-items-center">
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nom</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Prénom</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Numéro</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Exp</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Last Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">First Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Experience</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">État</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Option</th>
               </tr>
             </thead>
             <tbody>
               <?php
-              foreach ($volontaires as $volontaire) :
+              foreach ($volunteers as $volunteer) :
               ?>
                 <tr>
-                  <td><?= $volontaire['id'] ?></td>
-                  <td><?= $volontaire['nom'] ?></td>
-                  <td><?= $volontaire['prenom'] ?></td>
-                  <td><?= $volontaire['numero'] ?></td>
-                  <td><?= $volontaire['exp'] ?></td>
-                  <td><?= $volontaire['email'] ?></td>
+                  <td><?= $volunteer['id'] ?></td>
+                  <td><?= $volunteer['nom'] ?></td>
+                  <td><?= $volunteer['prenom'] ?></td>
+                  <td><?= $volunteer['numero'] ?></td>
+                  <td><?= $volunteer['exp'] ?></td>
+                  <td><?= $volunteer['email'] ?></td>
                   <td>
                     <?php
-                    if ($volontaire['etat'] == 0) :
+                    if ($volunteer['etat'] == 0) :
                     ?>
-                      <a href="?update=1&&id=<?= $volontaire['id'] ?>&&email=<?= $volontaire['email'] ?>" class="btn btn-success">Accepter</a>
-                      <a href="?update=2&&id=<?= $volontaire['id'] ?>&&email=<?= $volontaire['email'] ?>" class="btn btn-danger">Refuser</a>
+                      <a href="?update=1&&id=<?= $volunteer['id'] ?>&&email=<?= $volunteer['email'] ?>" class="btn btn-success">Accept</a>
+                      <a href="?update=2&&id=<?= $volunteer['id'] ?>&&email=<?= $volunteer['email'] ?>" class="btn btn-danger">Reject</a>
                     <?php
-                    elseif ($volontaire['etat'] == 1) :
+                    elseif ($volunteer['etat'] == 1) :
                     ?>
-                      <p>Accepté</p>
+                      <p>Accepted</p>
                       <?php
-                      if ($volontaire['has_portfolio']) :
+                      if ($volunteer['has_portfolio']) :
                       ?>
-                        <a href="portfolio.php?id=<?= $volontaire['id'] ?>">to protfolio</a>
+                        <a href="portfolio.php?id=<?= $volunteer['id'] ?>">To Portfolio</a>
                       <?php
                       endif;
                       ?>
                     <?php
-                    elseif ($volontaire['etat'] == 2) :
+                    elseif ($volunteer['etat'] == 2) :
                     ?>
-                      <p>Refusé</p>
+                      <p>Rejected</p>
                     <?php
                     endif
                     ?>
                   </td>
                   <td>
-                    <a class="btn btn-danger" href="?delete=<?= $volontaire['id'] ?>">Supprimer</a>
+                    <a class="btn btn-danger" href="?delete=<?= $volunteer['id'] ?>">Delete</a>
                   </td>
                 </tr>
-                <!-- Ajoutez d'autres lignes ici -->
+                <!-- Add other rows here -->
             </tbody>
           <?php
               endforeach
@@ -309,7 +297,7 @@ if (isset($_GET['update'])) {
         <div class="d-flex">
           <button class="btn bg-gradient-dark px-3 mb-2" data-class="bg-gradient-dark" onclick="sidebarType(this)">Dark</button>
           <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-transparent" onclick="sidebarType(this)">Transparent</button>
-          <button class="btn bg-gradient-dark px-3 mb-2  active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
+          <button class="btn bg-gradient-dark px-3 mb-2 active ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
         </div>
         <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
         <!-- Navbar Fixed -->
@@ -328,7 +316,7 @@ if (isset($_GET['update'])) {
         </div>
         <hr class="horizontal dark my-sm-4">
         <a class="btn bg-gradient-info w-100" href="https://www.creative-tim.com/product/material-dashboard-pro">Free Download</a>
-        <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard">View documentation</a>
+        <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard">View Documentation</a>
         <div class="w-100 text-center">
           <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
           <h6 class="mt-3">Thank you for sharing!</h6>
@@ -342,7 +330,7 @@ if (isset($_GET['update'])) {
       </div>
     </div>
   </div>
-  <!--   Core JS Files   -->
+  <!-- Core JS Files -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>

@@ -76,15 +76,21 @@ try {
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add user</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -96,25 +102,25 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">fetch orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -126,68 +132,68 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
         </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">volonteers</span>
           </a>
         </li>
       </ul>

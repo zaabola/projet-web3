@@ -3,12 +3,12 @@ session_start();
 require_once('../../FrontOffice/session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Log session contents for debugging
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Verify admin access
 if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in the session, redirect to the logout page
   header("Location: ../../FrontOffice/logout.php");
   exit();
 }
@@ -16,7 +16,6 @@ require_once '../../../Controller/GestionBus.php';
 
 $gestionBus = new GestionBus();
 $error = $success = "";
-
 
 // Handle form submission using the PRG pattern
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add-bus'])) {
@@ -28,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add-bus'])) {
 
   // Validate inputs
   $validationErrors = [];
-  if (empty($matricule)) $validationErrors[] = "Le champ 'Matricule' est obligatoire.";
-  if (empty($nomChauffeur)) $validationErrors[] = "Le champ 'Nom Chauffeur' est obligatoire.";
-  if (empty($depart)) $validationErrors[] = "Le champ 'Départ' est obligatoire.";
-  if (empty($nbrPlace)) $validationErrors[] = "Le champ 'Nombre de places' est obligatoire.";
-  if (empty($destination)) $validationErrors[] = "Le champ 'Destination' est obligatoire.";
+  if (empty($matricule)) $validationErrors[] = "The 'License Plate' field is required.";
+  if (empty($nomChauffeur)) $validationErrors[] = "The 'Driver Name' field is required.";
+  if (empty($depart)) $validationErrors[] = "The 'Departure' field is required.";
+  if (empty($nbrPlace)) $validationErrors[] = "The 'Number of Seats' field is required.";
+  if (empty($destination)) $validationErrors[] = "The 'Destination' field is required.";
 
   if (empty($validationErrors)) {
     try {
@@ -42,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add-bus'])) {
       header("Location: ajoutbus.php?success=1");
       exit();
     } catch (Exception $e) {
-      $error = "Erreur lors de l'ajout du bus : " . $e->getMessage();
+      $error = "Error adding the bus: " . $e->getMessage();
     }
   } else {
     $error = implode('<br>', $validationErrors);
@@ -51,24 +50,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add-bus'])) {
 
 // Check if success flag is set in the query string
 if (isset($_GET['success']) && $_GET['success'] == 1) {
-  $success = "Bus ajouté avec succès.";
+  $success = "Bus added successfully.";
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Ajouter un Bus</title>
+  <title>Add a Bus</title>
   <link href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
     Material Dashboard 3 by Creative Tim
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -168,27 +167,33 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
 
 <body class="g-sidenav-show bg-gray-100">
   <!-- Sidebar -->
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Emprunt</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add User</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -200,25 +205,25 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">Fetch Orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -230,75 +235,72 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations Manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
-        </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">Volunteers</span>
           </a>
         </li>
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-
-    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
 
   <!-- Main Content -->
@@ -308,7 +310,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header">
-              <h6>Ajouter un Bus</h6>
+              <h6>Add a Bus</h6>
             </div>
             <div class="card-body">
               <!-- Success and Error Messages -->
@@ -322,29 +324,29 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
               <!-- Add Bus Form -->
               <form method="POST">
                 <div class="form-group">
-                  <label>Matricule</label>
+                  <label>License Plate</label>
                   <input type="text" name="matricule" class="form-control" placeholder="Ex: 1234" value="<?= htmlspecialchars($_POST['matricule'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">
-                  <label>Nom Chauffeur</label>
+                  <label>Driver Name</label>
                   <input type="text" name="nom_chauffeur" class="form-control" placeholder="Ex: John Doe" value="<?= htmlspecialchars($_POST['nom_chauffeur'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">
-                  <label>Départ</label>
+                  <label>Departure</label>
                   <input type="time" name="depart" class="form-control" value="<?= htmlspecialchars($_POST['depart'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">
-                  <label>Nombre de Places</label>
+                  <label>Number of Seats</label>
                   <input type="number" name="nbr_place" class="form-control" placeholder="Ex: 50" value="<?= htmlspecialchars($_POST['nbr_place'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">
                   <label>Destination</label>
                   <select name="destination" class="form-control">
-                    <option value="" disabled <?= empty($_POST['destination']) ? 'selected' : '' ?>>Choisir une destination</option>
+                    <option value="" disabled <?= empty($_POST['destination']) ? 'selected' : '' ?>>Choose a destination</option>
                     <option value="Tozeur" <?= ($_POST['destination'] ?? '') === "Tozeur" ? 'selected' : '' ?>>Tozeur</option>
                     <option value="Djerba" <?= ($_POST['destination'] ?? '') === "Djerba" ? 'selected' : '' ?>>Djerba</option>
                     <option value="El Jem" <?= ($_POST['destination'] ?? '') === "El Jem" ? 'selected' : '' ?>>El Jem</option>
@@ -353,12 +355,11 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
                     <option value="Tunis" <?= ($_POST['destination'] ?? '') === "Tunis" ? 'selected' : '' ?>>Tunis</option>
                     <option value="Dougga" <?= ($_POST['destination'] ?? '') === "Dougga" ? 'selected' : '' ?>>Dougga</option>
                     <option value="Kairouan" <?= ($_POST['destination'] ?? '') === "Kairouan" ? 'selected' : '' ?>>Kairouan</option>
-                    <option value="Ain drahem et Tbarka" <?= ($_POST['destination'] ?? '') === "Ain drahem et Tbarka" ? 'selected' : '' ?>>Ain drahem et Tbarka</option>
+                    <option value="Ain drahem et Tbarka" <?= ($_POST['destination'] ?? '') === "Ain drahem et Tbarka" ? 'selected' : '' ?>>Ain Drahem and Tbarka</option>
                   </select>
                 </div>
 
-
-                <button type="submit" name="add-bus" class="btn btn-success mt-3">Ajouter</button>
+                <button type="submit" name="add-bus" class="btn btn-success mt-3">Add</button>
               </form>
             </div>
           </div>

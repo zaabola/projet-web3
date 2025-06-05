@@ -480,10 +480,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <div class="col-md-6">
                 <form action="recherche.php" method="GET" class="mb-4" id="searchForm" onsubmit="return validateSearch()">
                   <div class="input-group">
-                    <input type="text" name="q" id="searchInput" class="form-control" placeholder="Rechercher un mot...">
+                    <input type="text" name="q" id="searchInput" class="form-control" placeholder="look for theme...">
                     <button type="submit" class="btn btn-custom">Search</button>
                   </div>
-                  <small id="searchError" class="text-danger" style="display: none;">Veuillez saisir un terme de recherche</small>
+                  <small id="searchError" class="text-danger" style="display: none;">Please enter a search term</small>
                 </form>
               </div>
             </div>
@@ -491,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <div class="row" style="margin: 1200px,1200px,1200px;">
             <?php if (empty($list)): ?>
               <div class="col-12">
-                <p class="text-center">Aucun thème disponible.</p>
+                <p class="text-center">theme unavailabe.</p>
               </div>
             <?php else: ?>
               <?php foreach ($list as $theme): ?>
@@ -500,7 +500,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <img src="images/<?php echo htmlspecialchars($theme['image']); ?>" class="team-block-image" alt="Image du thème">
                     <h4 style="color: #b78752;" class="mt-3"><?php echo htmlspecialchars($theme['titre']); ?></h4>
                     <p><?php echo nl2br(htmlspecialchars($theme['description'])); ?></p>
-                    <a href="affichage.php?theme_id=<?php echo $theme['id']; ?>" class="btn btn-custom mt-3">Consulter les articles</a>
+                    <a href="affichage.php?theme_id=<?php echo $theme['id']; ?>" class="btn btn-custom mt-3">consult the articles</a>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -511,7 +511,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <ul class="pagination justify-content-center mt-4">
               <?php if ($page > 1): ?>
                 <li class="page-item">
-                  <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Précédent">
+                  <a class="page-link" href="?page=<?php echo $page - 1; ?>" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                   </a>
                 </li>
@@ -523,7 +523,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <?php endfor; ?>
               <?php if ($page < $totalPages): ?>
                 <li class="page-item">
-                  <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Suivant">
+                  <a class="page-link" href="?page=<?php echo $page + 1; ?>" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                   </a>
                 </li>
@@ -618,7 +618,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <div class="row">
 
                 <div class="col-lg-6 col-12">
-                  <label for="name" class="form-label">Nom <sup class="text-danger">*</sup></label>
+                  <label for="name" class="form-label">Name <sup class="text-danger">*</sup></label>
 
                   <input type="text" name="name" id="name" class="form-control" placeholder="Jackson">
                 </div>
@@ -630,7 +630,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
 
                 <div class="col-12">
-                  <label for="message" class="form-label">Comment s'est passé ton excursion</label>
+                  <label for="message" class="form-label">Leave a feedback</label>
 
                   <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message"></textarea>
 
@@ -638,7 +638,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               </div>
 
               <div class="col-lg-5 col-12 mx-auto mt-3">
-                <button type="submit" class="form-control">Envoyer votre avis</button>
+                <button type="submit" class="form-control">Send feedback</button>
               </div>
             </form>
           </div>
@@ -647,17 +647,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
     </section>
 
-
     <footer class="site-footer">
       <div class="container">
         <div class="row">
 
           <div class="col-lg-4 col-12 me-auto">
-            <em class="text-white d-block mb-4">Where to find us?</em>
+            <em class="text-white d-block mb-4">where to find us?</em>
 
             <strong class="text-white">
               <i class="bi-geo-alt me-2"></i>
-              Bandra West, Mumbai, Maharashtra 400050, India
+              Av. Hedi Nouira Ariana, 2001
             </strong>
 
             <ul class="social-icon mt-4">
@@ -682,10 +681,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <em class="text-white d-block mb-4">Contact</em>
 
             <p class="d-flex mb-1">
-              <strong class="me-2">Phone:</strong>
+              <strong class="me-2">Tel:</strong>
               <a href="tel: 305-240-9671" class="site-footer-link">
-                (65)
-                305 2409 671
+                (216)
+                95 020 030
               </a>
             </p>
 
@@ -693,28 +692,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <strong class="me-2">Email:</strong>
 
               <a href="mailto:info@yourgmail.com" class="site-footer-link">
-                hello@barista.co
+                Basma.Travel@gmail.com
               </a>
             </p>
           </div>
 
 
           <div class="col-lg-5 col-12">
-            <em class="text-white d-block mb-4">Opening Hours.</em>
+            <em class="text-white d-block mb-4">Working hours</em>
 
             <ul class="opening-hours-list">
               <li class="d-flex">
                 Monday - Friday
                 <span class="underline"></span>
 
-                <strong>9:00 - 18:00</strong>
+                <strong>9:00 am - 6:00 pm</strong>
               </li>
 
               <li class="d-flex">
                 Saturday
                 <span class="underline"></span>
 
-                <strong>11:00 - 16:30</strong>
+                <strong>9:00 am - 1:00 pm</strong>
               </li>
 
               <li class="d-flex">
@@ -727,8 +726,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </div>
 
           <div class="col-lg-8 col-12 mt-4">
-            <p class="copyright-text mb-0">Copyright © Barista Cafe 2048
-              - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+            <p class="copyright-text mb-0">Copyright © بصمة </p>
           </div>
         </div>
     </footer>

@@ -3,12 +3,12 @@ session_start();
 require_once('../../FrontOffice/session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Log session contents for debugging
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Verify admin access
 if (!isset($_SESSION['id']) || $_SESSION['type'] == 'user') {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in the session, redirect to the logout page
   header("Location: ../../FrontOffice/logout.php");
   exit();
 }
@@ -24,10 +24,10 @@ $success = $error = "";
 // Handle actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (isset($_POST['delete-bus'])) {
-    $matricule = $_POST['matricule'] ?? '';  // Get the matricule from the POST data
+    $matricule = $_POST['matricule'] ?? ''; // Get the matricule from the POST data
     try {
-      $gestionBus->deleteBus($matricule);  // Pass matricule to the deleteBus method
-      $success = "Bus supprimé avec succès.";
+      $gestionBus->deleteBus($matricule); // Pass matricule to the deleteBus method
+      $success = "Bus deleted successfully.";
     } catch (Exception $e) {
       $error = $e->getMessage();
     }
@@ -43,19 +43,19 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Gestion des Bus</title>
+  <title>Bus Management</title>
   <link href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
     Material Dashboard 3 by Creative Tim
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -69,27 +69,33 @@ try {
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand px-4 py-3 m-0" href="https://demos.creative-tim.com/material-dashboard/pages/dashboard" target="_blank">
         <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm text-dark">Emprunt</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="ajoutuser.php">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Add User</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/dashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Sales</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ReservationDashboard.php">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
-            <span class="nav-link-text ms-1">ReservationDashboard</span>
+            <span class="nav-link-text ms-1">Reservation Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
@@ -101,25 +107,25 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="deletecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">DeleteOrder</span>
+            <span class="nav-link-text ms-1">Delete Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="updatecommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">UpdateOrder</span>
+            <span class="nav-link-text ms-1">Update Order</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="fetchcommande.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">fetchOrders</span>
+            <span class="nav-link-text ms-1">Fetch Orders</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reclamation.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Complaints</span>
+            <span class="nav-link-text ms-1">Order Complaints</span>
           </a>
         </li>
         <li class="nav-item">
@@ -131,75 +137,72 @@ try {
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/bib.php">
             <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Gestion theme</span>
+            <span class="nav-link-text ms-1">Themes</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/reservation_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Reservation</span>
+            <span class="nav-link-text ms-1">Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_reservation.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modif des reservations</span>
+            <span class="nav-link-text ms-1">Edit Reservations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/ajoutbus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Ajouter un bus</span>
+            <span class="nav-link-text ms-1">Add Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link active bg-gradient-dark text-white" href="../pages/bus_tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Bus</span>
+            <span class="nav-link-text ms-1">Buses</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="../pages/edit_bus.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Modification des bus</span>
+            <span class="nav-link-text ms-1">Edit Bus</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="liste.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Liste</span>
+            <span class="nav-link-text ms-1">Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="admin.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Management</span>
+            <span class="nav-link-text ms-1">Donations Manager</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="jointure.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">Tableaux</span>
+            <span class="nav-link-text ms-1">Donors</span>
           </a>
-        </li>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="test.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">credit</span>
+            <span class="nav-link-text ms-1">Edit Donations</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="tables.php">
             <i class="material-symbols-rounded opacity-5">table_view</i>
-            <span class="nav-link-text ms-1">volontaires</span>
+            <span class="nav-link-text ms-1">Volunteers</span>
           </a>
         </li>
       </ul>
     </div>
-    <div class="sidenav-footer position-absolute w-100 bottom-0 ">
-
-    </div>
+    <div class="sidenav-footer position-absolute w-100 bottom-0"></div>
   </aside>
 
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
@@ -208,7 +211,7 @@ try {
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header">
-              <h6>Gestion des Bus</h6>
+              <h6>Bus Management</h6>
             </div>
             <div class="card-body">
               <?php if ($success): ?>
@@ -221,10 +224,10 @@ try {
                 <table class="table">
                   <thead>
                     <tr>
-                      <th>Matricule</th>
-                      <th>Nom Chauffeur</th>
-                      <th>Départ</th>
-                      <th>Nombre de Places</th>
+                      <th>License Plate</th>
+                      <th>Driver Name</th>
+                      <th>Departure</th>
+                      <th>Number of Seats</th>
                       <th>Destination</th>
                       <th>Actions</th>
                     </tr>
@@ -238,16 +241,16 @@ try {
                         <td><?= htmlspecialchars($bus['nbr_place'] ?? '') ?></td>
                         <td><?= htmlspecialchars($bus['destination'] ?? '') ?></td>
                         <td>
-                          <!-- Modifier Button -->
+                          <!-- Edit Button -->
                           <form method="GET" action="edit_bus.php" style="display:inline-block;">
                             <input type="hidden" name="matricule" value="<?= htmlspecialchars($bus['matricule'] ?? '') ?>">
-                            <button type="submit" class="btn btn-sm btn-primary">Modifier</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Edit</button>
                           </form>
 
-                          <!-- Supprimer Button -->
+                          <!-- Delete Button -->
                           <form method="POST" style="display:inline-block;">
                             <input type="hidden" name="matricule" value="<?= htmlspecialchars($bus['matricule'] ?? '') ?>">
-                            <button type="submit" name="delete-bus" class="btn btn-sm btn-danger">Supprimer</button>
+                            <button type="submit" name="delete-bus" class="btn btn-sm btn-danger">Delete</button>
                           </form>
                         </td>
                       </tr>

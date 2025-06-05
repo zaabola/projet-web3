@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!empty($name) && !empty($email) && !empty($amount)) {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      $error = "Veuillez entrer un email valide.";
+      $error = "Email not valid.";
     } elseif (!is_numeric($amount) || $amount <= 0) {
-      $error = "Le montant doit être un nombre positif.";
+      $error = "Amount must be positive";
     } else {
 
       try {
@@ -51,18 +51,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           ':amount' => $amount,
           ':message' => $message
         ]);
-        $success = "Votre donation a été enregistrée avec succès !";
+        $success = "thank you for your donation !";
       } catch (PDOException $e) {
-        $error = "Erreur lors de l'enregistrement : " . $e->getMessage();
+        $error = "Error treating your donation : " . $e->getMessage();
       }
     }
     if (empty($errors)) {
-      // Redirection vers credit.php après un délai de 1 seconde (temps pour l'utilisateur de voir le message)
       header("Location: credit.php");
       exit();
     }
   } else {
-    $error = "Veuillez remplir tous les champs obligatoires.";
+    $error = "Fill all fields !";
   }
 }
 ?>
@@ -92,14 +91,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       margin: 0;
       padding: 0;
       background: url('./images/vue_mosqué_tunis-1-scaled.jpg') no-repeat center center fixed;
-      /* Remplacez 'images/image.png' par le chemin de votre image */
       background-size: cover;
       color: #fff;
-      /* Couleur de texte pour garantir la lisibilité */
     }
   </style>
   <script>
-    // Fonction pour définir le montant de la donation
     function setDonationAmount(amount) {
       document.getElementById('donationAmount').value = amount; // Définit la valeur dans le champ caché
       document.getElementById('customDonationAmount').value = amount; // Affiche dans le champ visible
@@ -156,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="booking-form-wrap">
               <form class="custom-form booking-form" method="post" action="">
                 <div class="text-center mb-4 pb-lg-2">
-                  <em class="text-white">Remplissez le formulaire de donation</em>
+                  <em class="text-white">Fill in this form</em>
                   <h2 class="text-white">Donation</h2>
                   <?php if (!empty($success)): ?>
                     <p class="text-success"><?= htmlspecialchars($success); ?></p>
@@ -167,13 +163,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="booking-form-body">
                   <div class="row">
                     <div class="col-lg-6 col-12">
-                      <input type="text" name="booking-form-name" class="form-control" placeholder="Nom complet">
+                      <input type="text" name="booking-form-name" class="form-control" placeholder="Your name">
                     </div>
                     <div class="col-lg-6 col-12">
-                      <input type="text" name="booking-form-email" class="form-control" placeholder="Votre email">
+                      <input type="text" name="booking-form-email" class="form-control" placeholder="Your email">
                     </div>
                     <div class="col-lg-12 col-12 mt-3 text-center">
-                      <label class="text-white"><strong>Montant de la donation:</strong></label><br>
+                      <label class="text-white"><strong>Donation amount:</strong></label><br>
                       <button type="button" class="form-control" onclick="setDonationAmount(20)">20 €</button>
                       <button type="button" class="form-control" onclick="setDonationAmount(40)">40 €</button>
                       <button type="button" class="form-control" onclick="setDonationAmount(60)">60 €</button>
@@ -182,11 +178,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="hidden" name="booking-form-number" id="donationAmount" value="">
                     <!-- Champ visible pour la valeur personnalisée -->
                     <div class="col-lg-12 col-12 mt-3 text-center">
-                      <input type="text" name="booking-form-number" id="customDonationAmount" class="form-control" placeholder="Montant de la donation personnalisé" value="<?= isset($amount) ? htmlspecialchars($amount) : '' ?>">
+                      <input type="text" name="booking-form-number" id="customDonationAmount" class="form-control" placeholder="Other amount" value="<?= isset($amount) ? htmlspecialchars($amount) : '' ?>">
 
                     </div>
                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                      <button type="submit" class="form-control">suivant</button>
+                      <button type="submit" class="form-control">next</button>
                     </div>
                   </div>
                 </div>

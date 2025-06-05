@@ -433,7 +433,7 @@ if (!isset($_SESSION['id'])) {
               <div class="row">
 
                 <div class="col-lg-6 col-12">
-                  <label for="name" class="form-label">Nom <sup class="text-danger">*</sup></label>
+                  <label for="name" class="form-label">Name <sup class="text-danger">*</sup></label>
 
                   <input type="text" name="name" id="name" class="form-control" placeholder="Jackson">
                 </div>
@@ -445,7 +445,7 @@ if (!isset($_SESSION['id'])) {
                 </div>
 
                 <div class="col-12">
-                  <label for="message" class="form-label">Comment s'est passé ton excursion</label>
+                  <label for="message" class="form-label">how was your excursion</label>
 
                   <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message"></textarea>
 
@@ -453,7 +453,7 @@ if (!isset($_SESSION['id'])) {
               </div>
 
               <div class="col-lg-5 col-12 mx-auto mt-3">
-                <button type="submit" class="form-control">Envoyer votre avis</button>
+                <button type="submit" class="form-control">Send feedback</button>
               </div>
             </form>
           </div>
@@ -468,7 +468,7 @@ if (!isset($_SESSION['id'])) {
         <div class="row">
 
           <div class="col-lg-4 col-12 me-auto">
-            <em class="text-white d-block mb-4">Où nous trouver ?</em>
+            <em class="text-white d-block mb-4">where to find us?</em>
 
             <strong class="text-white">
               <i class="bi-geo-alt me-2"></i>
@@ -515,28 +515,28 @@ if (!isset($_SESSION['id'])) {
 
 
           <div class="col-lg-5 col-12">
-            <em class="text-white d-block mb-4">Horaire de travail.</em>
+            <em class="text-white d-block mb-4">Working hours</em>
 
             <ul class="opening-hours-list">
               <li class="d-flex">
-                Lundi - Vendredi
+                Monday - Friday
                 <span class="underline"></span>
 
-                <strong>9:00 - 18:00</strong>
+                <strong>9:00 am - 6:00 pm</strong>
               </li>
 
               <li class="d-flex">
-                Samedi
+                Saturday
                 <span class="underline"></span>
 
-                <strong>9:00 - 13:00</strong>
+                <strong>9:00 am - 1:00 pm</strong>
               </li>
 
               <li class="d-flex">
-                Dimanche
+                Sunday
                 <span class="underline"></span>
 
-                <strong>Ferme</strong>
+                <strong>Closed</strong>
               </li>
             </ul>
           </div>

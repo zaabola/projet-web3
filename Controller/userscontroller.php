@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../Model/users.php');
 
 class userscontroller
 {
-  public function listOffre()
+  public function listUsers()
   {
     $sql = "SELECT * FROM users";
     $db = Config::getConnexion();
@@ -16,7 +16,7 @@ class userscontroller
     }
   }
 
-  function deleteOffer($id)
+  function deleteUser($id)
   {
     $sql = "DELETE FROM users WHERE id = :id";
     $db = Config::getConnexion();
@@ -30,26 +30,27 @@ class userscontroller
     }
   }
 
-  function addOffer($offer)
+  function addUser($user)
   {
-    $sql = "INSERT INTO users (nom, prenom, type, classe, mdp, email) VALUES (:nom, :prenom, :type, :classe, :mdp, :email)";
+    $sql = "INSERT INTO users (nom, prenom, type, mdp, email) VALUES (:nom, :prenom, :type, :mdp, :email)";
     $db = Config::getConnexion();
     try {
       $query = $db->prepare($sql);
       $query->execute([
-        'nom' => $offer->getNom(),
-        'prenom' => $offer->getPrenom(),
-        'type' => $offer->getType(),
-        'classe' => $offer->getClasse(),
-        'mdp' => $offer->getMdp(),
-        'email' => $offer->getEmail()
+        'nom' => $user->getNom(),
+        'prenom' => $user->getPrenom(),
+
+        'type' => $user->getType(),
+        'mdp' => $user->getMdp(),
+        'email' => $user->getEmail()
       ]);
+      error_log("User added successfully with email: " . $user->getEmail());
     } catch (Exception $e) {
-      echo 'Error: ' . $e->getMessage();
+      error_log("Error adding user: " . $e->getMessage());
+      throw $e; // Re-throw to handle in calling code
     }
   }
-
-  function updateOffer($offer, $id)
+  function updateUser($user, $id)
   {
     try {
       $db = Config::getConnexion();
@@ -59,7 +60,6 @@ class userscontroller
                     nom = :nom,
                     prenom = :prenom,
                     type = :type,
-                    classe = :classe,
                     mdp = :mdp,
                     email = :email
                 WHERE id = :id'
@@ -67,12 +67,11 @@ class userscontroller
 
       $query->execute([
         'id' => $id,
-        'nom' => $offer->getNom(),
-        'prenom' => $offer->getPrenom(),
-        'type' => $offer->getType(),
-        'classe' => $offer->getClasse(),
-        'mdp' => $offer->getMdp(),
-        'email' => $offer->getEmail()
+        'nom' => $user->getNom(),
+        'prenom' => $user->getPrenom(),
+        'type' => $user->getType(),
+        'mdp' => $user->getMdp(),
+        'email' => $user->getEmail()
       ]);
 
       echo $query->rowCount() . " records UPDATED successfully <br>";
@@ -80,21 +79,6 @@ class userscontroller
     } catch (PDOException $e) {
       echo "Error: " . $e->getMessage();
       return false;
-    }
-  }
-
-  function showOffer($id)
-  {
-    $sql = "SELECT * from users where id = $id";
-    $db = Config::getConnexion();
-    try {
-      $query = $db->prepare($sql);
-      $query->execute();
-
-      $offer = $query->fetch();
-      return $offer;
-    } catch (Exception $e) {
-      die('Error: ' . $e->getMessage());
     }
   }
 
@@ -110,14 +94,12 @@ class userscontroller
       error_log("Résultat authentification : " . print_r($user, true));
 
       if ($user) {
-        // Assurons-nous que toutes les données sont stockées dans la session
         $_SESSION['id'] = $user['id'];
         $_SESSION['nom'] = $user['nom'];
         $_SESSION['prenom'] = $user['prenom'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['mdp'] = $user['mdp'];
         $_SESSION['type'] = $user['type'];
-        $_SESSION['classe'] = $user['classe'];
 
         error_log("Session après authentification : " . print_r($_SESSION, true));
       }
@@ -125,178 +107,6 @@ class userscontroller
     } catch (Exception $e) {
       error_log("Erreur d'authentification : " . $e->getMessage());
       return false;
-    }
-  }
-
-  public function updateUserAccount($id, $nom, $prenom, $email, $mdp)
-  {
-    try {
-      $db = Config::getConnexion();
-      error_log("Tentative de mise à jour pour ID: $id");
-
-      // Vérifier si l'utilisateur existe
-      $checkUser = $db->prepare("SELECT * FROM users WHERE id = ?");
-      $checkUser->execute([$id]);
-
-      if ($checkUser->rowCount() > 0) {
-        $sql = "UPDATE users 
-                        SET nom = :nom,
-                            prenom = :prenom,
-                            email = :email,
-                            mdp = :mdp
-                        WHERE id = :id";
-
-        $query = $db->prepare($sql);
-
-        $params = [
-          'id' => $id,
-          'nom' => $nom,
-          'prenom' => $prenom,
-          'email' => $email,
-          'mdp' => $mdp
-        ];
-
-        error_log("Paramètres de mise à jour : " . print_r($params, true));
-
-        $result = $query->execute($params);
-
-        if ($result) {
-          error_log("Mise à jour réussie");
-          // Mettre à jour la session
-          $_SESSION['nom'] = $nom;
-          $_SESSION['prenom'] = $prenom;
-          $_SESSION['email'] = $email;
-          $_SESSION['mdp'] = $mdp;
-          return true;
-        } else {
-          error_log("Échec de la mise à jour - Erreur SQL : " . print_r($query->errorInfo(), true));
-        }
-      } else {
-        error_log("Utilisateur non trouvé avec l'ID : $id");
-      }
-      return false;
-    } catch (PDOException $e) {
-      error_log("Erreur PDO : " . $e->getMessage());
-      throw $e;
-    }
-  }
-
-  public function searchUsers($searchTerm)
-  {
-    try {
-      $db = Config::getConnexion();
-      $searchTerm = '%' . $searchTerm . '%';
-
-      $sql = "SELECT * FROM users WHERE 
-                    classe LIKE :searchTerm OR 
-                    nom LIKE :searchTerm OR 
-                    prenom LIKE :searchTerm OR 
-                    email LIKE :searchTerm";
-
-      $query = $db->prepare($sql);
-      $query->bindParam(':searchTerm', $searchTerm);
-      $query->execute();
-
-      return $query->fetchAll();
-    } catch (Exception $e) {
-      error_log("Erreur de recherche : " . $e->getMessage());
-      return [];
-    }
-  }
-
-  public function listOffreWithPagination($currentPage, $itemsPerPage, $userType)
-  {
-    $offset = ($currentPage - 1) * $itemsPerPage;
-    $sql = "SELECT * FROM users WHERE type LIKE :userType ORDER BY nom ASC LIMIT :offset, :itemsPerPage";
-    $db = Config::getConnexion();
-    try {
-      $query = $db->prepare($sql);
-      $query->bindValue(':userType', '%' . $userType . '%', PDO::PARAM_STR);
-      $query->bindValue(':offset', $offset, PDO::PARAM_INT);
-      $query->bindValue(':itemsPerPage', $itemsPerPage, PDO::PARAM_INT);
-      $query->execute();
-      return $query->fetchAll();
-    } catch (Exception $e) {
-      die('Error:' . $e->getMessage());
-    }
-  }
-
-  public function searchUsersWithPagination($searchTerm, $page = 1, $itemsPerPage = 6, $type = '')
-  {
-    try {
-      $db = Config::getConnexion();
-      $searchTerm = '%' . $searchTerm . '%';
-      $offset = ($page - 1) * $itemsPerPage;
-
-      // Base query with optional type filtering
-      $sql = "SELECT * FROM users WHERE 
-                    (classe LIKE :searchTerm OR 
-                     nom LIKE :searchTerm OR 
-                     prenom LIKE :searchTerm OR 
-                     email LIKE :searchTerm)";
-
-      if (!empty($type)) {
-        $sql .= " AND type = :type";
-      }
-
-      $sql .= " LIMIT :limit OFFSET :offset";
-
-      $query = $db->prepare($sql);
-      $query->bindParam(':searchTerm', $searchTerm);
-      if (!empty($type)) {
-        $query->bindValue(':type', $type);
-      }
-      $query->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
-      $query->bindValue(':offset', $offset, PDO::PARAM_INT);
-      $query->execute();
-
-      return $query->fetchAll();
-    } catch (Exception $e) {
-      return [];
-    }
-  }
-
-  public function getTotalUsers($type = '')
-  {
-    $db = Config::getConnexion();
-    $sql = "SELECT COUNT(*) as total FROM users";
-
-    if (!empty($type)) {
-      $sql .= " WHERE type = :type";
-    }
-
-    try {
-      $query = $db->prepare($sql);
-      if (!empty($type)) {
-        $query->bindValue(':type', $type);
-      }
-      $query->execute();
-      return $query->fetch()['total'];
-    } catch (Exception $e) {
-      die('Error:' . $e->getMessage());
-    }
-  }
-
-  public function getTotalSearchResults($searchTerm)
-  {
-    try {
-      $db = Config::getConnexion();
-      $searchTerm = '%' . $searchTerm . '%';
-
-      $sql = "SELECT COUNT(*) as total FROM users WHERE 
-                    classe LIKE :searchTerm OR 
-                    nom LIKE :searchTerm OR 
-                    prenom LIKE :searchTerm OR 
-                    email LIKE :searchTerm";
-
-      $query = $db->prepare($sql);
-      $query->bindParam(':searchTerm', $searchTerm);
-      $query->execute();
-
-      $result = $query->fetch();
-      return (int)$result['total'];
-    } catch (Exception $e) {
-      return 0;
     }
   }
 
@@ -309,7 +119,7 @@ class userscontroller
 
     try {
       $query->execute();
-      return $query->fetch(); // Retourne l'utilisateur ou false si non trouvé
+      return $query->fetch();
     } catch (Exception $e) {
       error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
       return false;
@@ -340,7 +150,7 @@ class userscontroller
 
     try {
       $query->execute();
-      return $query->fetch(); // Retourne l'utilisateur si le code est valide, sinon false
+      return $query->fetch();
     } catch (Exception $e) {
       error_log("Erreur lors de la vérification du code de réinitialisation : " . $e->getMessage());
       return false;
@@ -350,7 +160,7 @@ class userscontroller
   public function updatePassword($userId, $newPassword)
   {
     $db = Config::getConnexion();
-    $sql = "UPDATE users SET mdp = :mdp, reset_code = NULL WHERE id = :id"; // Réinitialiser le code après mise à jour
+    $sql = "UPDATE users SET mdp = :mdp, reset_code = NULL WHERE id = :id";
     $query = $db->prepare($sql);
     $query->bindValue(':mdp', $newPassword);
     $query->bindValue(':id', $userId);

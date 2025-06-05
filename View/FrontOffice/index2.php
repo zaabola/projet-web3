@@ -3,12 +3,12 @@ session_start();
 require_once('session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Debugging session variables
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Check for ID
 if (!isset($_SESSION['id'])) {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in session, redirect to login page
   header("Location: ../FrontOffice/login.php");
   exit();
 }
@@ -96,6 +96,7 @@ $guides = $PortfolioC->read();
           <div class="ms-lg-3">
             <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
+        </div>
     </nav>
 
     <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
@@ -104,16 +105,16 @@ $guides = $PortfolioC->read();
         <div class="row align-items-center">
 
           <div class="col-lg-6 col-12 mx-auto">
-            <em class="small-text">Bienvenue A</em>
+            <em class="small-text">Welcome to</em>
 
             <h1>بصمة</h1>
 
             <p class="text-white mb-4 pb-lg-2">
-              votre site <em>favorie</em>
+              your <em>favorite</em> website
             </p>
 
             <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_4">
-              A propos
+              About
             </a>
 
             <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_5"><strong>Apply</strong></a>
@@ -124,14 +125,6 @@ $guides = $PortfolioC->read();
 
       <div class="hero-slides"></div>
     </section>
-
-
-
-
-
-
-
-
 
     <section class="about-section section-padding" id="section_4">
       <div class="section-overlay"></div>
@@ -147,21 +140,18 @@ $guides = $PortfolioC->read();
               </video>
 
               <div class="about-video-info d-flex flex-column">
-                <h4 class="mt-auto"> Rejoignez nous et partagez votre passion pour la Tunisie !</h4>
-
-
+                <h4 class="mt-auto">Join us and share your passion for Tunisia!</h4>
               </div>
             </div>
           </div>
 
           <div class="col-lg-5 col-12 mt-4 mt-lg-0 mx-auto">
-            <em class="text-white">Empreinte</em>
 
-            <h2 class="text-white mb-3">Volontariat</h2>
+            <h2 class="text-white mb-3">Volunteering</h2>
 
-            <p class="text-white">Rejoignez-nous pour faire découvrir notre patrimoine culturel et naturel aux visiteurs, tout en contribuant à sa préservation. Inscrivez-vous pour guider des excursions, raconter nos histoires, et faire briller la beauté de la Tunisie !.</p>
+            <p class="text-white">Join us to showcase our cultural and natural heritage to visitors while contributing to its preservation. Sign up to guide tours, share our stories, and highlight the beauty of Tunisia!</p>
 
-            <p class="text-white">En tant que guide, vous accompagnerez des groupes lors d’excursions dans des lieux uniques, en valorisant notre histoire et nos coutumes. .</p>
+            <p class="text-white">As a guide, you will accompany groups on excursions to unique locations, promoting our history and traditions.</p>
 
           </div>
 
@@ -174,8 +164,7 @@ $guides = $PortfolioC->read();
         <div class="row">
 
           <div class="col-lg-12 col-12">
-            <em class="text-white">empreinte</em>
-            <h2 class="text-white mb-4 pb-lg-2">Formulaire Pour guide</h2>
+            <h2 class="text-white mb-4 pb-lg-2">Guide Application Form</h2>
           </div>
 
           <div class="col-lg-6 col-12">
@@ -184,13 +173,13 @@ $guides = $PortfolioC->read();
 
                 <div class="col-lg-6 col-12">
                   <label for="nom" class="form-label">Last Name <sup class="text-danger">*</sup></label>
-                  <input type="text" name="nom" id="nom" class="form-control" placeholder="ferchichi">
+                  <input type="text" name="nom" id="nom" class="form-control" placeholder="Smith">
                   <span id="nomr"></span>
                 </div>
 
                 <div class="col-lg-6 col-12">
-                  <label for="Prenom" class="form-label">First Name</label>
-                  <input type="text" name="prenom" id="prenom" class="form-control" placeholder="mariem">
+                  <label for="prenom" class="form-label">First Name</label>
+                  <input type="text" name="prenom" id="prenom" class="form-control" placeholder="John">
                   <span id="prenomr"></span>
                 </div>
 
@@ -212,7 +201,7 @@ $guides = $PortfolioC->read();
 
                 <div class="col-lg-6 col-12">
                   <label for="email" class="form-label">Email Address</label>
-                  <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Mariem@gmail.com">
+                  <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="John@gmail.com">
                   <span id="emailr"></span>
                 </div>
 
@@ -234,44 +223,43 @@ $guides = $PortfolioC->read();
                 const regex = /^[a-zA-Z-\s]+$/;
                 if (lnameinput.value === '') {
                   let lnameer = document.getElementById('prenomr');
-                  lnameer.innerHTML = "le champs prenom est vide . ";
+                  lnameer.innerHTML = "The first name field is empty.";
                   lnameer.style.color = 'white';
                   e.preventDefault();
                 } else if (!(regex.test(lnameinput.value))) {
                   let lnameer = document.getElementById('prenomr');
-                  lnameer.innerHTML = "le prenom doit comporter des lettres,et tirets seulements.";
+                  lnameer.innerHTML = "The first name must contain only letters and hyphens.";
                   lnameer.style.color = 'white';
                   e.preventDefault();
                 }
                 if (nameinput.value === '') {
                   let nameer = document.getElementById('nomr');
-                  nameer.innerHTML = "le champs nom est vide . ";
+                  nameer.innerHTML = "The last name field is empty.";
                   nameer.style.color = 'white';
                   e.preventDefault();
                 } else if (!(regex.test(nameinput.value))) {
                   let nameer = document.getElementById('nomr');
-                  nameer.innerHTML = "le nom doit comporter des lettres,et tirets seulements.";
+                  nameer.innerHTML = "The last name must contain only letters and hyphens.";
                   nameer.style.color = 'white';
                   e.preventDefault();
                 }
                 if (numero.value === '') {
                   let numeror = document.getElementById('numeror');
-                  numeror.innerHTML = "le champs numero est vide . ";
+                  numeror.innerHTML = "The phone number field is empty.";
                   numeror.style.color = 'white';
                   e.preventDefault();
                 } else if (!(/^[1-9]+$/.test(numero.value))) {
                   let numeror = document.getElementById('numeror');
-                  numeror.innerHTML = "l numero doit comporter que des numero";
+                  numeror.innerHTML = "The phone number must contain only digits.";
                   numeror.style.color = 'white';
                   e.preventDefault();
                 }
                 if (exp.value === '') {
                   let nameer = document.getElementById('expr');
-                  nameer.innerHTML = "le champs experience&motivation est vide . ";
+                  nameer.innerHTML = "The experience & motivation field is empty.";
                   nameer.style.color = 'white';
                   e.preventDefault();
                 }
-
               });
             </script>
           </div>
@@ -288,9 +276,8 @@ $guides = $PortfolioC->read();
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
-            <em class="text-white">Empreinte</em>
 
-            <h2 class="text-white">Meet our guides</h2>
+            <h2 class="text-white">Meet Our Guides</h2>
           </div>
           <div class="col-lg-4 col-md-4 col-4 mb-4">
             <?php
@@ -305,7 +292,6 @@ $guides = $PortfolioC->read();
                       <h4 class="text-white mb-0"><?= $guide['nom'] ?> <?= $guide['prenom'] ?></h4>
                     </div>
                     <p class="text-white mb-0"><?= $guide['specialite'] ?></p>
-
                   </div>
 
                   <div class="team-block-image-wrap">
@@ -321,22 +307,21 @@ $guides = $PortfolioC->read();
         </div>
     </section>
 
-
     <footer class="site-footer">
       <div class="container">
         <div class="row">
 
           <div class="col-lg-4 col-12 me-auto">
-            <em class="text-white d-block mb-4">Where to find us?</em>
+            <em class="text-white d-block mb-4">where to find us?</em>
 
             <strong class="text-white">
               <i class="bi-geo-alt me-2"></i>
-              Bandra West, Mumbai, Maharashtra 400050, India
+              Av. Hedi Nouira Ariana, 2001
             </strong>
 
             <ul class="social-icon mt-4">
               <li class="social-icon-item">
-                <a href="#" class="social-icon-link bi-star">
+                <a href="#" class="social-icon-link bi-facebook">
                 </a>
               </li>
 
@@ -356,10 +341,10 @@ $guides = $PortfolioC->read();
             <em class="text-white d-block mb-4">Contact</em>
 
             <p class="d-flex mb-1">
-              <strong class="me-2">Phone:</strong>
+              <strong class="me-2">Tel:</strong>
               <a href="tel: 305-240-9671" class="site-footer-link">
-                (65)
-                305 2409 671
+                (216)
+                95 020 030
               </a>
             </p>
 
@@ -367,28 +352,28 @@ $guides = $PortfolioC->read();
               <strong class="me-2">Email:</strong>
 
               <a href="mailto:info@yourgmail.com" class="site-footer-link">
-                hello@barista.co
+                Basma.Travel@gmail.com
               </a>
             </p>
           </div>
 
 
           <div class="col-lg-5 col-12">
-            <em class="text-white d-block mb-4">Opening Hours.</em>
+            <em class="text-white d-block mb-4">Working hours</em>
 
             <ul class="opening-hours-list">
               <li class="d-flex">
                 Monday - Friday
                 <span class="underline"></span>
 
-                <strong>9:00 - 18:00</strong>
+                <strong>9:00 am - 6:00 pm</strong>
               </li>
 
               <li class="d-flex">
                 Saturday
                 <span class="underline"></span>
 
-                <strong>11:00 - 16:30</strong>
+                <strong>9:00 am - 1:00 pm</strong>
               </li>
 
               <li class="d-flex">
@@ -401,11 +386,11 @@ $guides = $PortfolioC->read();
           </div>
 
           <div class="col-lg-8 col-12 mt-4">
-            <p class="copyright-text mb-0">Copyright © Barista Cafe 2048
-              - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+            <p class="copyright-text mb-0">Copyright © بصمة </p>
           </div>
         </div>
     </footer>
+
   </main>
 
   <!-- JAVASCRIPT FILES -->

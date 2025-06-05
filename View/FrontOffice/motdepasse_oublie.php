@@ -47,20 +47,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->addAddress($email);
 
         $mail->isHTML(true);
-        $mail->Subject = 'Reinitialisation de votre mot de passe';
-        $mail->Body    = "Cliquez sur le lien suivant pour changer votre mot de passe :<br>";
-        $mail->Body   .= "#" . $reset_code . "'>Reinitialiser le mot de passe</a>";
+        $mail->Subject = 'Reset your password';
+        $mail->Body    = "Click on this link  :<br>";
+        $mail->Body    = "http://localhost/web/View/FrontOffice/reset_code.php?reset_code=" . $reset_code . "'>Reset password</a>";
 
         $mail->send();
-        $message = "Un e-mail a été envoyé à votre adresse.";
+        $message = "Mail has been sent to you.";
         $message_type = 'success';
       } catch (Exception $e) {
-        error_log("Erreur lors de l'envoi de l'e-mail : {$mail->ErrorInfo}");
-        $message = "Erreur lors de l'envoi de l'e-mail. Veuillez vérifier votre configuration de serveur.";
+        error_log("Error while sending mail : {$mail->ErrorInfo}");
+        $message = "Error while sending mail. Check network connection.";
         $message_type = 'error';
       }
     } else {
-      $message = "Aucun utilisateur trouvé avec cet e-mail.";
+      $message = "No user found for this email.";
       $message_type = 'error';
     }
   }
