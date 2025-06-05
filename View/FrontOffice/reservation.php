@@ -5,22 +5,20 @@ session_start();
 require_once('session_check.php');
 verifierSession();
 
-// Débogage des variables de session
-error_log("Contenu de la session : " . print_r($_SESSION, true));
+// Debug session variables
+error_log("Session content: " . print_r($_SESSION, true));
 
-// Vérification de l'ID
+// Check ID
 if (!isset($_SESSION['id'])) {
-  // Si l'ID n'est pas dans la session, redirigeons vers la page de connexion
+  // If ID is not in session, redirect to login page
   header("Location: ../FrontOffice/login.php");
   exit();
 }
 require_once(__DIR__ . '/../../Controller/GestionReservation.php');
-//require 'vendor/autoload.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
 
 // Initialize variables for messages
 $success = $error = "";
@@ -31,10 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
   $dateTime = new DateTime();
   $date = $dateTime->format('Y-m-d');
 
-
-
   try {
-
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
@@ -43,18 +38,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
-    $mail->setFrom('khalilboujemaa2@gmail.com', 'Emprunt');
+    $mail->setFrom('khalilboujemaa2@gmail.com', 'Reservation');
     $mail->addAddress($_POST['mail'], $_POST['first-name'] . ' ' . $_POST['last-name']);
     $mail->isHTML(true);
-    $mail->Subject = 'Confirmation de reservation';
-    $mail->Body = "<h1>Bonjour {$_POST['first-name']} {$_POST['last-name']}</h1>
-                         <p>Votre reservation a etait bien effectuer vous devez presentez voter code QR pour acceder au bus.</p>
-                         <p>Date de soumission : {$date}</p>
-                         <p>Votre code QR :</p>
+    $mail->Subject = 'Reservation Confirmation';
+    $mail->Body = "<h1>Hello {$_POST['first-name']} {$_POST['last-name']}</h1>
+                         <p>Your reservation has been successfully completed. You must present your QR code to access the bus.</p>
+                         <p>Submission date: {$date}</p>
+                         <p>Your QR code:</p>
                          <img src='https://upload.wikimedia.org/wikipedia/commons/7/78/Qrcode_wikipedia_fr_v2clean.png' style='width:150px; height:auto;'>";
     $mail->send();
   } catch (Exception $e) {
-    echo "Erreur : {$mail->ErrorInfo}";
+    echo "Error: {$mail->ErrorInfo}";
   }
 
   try {
@@ -75,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-reservation']) && 
     $gestionReservation->createReservation($reservation);
 
     // Set success message in session
-    $_SESSION['success'] = "Réservation ajoutée avec succès !";
+    $_SESSION['success'] = "Reservation added successfully!";
 
     // Redirect to avoid resubmitting the form on refresh
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -106,12 +101,11 @@ if (isset($_SESSION['error'])) {
 <html lang="en">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Reservation Form for Excursions">
   <meta name="author" content="Your Name">
-  <title>Réservation - بصمة</title>
+  <title>Reservation - Basma</title>
 
   <!-- CSS Files -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -157,7 +151,7 @@ if (isset($_SESSION['error'])) {
               <a class="nav-link click-scroll" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+              <a class="nav-link click-scroll" href="index1.php#section_5">Contact</a>
             </li>
             <li class="nav-item">
               <a class="nav-link click-scroll" href="donation.php">Donate</a>
@@ -166,6 +160,8 @@ if (isset($_SESSION['error'])) {
           <div class="ms-lg-3">
             <a class="btn custom-btn custom-border-btn" href="logout.php">Log Out<i class="bi-arrow-up-right ms-2"></i></a>
           </div>
+        </div>
+      </div>
     </nav>
 
     <!-- Reservation Form -->
@@ -191,26 +187,26 @@ if (isset($_SESSION['error'])) {
                   <form class="custom-form booking-form" action="#" method="post" role="form" onsubmit="return verifyInputs()" novalidate>
                     <input type="hidden" name="formValid" id="formValid" value="false">
                     <div class="text-center mb-4 pb-lg-2">
-                      <em class="text-white">Remplir le formulaire de réservation</em>
-                      <h2 class="text-white">Réserver une excursion</h2>
+                      <em class="text-white">Fill out the reservation form</em>
+                      <h2 class="text-white">Book a Trip</h2>
                     </div>
                     <div class="booking-form-body">
                       <div class="row">
                         <div class="col-lg-6 col-12">
-                          <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Nom" readonly value="<?php echo $_SESSION['nom'] ?>">
+                          <input type="text" name="last-name" id="last-name" class="form-control" placeholder="Last Name" readonly value="<?php echo $_SESSION['nom'] ?>">
                         </div>
                         <div class="col-lg-6 col-12">
-                          <input type="text" name="first-name" id="first-name" class="form-control" placeholder="Prénom" readonly value="<?php echo $_SESSION['prenom'] ?>">
+                          <input type="text" name="first-name" id="first-name" class="form-control" placeholder="First Name" readonly value="<?php echo $_SESSION['prenom'] ?>">
                         </div>
                         <div class="col-lg-6 col-12">
                           <input type="email" name="mail" id="mail" class="form-control" placeholder="Email" readonly value="<?php echo $_SESSION['email'] ?>">
                         </div>
                         <div class="col-lg-6 col-12">
-                          <input type="tel" name="tel" id="tel" class="form-control" placeholder="Téléphone">
+                          <input type="tel" name="tel" id="tel" class="form-control" placeholder="Phone">
                         </div>
                         <div class="col-lg-12 col-12">
                           <select name="destination" id="destination" class="form-control">
-                            <option value="" disabled selected>Choisir une excursion</option>
+                            <option value="" disabled selected>Choose a destination</option>
                             <option value="Tozeur">Tozeur</option>
                             <option value="Djerba">Djerba</option>
                             <option value="El Jem">El Jem</option>
@@ -219,12 +215,12 @@ if (isset($_SESSION['error'])) {
                             <option value="Tunis">Tunis</option>
                             <option value="Dougga">Dougga</option>
                             <option value="Kairouan">Kairouan</option>
-                            <option value="Ain drahem et Tbarka">Ain drahem et Tbarka</option>
+                            <option value="Ain drahem et Tbarka">Ain Drahem and Tabarka</option>
                           </select>
-                          <textarea name="commentaire" rows="3" class="form-control" placeholder="Commentaire (optionnel)"></textarea>
+                          <textarea name="commentaire" rows="3" class="form-control" placeholder="Comment (optional)"></textarea>
                         </div>
                         <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                          <button type="submit" class="form-control" name="add-reservation">Réserver</button>
+                          <button type="submit" class="form-control" name="add-reservation">Book Now</button>
                         </div>
                       </div>
                     </div>
@@ -245,7 +241,7 @@ if (isset($_SESSION['error'])) {
       <div class="container">
         <div class="row">
           <div class="col-lg-4 col-12 me-auto">
-            <em class="text-white d-block mb-4">Où nous trouver ?</em>
+            <em class="text-white d-block mb-4">Where to find us?</em>
 
             <strong class="text-white">
               <i class="bi-geo-alt me-2"></i>
@@ -268,7 +264,7 @@ if (isset($_SESSION['error'])) {
           <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
             <em class="text-white d-block mb-4">Contact</em>
             <p class="d-flex mb-1">
-              <strong class="me-2">Tel:</strong>
+              <strong class="me-2">Phone:</strong>
               <a href="tel: 305-240-9671" class="site-footer-link">
                 (216)
                 95 020 030
@@ -282,30 +278,29 @@ if (isset($_SESSION['error'])) {
             </p>
           </div>
 
-
           <div class="col-lg-5 col-12">
-            <em class="text-white d-block mb-4">Horaire de travail.</em>
+            <em class="text-white d-block mb-4">Working Hours</em>
             <ul class="opening-hours-list">
               <li class="d-flex">
-                Lundi - Vendredi
+                Monday - Friday
                 <span class="underline"></span>
-                <strong>9:00 - 18:00</strong>
+                <strong>9:00 AM - 6:00 PM</strong>
               </li>
               <li class="d-flex">
-                Samedi
+                Saturday
                 <span class="underline"></span>
-                <strong>9:00 - 13:00</strong>
+                <strong>9:00 AM - 1:00 PM</strong>
               </li>
               <li class="d-flex">
-                Dimanche
+                Sunday
                 <span class="underline"></span>
-                <strong>Ferme</strong>
+                <strong>Closed</strong>
               </li>
             </ul>
           </div>
 
           <div class="col-lg-8 col-12 mt-4">
-            <p class="copyright-text mb-0">Copyright © بصمة </p>
+            <p class="copyright-text mb-0">Copyright © Basma </p>
           </div>
         </div>
       </div>

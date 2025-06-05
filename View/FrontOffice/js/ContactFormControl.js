@@ -13,23 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Name Validation
         if (!nameInput.value.trim()) {
-            showError('name', 'Remplir champ Nom.');
+            showError('name', 'Please fill in Name field.');
             isValid = false;
         }
 
         // Email Validation
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailInput.value.trim()) {
-            showError('email', 'champ Email est vide.');
+            showError('email', 'Email field is empty.');
             isValid = false;
         } else if (!emailPattern.test(emailInput.value.trim())) {
-            showError('email', 'Email doit respecter la forme exemple@exemple.com');
+            showError('email', 'Email must follow the format example@example.com');
             isValid = false;
         }
 
         // Message Validation
         if (!messageInput.value.trim()) {
-            showError('message', 'Remplir champ Message.');
+            showError('message', 'Please fill in Message field.');
             isValid = false;
         }
 

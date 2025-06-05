@@ -14,35 +14,35 @@ function verifyInputs() {
 
     // Validation for Last Name
     if (!lastName) {
-        showError('last-name', 'Remplir champ Nom');
+        showError('last-name', 'Please fill in Last Name field');
         isValid = false;
     }
 
     // Validation for First Name
     if (!firstName) {
-        showError('first-name', 'Remplir champ Prénom');
+        showError('first-name', 'Please fill in First Name field');
         isValid = false;
     }
 
     // Validation for Email
     const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
     if (!email) {
-        showError('mail', 'Champ Email est vide');
+        showError('mail', 'Email field is empty');
         isValid = false;
     } else if (!emailPattern.test(email)) {
-        showError('mail', 'Email doit respecter la forme exemple@exemple.com');
+        showError('mail', 'Email must follow the format example@example.com');
         isValid = false;
     }
 
     // Validation for Phone Number
     if (!/^\d{8}$/.test(phone)) {
-        showError('tel', 'Le numéro doit comporter exactement 8 chiffres');
+        showError('tel', 'Phone number must contain exactly 8 digits');
         isValid = false;
     }
 
     // Validation for Destination
     if (!destination) {
-        showError('destination', 'Choisir une destination');
+        showError('destination', 'Please choose a destination');
         isValid = false;
     }
 

@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               <a class="nav-link" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="#section_5">Complaint</a>
+              <a class="nav-link click-scroll" href="#section_5">Contact</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="donation.php">Donate</a>

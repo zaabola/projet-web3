@@ -76,7 +76,7 @@ if (!isset($_SESSION['id'])) {
               <a class="nav-link" href="panier.php">Cart</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link click-scroll" href="index1.php#section_5">Complaint</a>
+              <a class="nav-link click-scroll" href="index1.php#section_5">Contact</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="donation.php">Donate</a>
